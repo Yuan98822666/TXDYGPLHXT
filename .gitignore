@@ -1,0 +1,6 @@
+# Ignore .env files
+.env
+venv/
+ENV/
+.venv/
+.idea/
