@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/TXDYGPLHXT.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/swagger/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/swagger/test_block_api.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/db/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/db/session.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/raw/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/raw/raw_block_named_stock_event.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/raw/raw_block_snapshot_event.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/raw/raw_block_stock_signal_event.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/raw/raw_limit_up_snapshot_event.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/raw/raw_stock_snapshot_event.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/collectors/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/collectors/block_named_stock_collector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/collectors/block_snapshot_collector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/collectors/kz_generator.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/collectors/limit_up_snapshot_collector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/collectors/stock_snapshot_collector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/dispatcher.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/log_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/time_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/services功能.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/一分钟级的灵感.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/合格的板块.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/常用命令.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/总体架构.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/板块迁移(宪法).md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/系统目标.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/量化哲学.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/量化知识1.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/项目结构.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_dispatcher_run.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="37eAQp3Nqsg2yC82yUnEDisCMcG" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.test_dispatcher_run.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/db",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\db" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\api\swagger" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\services\collectors" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\services\scheduler" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\services" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\services\collectors" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\api" />
+      <recent name="E:\Python Project\TXDYGPLHXT\docs" />
+      <recent name="E:\Python Project\TXDYGPLHXT" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="test_dispatcher_run" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="TXDYGPLHXT" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_dispatcher_run.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.test_dispatcher_run" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-41e8cd69c857-64d779b69b7a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26927.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="" />
+      <created>1767253149738</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1767253149738</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/app/services/collectors/__init__.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
