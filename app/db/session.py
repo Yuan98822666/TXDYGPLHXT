@@ -1,25 +1,24 @@
 """
-数据库会话模块
-作用：
-    提供 SQLAlchemy 会话工厂 SessionLocal 以及 Base
+文件名：session.py
+作用说明：
+    SQLAlchemy Engine 与 Session 工厂
 """
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker
 
-# SQLite 示例，可换成 MySQL/Postgres
-DATABASE_URL = "sqlite:///E:/Python Project/TXDYGPLHXT/db/txdygplhxt.db"
+from app.config.settings import settings
 
 engine = create_engine(
-    DATABASE_URL,
-    echo=False,
-    connect_args={"check_same_thread": False}  # SQLite 特有
+    settings.database_url,
+    echo=settings.DB_ECHO,
+    pool_size=settings.DB_POOL_SIZE,
+    max_overflow=settings.DB_MAX_OVERFLOW,
+    future=True,
 )
 
 SessionLocal = sessionmaker(
+    bind=engine,
     autocommit=False,
     autoflush=False,
-    bind=engine
 )
-
-Base = declarative_base()

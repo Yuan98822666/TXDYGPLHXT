@@ -1,5 +1,5 @@
 """
-文件名：raw_stock_snapshot_event.py
+文件名：raw_stock_huoyue.py
 作用说明：
     定义【个股资金信息快照表】ORM 模型。
     本模型用于存储从市场接口直接获取的个股行情与资金原始数据，
@@ -18,13 +18,12 @@ from sqlalchemy import (
     BigInteger,
     Index
 )
-from sqlalchemy.ext.declarative import declarative_base
-import datetime
-
-Base = declarative_base()
+from app.db.base import Base
+from datetime import datetime, timezone
 
 
-class RawStockSnapshotEvent(Base):
+
+class RawStockHuoyue(Base):
     """
     表名：raw_stock_snapshot_event
     中文名：个股原始行情与资金快照事件表
@@ -36,7 +35,7 @@ class RawStockSnapshotEvent(Base):
         - 不允许在此表中做任何计算或业务判断
         - 所有字段均可用于事后重算与回测
     """
-    __tablename__ = "raw_stock_snapshot_event"
+    __tablename__ = "raw_stock_huoyue"
     # =========================
     # 1. 主键与事件控制字段
     # =========================
@@ -46,8 +45,7 @@ class RawStockSnapshotEvent(Base):
     # 2. 时间字段（极其重要）
     # =========================
     market_time = Column(DateTime, nullable=False, comment="市场时间：行情数据对应的市场时间（接口返回或推算）")
-    fetch_time = Column(DateTime, nullable=False, default=datetime.datetime.utcnow,comment="数据获取时间：程序实际向接口请求并成功返回的时间")
-    store_time = Column(DateTime, nullable=False, default=datetime.datetime.utcnow,comment="数据入库时间：该条记录写入数据库的时间")
+    add_time = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc),comment="入库时间")
     # =========================
     # 3. 股票身份字段
     # =========================
@@ -71,11 +69,20 @@ class RawStockSnapshotEvent(Base):
     # =========================
     # 6. 资金流向字段（五档）
     # =========================
-    main_net_inflow = Column(BigInteger, nullable=True, comment="主力资金净流入（元）")
-    super_large_net_inflow = Column(BigInteger, nullable=True, comment="超大单净流入（元）")
-    large_net_inflow = Column(BigInteger, nullable=True, comment="大单净流入（元）")
-    medium_net_inflow = Column(BigInteger, nullable=True, comment="中单净流入（元）")
-    small_net_inflow = Column(BigInteger, nullable=True, comment="小单净流入（元）")
+    stock_zl_inflow = Column(BigInteger, nullable=True, comment="主力资金净流入（元）")
+    stock_cd_inflow = Column(BigInteger, nullable=True, comment="超大单净流入（元）")
+    stock_dd_inflow = Column(BigInteger, nullable=True, comment="大单净流入（元）")
+    stock_zd_inflow = Column(BigInteger, nullable=True, comment="中单净流入（元）")
+    stock_xd_inflow = Column(BigInteger, nullable=True, comment="小单净流入（元）")
+
+    stock_zl_zb = Column(Float, nullable=True, comment="主力资金净流入占比（元）")
+    stock_cd_zb = Column(Float, nullable=True, comment="超大单净流入占比（元）")
+    stock_dd_zb = Column(Float, nullable=True, comment="大单净流入占比（元）")
+    stock_zd_zb = Column(Float, nullable=True, comment="中单净流入占比（元）")
+    stock_xd_zb = Column(Float, nullable=True, comment="小单净流入占比（元）")
+
+
+
     # =========================
     # 7. 接口溯源字段
     # =========================

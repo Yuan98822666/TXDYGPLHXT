@@ -1,5 +1,5 @@
 """
-文件路径：app/models/raw/raw_block_snapshot_event.py
+文件路径：app/models/raw/raw_block_huoyue.py
 作用说明：
     定义【板块资金快照事件】ORM。
     本表用于记录：
@@ -13,18 +13,18 @@
     4. 只描述“板块此刻是什么样子”
 """
 from sqlalchemy import Column, String, Integer, Float, DateTime, BigInteger
-from sqlalchemy.ext.declarative import declarative_base
-import datetime
-
-Base = declarative_base()
+from app.db.base import Base
+from datetime import datetime, timezone
 
 
-class RawBlockSnapshotEvent(Base):
+
+
+class RawBlockHuoyue(Base):
     """
     表名：raw_block_snapshot_event
     中文名：板块原始行情快照事件表
     """
-    __tablename__ = "raw_block_snapshot_event"
+    __tablename__ = "raw_block_huoyue"
     # =========================
     # 1. 事件与批次
     # =========================
@@ -47,22 +47,34 @@ class RawBlockSnapshotEvent(Base):
     # 4. 板块结构
     # =========================
     up_count = Column(Integer, nullable=True, comment="上涨家数")
-    down_count = Column(Integer, nullable=True, comment="下跌家数")
-    # limit_up_count = Column(Integer, nullable=True, comment="涨停家数（如接口可得）")
-    # limit_down_count = Column(Integer, nullable=True, comment="跌停家数（如接口可得）")
+    pi_count = Column(Integer, nullable=True, comment="平盘家数")
+    dw_count = Column(Integer, nullable=True, comment="下跌家数")
+
     # =========================
     # 5. 板块资金
     # =========================
-    main_inflow = Column(Float, nullable=True, comment="板块主力资金净流入")
-    super_inflow = Column(Float, nullable=True, comment="板块超大单资金净流入")
-    large_inflow = Column(Float, nullable=True, comment="板块大单资金净流入")
-    medium_inflow = Column(Float, nullable=True, comment="板块中单资金净流入")
-    small_inflow = Column(Float, nullable=True, comment="板块小单资金净流入")
+    block_zl_inflow = Column(Float, nullable=True, comment="板块主力资金净流入")
+    block_cd_inflow = Column(Float, nullable=True, comment="板块超大单资金净流入")
+    block_dd_inflow = Column(Float, nullable=True, comment="板块大单资金净流入")
+    block_zd_inflow = Column(Float, nullable=True, comment="板块中单资金净流入")
+    block_xd_inflow = Column(Float, nullable=True, comment="板块小单资金净流入")
+
+    block_zl_zb = Column(Float, nullable=True, comment="板块主力资金净流入占比")
+    block_cd_zb = Column(Float, nullable=True, comment="板块超大单资金净流入占比")
+    block_dd_zb = Column(Float, nullable=True, comment="板块大单资金净流入占比")
+    block_zd_zb = Column(Float, nullable=True, comment="板块中单资金净流入占比")
+    block_xd_zb = Column(Float, nullable=True, comment="板块小单资金净流入占比")
+
+
+
+
+
+
+
     # =========================
     # 6. 时间字段
     # =========================
     market_time = Column(DateTime, nullable=False, comment="市场时间：该板块状态对应的市场时间")
-    fetch_time = Column(DateTime, nullable=False, default=datetime.datetime.utcnow, comment="抓取时间：程序请求接口时间")
-
+    add_time = Column(DateTime(timezone=True),nullable=False,default=lambda: datetime.now(timezone.utc),comment="入库时间")
     def __repr__(self):
         return f"<RawBlockSnapshotEvent "f"{self.block_name} "f"time={self.market_time}>"

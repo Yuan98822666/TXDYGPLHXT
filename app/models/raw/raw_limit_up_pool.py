@@ -1,5 +1,5 @@
 """
-文件名：raw_limit_up_snapshot_event.py
+文件名：raw_limit_up_pool.py
 作用说明：
     涨停池原始快照事件表。
     用于记录在某一市场时间点，
@@ -23,18 +23,17 @@ from sqlalchemy import (
     BigInteger,
     Date
 )
-from sqlalchemy.ext.declarative import declarative_base
-import datetime
-
-Base = declarative_base()
+from app.db.base import Base
+from datetime import datetime, timezone
 
 
-class RawLimitUpSnapshotEvent(Base):
+
+class RawLimitUpPool(Base):
     """
     表名：raw_limit_up_snapshot_event
     中文名：涨停池原始快照事件表
     """
-    __tablename__ = "raw_limit_up_snapshot_event"
+    __tablename__ = "raw_limit_up_pool"
     # =========================
     # 1. 事件与批次
     # =========================
@@ -76,8 +75,7 @@ class RawLimitUpSnapshotEvent(Base):
     # =========================
     trade_date = Column(Date, nullable=False, index=True, comment="交易日")
     market_time = Column(DateTime, nullable=False, comment="市场时间：该状态在市场中的时间点")
-    store_time = Column(DateTime, nullable=False, default=datetime.datetime.utcnow, comment="入库时间")
-
+    add_time = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc),comment="入库时间")
     def __repr__(self):
         return (
             f"<RawLimitUpSnapshotEvent "f"{self.stock_code} "f"time={self.market_time}>")

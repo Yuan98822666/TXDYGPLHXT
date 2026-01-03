@@ -16,24 +16,24 @@ from fastapi import FastAPI
 # =========================
 # 引入 Swagger 测试 API
 # =========================
-from app.api.swagger.test_block_api import router as block_test_router  # ← 改这里！
 
 # =========================
 # 创建主应用
 # =========================
-app = FastAPI  (
-    title="TXDYGPLHXT",
-    description="体系化板块-个股联动量化系统",
-    version="0.1.0"
-)
+app = FastAPI(title="TXDYGPLHXT", description="体系化板块-个股联动量化系统", version="0.1.0")
 
 # 使用 include_router 注册路由
-app.include_router(block_test_router, prefix="/debug")
 
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
-    """
-    服务健康检查接口
-    """
-    return {"status": "ok"}
+
+
+# ===== 新增：内置 Uvicorn 启动器 =====
+if __name__ == "__main__":
+    import uvicorn
+
+    # 指定 host、port、reload 等参数
+    uvicorn.run(        "app.main:app",  # 与命令行一致的模块路径
+        host="127.0.0.1",
+        port=8011,  # ← 你想要的端口
+        reload=True,  # 开发时自动重载
+        log_level="info"
+    )
