@@ -32,4 +32,3 @@ endpoints:
   stock_snapshot:
     url: "https://push2.eastmoney.com/api/qt/stock/get"
     params: "secid={secid}&invt=2&fltt=1&wbp2u=|0|0|0|web&dect=1&_=1767444457994&fields=f57,f58,f43,f169,f170,f47,f48,f168,f116,f117,f137,f140,f143,f146,f149,f162,f167,f193,f194,f195,f196,f197"
-

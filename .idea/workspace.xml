@@ -4,33 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="数据库连接上了">
-      <change afterPath="$PROJECT_DIR$/app/collectors/board_collector.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/collectors/dispatcher.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/collectors/stock_collector.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/config/request_conf.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/models/system/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/models/system/market_state_date.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/utils/http_client.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/utils/kz_generator.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/writers/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/writers/snapshot_writer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/数据获取流程.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/collect_test.py" afterDir="false" />
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="数据下载进入了 下一步要弄定时任务了">
+      <change afterPath="$PROJECT_DIR$/app/services/auto_snapshot_scheduler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/auto_snapshot_state.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/trading_schedule.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/snapshot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/snapshot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/config/request_conf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/request_conf.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/db/session.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/db/session.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_limit_up_pool.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_limit_up_pool.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_stock_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_stock_huoyue.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/collectors/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/snapshot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/collectors/kz_generator.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/dispatcher.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/utils/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/log_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/time_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/time_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/init_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/init_db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,8 +85,8 @@
       <recent name="E:\Python Project\TXDYGPLHXT\tests" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\Python Project\TXDYGPLHXT\app\models\system" />
       <recent name="E:\Python Project\TXDYGPLHXT\app" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\models\system" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\services\utils" />
       <recent name="E:\Python Project\TXDYGPLHXT" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\db" />
@@ -268,7 +251,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767412246051</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="数据下载进入了 下一步要弄定时任务了">
+      <option name="closed" value="true" />
+      <created>1767505242739</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1767505242739</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -285,7 +276,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="0" />
     <MESSAGE value="数据库连接上了" />
-    <option name="LAST_COMMIT_MESSAGE" value="数据库连接上了" />
+    <MESSAGE value="数据下载进入了 下一步要弄定时任务了" />
+    <option name="LAST_COMMIT_MESSAGE" value="数据下载进入了 下一步要弄定时任务了" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">

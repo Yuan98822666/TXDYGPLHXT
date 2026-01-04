@@ -43,6 +43,8 @@ class Settings(BaseSettings):
     EASTMONEY_CB_PREFIX: str = "jQuery112308004600294897531_1767433763641"
     EASTMONEY_PAGE_SIZE: int = 50
     EASTMONEY_TIMEOUT: int = 10
+    # ===== 自动快照调度 =====
+    AUTO_SNAPSHOT_INTERVAL_SECONDS: int = 30  # 默认 30 秒（1分钟2次）
 
 
 

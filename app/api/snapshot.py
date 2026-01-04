@@ -1,5 +1,8 @@
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from app.collectors.dispatcher import run_snapshot_cycle
+from app.db.session import SessionLocal
+from app.services.auto_snapshot_state import auto_snapshot_state
+from app.utils.trading_schedule import is_today_a_trading_day
 
 router = APIRouter(prefix="/snapshot")
 @router.post("/blockstock", tags=["手动下载数据板块股票数据1次"])
@@ -15,3 +18,28 @@ async def trigger_snapshot(background_tasks: BackgroundTasks):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"快照触发失败: {str(e)}")
 
+# === 新增接口 ===
+@router.get("/auto-status", tags=["自动快照控制"])
+async def get_auto_snapshot_status():
+    """获取自动快照当前状态（内存中）"""
+    enabled = await auto_snapshot_state.is_enabled()
+    return {"enabled": enabled}
+
+
+@router.post("/auto-toggle", tags=["自动快照控制"])
+async def toggle_auto_snapshot():
+    """切换自动快照开关（仅内存，重启恢复默认开启）"""
+    new_status = await auto_snapshot_state.toggle()
+    action = "开启" if new_status else "关闭"
+    return {
+        "enabled": new_status,
+        "message": f"自动快照已{action}（服务重启后自动恢复开启）"
+    }
+
+@router.get("/debug/today")
+async def debug_today():
+    from datetime import date
+    return {
+        "today": str(date.today()),
+        "is_trading_day": is_today_a_trading_day(SessionLocal())
+    }

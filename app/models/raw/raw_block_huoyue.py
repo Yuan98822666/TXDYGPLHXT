@@ -68,7 +68,7 @@ class RawBlockHuoyue(Base):
     block_xd_zb = Column(Float, nullable=True, comment="板块小单资金净流入占比")
 
     # =========================
-    # 6. 点名股票
+    # 6. 点名股票  板块领涨股 和 板块资金流入最多股 都是板块点名股
     # =========================
     money_stock_code  = Column(String(20), nullable=True, comment="板块资金流入最多个股名称")
     money_stock__name = Column(String(50), nullable=True, comment="板块资金流入最多个股代码")

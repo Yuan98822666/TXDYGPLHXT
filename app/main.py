@@ -1,28 +1,32 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware  # 如果前端跨域需要
+from contextlib import asynccontextmanager
+import asyncio
+import logging
 
-# 导入你的 API 路由
+# 导入你的 API
 from app.api.snapshot import router as snapshot_router
 
-# 创建 FastAPI 应用实例
-app = FastAPI(title="TXDYGPLHXT 后台服务", description="提供板块活跃度快照采集与查询接口", version="1.0.0" )
+# 新增导入调度器
+from app.services.auto_snapshot_scheduler import auto_snapshot_scheduler_loop
 
-# 注册路由
+# 配置日志
+logging.basicConfig(level=logging.INFO)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 启动自动快照调度器（默认开启）
+    asyncio.create_task(auto_snapshot_scheduler_loop())
+    yield
+
+app = FastAPI(
+    title="TXDYGPLHXT 后台服务", description="提供板块活跃度快照采集与查询接口", version="1.0.0", lifespan=lifespan)
+
 app.include_router(snapshot_router)
 
-
-# 可选：根路径欢迎信息
 @app.get("/")
 async def root():
     return {"message": "欢迎使用 TXDYGPLHXT 快照服务", "docs": "/docs"}
 
-
 if __name__ == "__main__":
     import uvicorn
-
-    uvicorn.run(
-        "app.main:app",
-        host="localhost",
-        port=8084,
-        reload=True,  # 开发期强烈建议打开
-    )
+    uvicorn.run("app.main:app", host="localhost", port=8084, reload=True)
