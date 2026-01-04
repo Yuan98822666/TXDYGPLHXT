@@ -38,5 +38,12 @@ class Settings(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
 
+    # ===== EastMoney =====
+    EASTMONEY_UT: str
+    EASTMONEY_CB_PREFIX: str = "jQuery112308004600294897531_1767433763641"
+    EASTMONEY_PAGE_SIZE: int = 50
+    EASTMONEY_TIMEOUT: int = 10
+
+
 
 settings = Settings()

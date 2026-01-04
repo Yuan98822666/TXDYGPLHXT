@@ -1,0 +1,35 @@
+common:
+  ut: "8dec03ba335b81bf4ebdf7b29ec27d15"
+  cb: "jQuery112308004600294897531_1767433763641"
+  timeout: 10
+  max_pages: 100
+
+endpoints:
+  board_concept:
+    url: "https://push2.eastmoney.com/api/qt/clist/get"
+    fid: "f62"
+    po: "1"
+    pz: "100"
+    pn: "{pn}"
+    np: "2"
+    fltt: "2"
+    invt: "2"
+    fs: "m:90+t:3"
+    fields: "f1,f2,f3,f4,f8,f12,f13,f14,f20,f62,f66,f69,f72,f75,f78,f81,f84,f87,f104,f105,f106,f124,f128,f136,f140,f141,f152,f184,f204,f205,f206"
+
+  board_industry:
+    url: "https://push2.eastmoney.com/api/qt/clist/get"
+    fid: "f62"
+    po: "1"
+    pz: "100"
+    pn: "{pn}"
+    np: "2"
+    fltt: "2"
+    invt: "2"
+    fs: "m:90+t:2"
+    fields: "f1,f2,f3,f4,f8,f12,f13,f14,f20,f62,f66,f69,f72,f75,f78,f81,f84,f87,f104,f105,f106,f124,f128,f136,f140,f141,f152,f184,f204,f205,f206"
+
+  stock_snapshot:
+    url: "https://push2.eastmoney.com/api/qt/stock/get"
+    params: "secid={secid}&invt=2&fltt=1&wbp2u=|0|0|0|web&dect=1&_=1767444457994&fields=f57,f58,f43,f169,f170,f47,f48,f168,f116,f117,f137,f140,f143,f146,f149,f162,f167,f193,f194,f195,f196,f197"
+

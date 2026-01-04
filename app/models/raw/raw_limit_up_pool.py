@@ -30,7 +30,7 @@ from datetime import datetime, timezone
 
 class RawLimitUpPool(Base):
     """
-    表名：raw_limit_up_snapshot_event
+    表名：raw_limit_up_pool
     中文名：涨停池原始快照事件表
     """
     __tablename__ = "raw_limit_up_pool"
@@ -38,7 +38,7 @@ class RawLimitUpPool(Base):
     # 1. 事件与批次
     # =========================
     event_id = Column(BigInteger, primary_key=True, autoincrement=True, comment="事件ID")
-    kz_no = Column(BigInteger, nullable=False, index=True, comment="快照批次号：与板块、个股快照对齐")
+    kz_no = Column(BigInteger, nullable=False, index=True, comment="快照批次号")
     # =========================
     # 2. 股票身份
     # =========================

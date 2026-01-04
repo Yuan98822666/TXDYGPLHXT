@@ -25,7 +25,7 @@ from datetime import datetime, timezone
 
 class RawStockHuoyue(Base):
     """
-    表名：raw_stock_snapshot_event
+    表名：raw_stock_huoyue
     中文名：个股原始行情与资金快照事件表
     表作用：
         记录某一时间点，从市场接口获取到的“某只股票”的
@@ -40,12 +40,7 @@ class RawStockHuoyue(Base):
     # 1. 主键与事件控制字段
     # =========================
     id = Column(BigInteger, primary_key=True, autoincrement=True, comment="主键，自增ID，仅用于数据库唯一性")
-    kz_no = Column(String(64), nullable=False, index=True,comment="快照批次号：一次完整市场抓取动作的唯一标识，用于对齐板块/个股数据")
-    # =========================
-    # 2. 时间字段（极其重要）
-    # =========================
-    market_time = Column(DateTime, nullable=False, comment="市场时间：行情数据对应的市场时间（接口返回或推算）")
-    add_time = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc),comment="入库时间")
+    kz_no = Column(BigInteger, nullable=False, index=True, comment="快照批次号")
     # =========================
     # 3. 股票身份字段
     # =========================
@@ -55,17 +50,20 @@ class RawStockHuoyue(Base):
     # =========================
     # 4. 行情与成交字段
     # =========================
-    last_price = Column(Float, nullable=True, comment="最新价")
-    change_amount = Column(Float, nullable=True, comment="涨跌额")
-    change_rate = Column(Float, nullable=True, comment="涨跌幅（百分比）")
-    volume = Column(BigInteger, nullable=True, comment="成交量（股）")
-    amount = Column(BigInteger, nullable=True, comment="成交额（元）")
+    stock_zxj = Column(Float, nullable=True, comment="最新价")
+    stock_zde = Column(Float, nullable=True, comment="涨跌额")
+    stock_zdf = Column(Float, nullable=True, comment="涨跌幅（百分比）")
+    stock_zjlg = Column(BigInteger, nullable=True, comment="成交量（股）")
+    stock_cjey = Column(BigInteger, nullable=True, comment="成交额（元）")
     # =========================
     # 5. 市值与换手率
     # =========================
-    turnover_rate = Column(Float, nullable=True, comment="换手率（百分比）")
-    total_market_value = Column(BigInteger, nullable=True, comment="总市值（元）")
-    float_market_value = Column(BigInteger, nullable=True, comment="流通市值（元）")
+    stock_hsl = Column(Float, nullable=True, comment="换手率（百分比）")
+    stock_zsz = Column(BigInteger, nullable=True, comment="总市值（元）")
+    stock_ltsz = Column(BigInteger, nullable=True, comment="流通市值（元）")
+    stock_syl = Column(BigInteger, nullable=True, comment="市盈率（动）")
+    stock_sjl = Column(BigInteger, nullable=True, comment="市净率")
+
     # =========================
     # 6. 资金流向字段（五档）
     # =========================
@@ -81,14 +79,22 @@ class RawStockHuoyue(Base):
     stock_zd_zb = Column(Float, nullable=True, comment="中单净流入占比（元）")
     stock_xd_zb = Column(Float, nullable=True, comment="小单净流入占比（元）")
 
-
-
     # =========================
     # 7. 接口溯源字段
     # =========================
     source = Column(String(32), nullable=False, comment="数据来源标识，如 eastmoney")
-    raw_symbol = Column(String(64), nullable=True, comment="接口原始标识字段，用于字段含义变更后的回溯")
+    # raw_symbol = Column(String(64), nullable=True, comment="接口原始标识字段，用于字段含义变更后的回溯")
+
+
+    # =========================
+    # 2. 时间字段（极其重要）
+    # =========================
+    market_time = Column(DateTime, nullable=False, comment="市场时间：行情数据对应的市场时间（接口返回或推算）")
+    add_time = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc),comment="入库时间")
     # =========================
     # 索引定义
     # =========================
     __table_args__ = (Index("idx_stock_time", "stock_code", "market_time"),)
+
+
+

@@ -9,16 +9,8 @@ from sqlalchemy.orm import sessionmaker
 
 from app.config.settings import settings
 
-engine = create_engine(
-    settings.database_url,
-    echo=settings.DB_ECHO,
-    pool_size=settings.DB_POOL_SIZE,
-    max_overflow=settings.DB_MAX_OVERFLOW,
-    future=True,
-)
+engine = create_engine(settings.database_url, echo=settings.DB_ECHO, pool_size=settings.DB_POOL_SIZE,max_overflow=settings.DB_MAX_OVERFLOW, future=True, )
 
-SessionLocal = sessionmaker(
-    bind=engine,
-    autocommit=False,
-    autoflush=False,
-)
+SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False, )
+
+

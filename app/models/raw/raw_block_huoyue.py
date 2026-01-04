@@ -1,5 +1,6 @@
 """
 文件路径：app/models/raw/raw_block_huoyue.py
+
 作用说明：
     定义【板块资金快照事件】ORM。
     本表用于记录：
@@ -21,34 +22,35 @@ from datetime import datetime, timezone
 
 class RawBlockHuoyue(Base):
     """
-    表名：raw_block_snapshot_event
-    中文名：板块原始行情快照事件表
+    表名：raw_block_huoyue
+    中文名：板块活跃度 / 资金快照表
     """
     __tablename__ = "raw_block_huoyue"
     # =========================
     # 1. 事件与批次
     # =========================
     event_id = Column(BigInteger, primary_key=True, autoincrement=True, comment="事件ID，全局唯一")
-    kz_no = Column(String(64), nullable=False, index=True, comment="快照批次号：与个股快照共享，用于板块-个股联动")
+    kz_no = Column(BigInteger, nullable=False, index=True, comment="快照批次号")
     # =========================
     # 2. 板块身份
     # =========================
     block_code = Column(String(20), nullable=False, index=True, comment="板块代码（东方财富板块ID）")
     block_name = Column(String(50), nullable=False, comment="板块名称")
-    block_type = Column(String(20), nullable=True, comment="板块类型：行业 / 概念")
+    block_type = Column(String(20), nullable=False, comment="HY / GN")
     # =========================
     # 3. 行情事实
     # =========================
-    block_index = Column(Float, nullable=True, comment="板块指数")
-    block_change_pct = Column(Float, nullable=True, comment="板块涨跌幅（%）")
-    block_change_amt = Column(Float, nullable=True, comment="板块涨跌额")
-    block_turnover_rate = Column(Float, nullable=True, comment="板块换手率（%）")
+    # block_zs = Column(Float, nullable=True, comment="板块指数")
+    block_zdf = Column(Float, nullable=True, comment="板块涨跌幅（%）")
+    block_zde = Column(Float, nullable=True, comment="板块涨跌额")
+    block_hsl = Column(Float, nullable=True, comment="板块换手率（%）")
     # =========================
     # 4. 板块结构
     # =========================
     up_count = Column(Integer, nullable=True, comment="上涨家数")
     pi_count = Column(Integer, nullable=True, comment="平盘家数")
     dw_count = Column(Integer, nullable=True, comment="下跌家数")
+
 
     # =========================
     # 5. 板块资金
@@ -64,6 +66,19 @@ class RawBlockHuoyue(Base):
     block_dd_zb = Column(Float, nullable=True, comment="板块大单资金净流入占比")
     block_zd_zb = Column(Float, nullable=True, comment="板块中单资金净流入占比")
     block_xd_zb = Column(Float, nullable=True, comment="板块小单资金净流入占比")
+
+    # =========================
+    # 6. 点名股票
+    # =========================
+    money_stock_code  = Column(String(20), nullable=True, comment="板块资金流入最多个股名称")
+    money_stock__name = Column(String(50), nullable=True, comment="板块资金流入最多个股代码")
+    money_stock__type = Column(String(20), nullable=True, comment="板块资金流入最多个股所属市场1 沪 0 深")
+
+    lider_stock_code  = Column(String(20), nullable=True, comment="板块领涨个股名称")
+    lider_stock__name = Column(String(50), nullable=True, comment="板块领涨个股代码")
+    lider_stock__pct  = Column(String(20), nullable=True, comment="板块领涨个股涨幅")
+    lider_stock__type = Column(String(20), nullable=True, comment="板块领涨个股所属市场1 沪 0 深")
+
 
 
 
