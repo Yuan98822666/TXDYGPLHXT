@@ -5,6 +5,8 @@ from ..models import NewsItem, SentimentSource
 from datetime import datetime
 import pandas as pd
 
+from ...services.auto_snapshot_scheduler import logger
+
 
 class CninfoAnnouncementSource(NewsSource):
     def fetch_latest(self, limit: int = 20) -> list[NewsItem]:

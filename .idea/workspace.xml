@@ -5,9 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="简单利用股票代码查询负面舆情">
+      <change afterPath="$PROJECT_DIR$/app/api/hot_stocks.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/behavior/mentioned_stock_behavior.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/mentioned_stock_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/dispatcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/dispatcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/behavior/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/collectors/board_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/board_collector.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_stock_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_stock_huoyue.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/sentiment/sources/cninfo_rss.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/sentiment/sources/cninfo_rss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/游资顺风车.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/游资顺风车.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +65,7 @@
     "deletionFromPopupRequiresConfirmation": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/sentiment",
+    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/behavior",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "PyConsoleConfigurable.Python 控制台"
   }
@@ -72,11 +80,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\behavior" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\sentiment" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\sentiment\sources" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\models\util" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\services\clients" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\Python Project\TXDYGPLHXT\app\api" />
@@ -277,7 +285,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767574510126</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="简单利用股票代码查询负面舆情">
+      <option name="closed" value="true" />
+      <created>1767575462456</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1767575462456</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

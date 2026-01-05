@@ -7,6 +7,8 @@ import logging
 from app.api.snapshot import router as snapshot_router
 from app.api.sentiment import router as sentiment_router
 # from app.api.hot_stocks import router as hot_stocks_router
+from app.api.hot_stocks import router as hot_stocks_router
+
 # 新增导入调度器
 from app.services.auto_snapshot_scheduler import auto_snapshot_scheduler_loop
 
@@ -22,6 +24,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="TXDYGPLHXT 后台服务", description="提供板块活跃度快照采集与查询接口", version="1.0.0", lifespan=lifespan)
 
+app.include_router(hot_stocks_router)
 app.include_router(snapshot_router)
 app.include_router(sentiment_router)
 # app.include_router(hot_stocks_router)

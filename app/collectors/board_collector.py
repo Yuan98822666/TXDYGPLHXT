@@ -76,12 +76,12 @@ def collect_board_snapshot(market_time: datetime, kz_no: int) -> Tuple[List[RawB
                     block_zd_zb=item.get("f81"),
                     block_xd_zb=item.get("f87"),
                     money_stock_code=item.get("f205"),
-                    money_stock__name=item.get("f204"),
-                    money_stock__type=item.get("f206"),
+                    money_stock_name=item.get("f204"),
+                    money_stock_type=item.get("f206"),
                     lider_stock_code=item.get("f140"),
-                    lider_stock__name=item.get("f128"),
-                    lider_stock__type=item.get("f141"),
-                    lider_stock__pct=item.get("f136"),
+                    lider_stock_name=item.get("f128"),
+                    lider_stock_type=item.get("f141"),
+                    lider_stock_pct=item.get("f136"),
 
 
 
