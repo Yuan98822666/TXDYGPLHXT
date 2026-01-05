@@ -5,6 +5,7 @@ import logging
 
 # 导入你的 API
 from app.api.snapshot import router as snapshot_router
+from app.api.sentiment import router as sentiment_router
 
 # 新增导入调度器
 from app.services.auto_snapshot_scheduler import auto_snapshot_scheduler_loop
@@ -22,10 +23,13 @@ app = FastAPI(
     title="TXDYGPLHXT 后台服务", description="提供板块活跃度快照采集与查询接口", version="1.0.0", lifespan=lifespan)
 
 app.include_router(snapshot_router)
+app.include_router(sentiment_router)
 
 @app.get("/")
 async def root():
     return {"message": "欢迎使用 TXDYGPLHXT 快照服务", "docs": "/docs"}
+
+
 
 if __name__ == "__main__":
     import uvicorn

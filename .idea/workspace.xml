@@ -4,16 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="数据下载进入了 下一步要弄定时任务了">
-      <change afterPath="$PROJECT_DIR$/app/services/auto_snapshot_scheduler.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/services/auto_snapshot_state.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/utils/trading_schedule.py" afterDir="false" />
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="定时任务弄好了 下一步 舆情和前端">
+      <change afterPath="$PROJECT_DIR$/app/api/sentiment.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/sentiment/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/sentiment/config.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/sentiment/keywords.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/sentiment/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/sentiment/service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/sentiment/sources/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/sentiment/sources/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/sentiment/sources/caifenglian.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/sentiment/sources/cninfo_announcement.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/sentiment/sources/cninfo_rss.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_sentiment.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/snapshot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/snapshot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config/request_conf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/request_conf.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +70,7 @@
     "deletionFromPopupRequiresConfirmation": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/models/util",
+    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/sentiment",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "PyConsoleConfigurable.Python 控制台"
   }
@@ -78,18 +85,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\sentiment" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\sentiment\sources" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\models\util" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\services\clients" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\services\writers" />
-      <recent name="E:\Python Project\TXDYGPLHXT\tests" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\sentiment" />
       <recent name="E:\Python Project\TXDYGPLHXT\app" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\models\system" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\services\utils" />
       <recent name="E:\Python Project\TXDYGPLHXT" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\db" />
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
@@ -259,7 +266,23 @@
       <option name="project" value="LOCAL" />
       <updated>1767505242739</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="定时任务弄好了 下一步 舆情和前端">
+      <option name="closed" value="true" />
+      <created>1767534615911</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1767534615911</updated>
+    </task>
+    <task id="LOCAL-00005" summary="定时任务弄好了 下一步 舆情和前端">
+      <option name="closed" value="true" />
+      <created>1767534634109</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1767534634109</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -277,7 +300,8 @@
     <MESSAGE value="0" />
     <MESSAGE value="数据库连接上了" />
     <MESSAGE value="数据下载进入了 下一步要弄定时任务了" />
-    <option name="LAST_COMMIT_MESSAGE" value="数据下载进入了 下一步要弄定时任务了" />
+    <MESSAGE value="定时任务弄好了 下一步 舆情和前端" />
+    <option name="LAST_COMMIT_MESSAGE" value="定时任务弄好了 下一步 舆情和前端" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
