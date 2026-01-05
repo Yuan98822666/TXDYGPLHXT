@@ -16,16 +16,16 @@ def run_snapshot_cycle():
     try:
         # 1. 采集板块 + 获取点名股 secid
         blocks, secids = collect_board_snapshot(market_time, kz_no)
-        print(f"📊 板块: {len(blocks)} | 点名股候选: {len(secids)}")
+        print(f"📊 板块: {len(blocks)} | 点名股候选: {len(secids)}" + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
         # 2. 并发采集点名股详情
         stocks = collect_named_stocks(secids, market_time, kz_no)
-        print(f"📈 点名股详情: {len(stocks)}")
+        print(f"📈 点名股详情: {len(stocks)}" + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
         # 3. 批量写入
         write_block_and_stock_snapshots(blocks, stocks)
-        print("✅ 快照入库完成")
+        print("✅ 快照入库完成" + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
     except Exception as e:
-        print(f"❌ 快照失败: {e}")
+        print(f"❌ 快照失败: {e}" + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         raise
