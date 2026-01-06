@@ -4,20 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="调整了项目 有些功能没必要删了">
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="调整了项目 有些功能没必要删了  现在还原就剩采集了">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/e2e/tsconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/e2e/vue.spec.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/playwright.config.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/api/backtest.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/router/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/router/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/stores/counter.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/views/BacktestAnalysis.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/views/Home.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/vite.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/vitest.config.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -320,7 +308,23 @@
       <option name="project" value="LOCAL" />
       <updated>1767689421666</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="调整了项目 有些功能没必要删了  现在还原就剩采集了">
+      <option name="closed" value="true" />
+      <created>1767692469015</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1767692469015</updated>
+    </task>
+    <task id="LOCAL-00012" summary="调整了项目 有些功能没必要删了  现在还原就剩采集了">
+      <option name="closed" value="true" />
+      <created>1767692473180</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1767692473180</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -342,7 +346,8 @@
     <MESSAGE value="简单利用股票代码查询负面舆情" />
     <MESSAGE value="差不多调整了前端显示" />
     <MESSAGE value="调整了项目 有些功能没必要删了" />
-    <option name="LAST_COMMIT_MESSAGE" value="调整了项目 有些功能没必要删了" />
+    <MESSAGE value="调整了项目 有些功能没必要删了  现在还原就剩采集了" />
+    <option name="LAST_COMMIT_MESSAGE" value="调整了项目 有些功能没必要删了  现在还原就剩采集了" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">

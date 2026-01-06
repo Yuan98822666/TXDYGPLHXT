@@ -13,11 +13,12 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      // ✅ 代理 /snapshot 开头的请求
-      '/snapshot': {
+      // ✅ 只代理 /snapshot/ 开头的 API 路径
+      '/snapshot/': {
         target: 'http://localhost:8084',
         changeOrigin: true,
         secure: false,
+        // ✅ 关键：只匹配带斜杠的路径
       }
     }
   }
