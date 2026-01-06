@@ -72,7 +72,7 @@ class RawBlockHuoyue(Base):
     # =========================
     money_stock_code  = Column(String(20), nullable=True, comment="板块资金流入最多个股代码")
     money_stock_name = Column(String(50), nullable=True, comment="板块资金流入最多个股名称")
-    money_stock__type = Column(String(20), nullable=True, comment="板块资金流入最多个股所属市场1 沪 0 深")
+    money_stock_type = Column(String(20), nullable=True, comment="板块资金流入最多个股所属市场1 沪 0 深")
 
     lider_stock_code  = Column(String(20), nullable=True, comment="板块领涨个股代码")
     lider_stock_name = Column(String(50), nullable=True, comment="板块领涨个股名称")

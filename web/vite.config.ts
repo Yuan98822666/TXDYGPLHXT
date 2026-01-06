@@ -1,9 +1,15 @@
-// vite.config.js
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+// vite.config.ts
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
   plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)), // ✅ 安全替代 resolve(__dirname, 'src')
+    },
+  },
   server: {
     port: 5173,
     proxy: {
@@ -24,7 +30,13 @@ export default defineConfig({
         target: 'http://localhost:8084',
         changeOrigin: true,
         secure: false,
+      },
+      // 👇 新增：将 /api 开头的请求代理到你的 FastAPI（回测服务）
+      '/api': {
+        target: 'http://localhost:8084', // FastAPI 默认端口
+        changeOrigin: true,
+        secure: false,
       }
     }
   }
-})
+});

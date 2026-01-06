@@ -1,8 +1,6 @@
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from app.collectors.dispatcher import run_snapshot_cycle
-from app.db.session import SessionLocal
 from app.services.auto_snapshot_state import auto_snapshot_state
-from app.utils.trading_schedule import is_today_a_trading_day
 
 router = APIRouter(prefix="/snapshot")
 @router.post("/blockstock", tags=["手动下载数据板块股票数据1次"])
@@ -34,12 +32,4 @@ async def toggle_auto_snapshot():
     return {
         "enabled": new_status,
         "message": f"自动快照已{action}（服务重启后自动恢复开启）"
-    }
-
-@router.get("/debug/today")
-async def debug_today():
-    from datetime import date
-    return {
-        "today": str(date.today()),
-        "is_trading_day": is_today_a_trading_day(SessionLocal())
     }
