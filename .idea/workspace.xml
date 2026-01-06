@@ -4,33 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="差不多调整了前端显示">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="调整了项目 有些功能没必要删了">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/hot_stocks.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/sentiment.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/snapshot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/v1/snapshot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/behavior/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/behavior/mentioned_stock_behavior.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/sentiment/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/v1/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/sentiment/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/sentiment/keywords.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/sentiment/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/sentiment/service.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/sentiment/sources/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/backtest_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/sentiment/sources/base.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/sentiment/sources/caifenglian.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/sentiment/sources/cninfo_announcement.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/sentiment/sources/cninfo_rss.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/web/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/web/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/e2e/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/e2e/vue.spec.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/playwright.config.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/web/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/tsconfig.node.json" beforeDir="false" afterPath="$PROJECT_DIR$/web/tsconfig.node.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/api/backtest.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/router/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/router/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/stores/counter.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/views/BacktestAnalysis.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/views/Home.vue" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/web/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web/vite.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/vitest.config.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +33,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
@@ -316,7 +304,23 @@
       <option name="project" value="LOCAL" />
       <updated>1767615837619</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="调整了项目 有些功能没必要删了">
+      <option name="closed" value="true" />
+      <created>1767689406616</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1767689406616</updated>
+    </task>
+    <task id="LOCAL-00010" summary="调整了项目 有些功能没必要删了">
+      <option name="closed" value="true" />
+      <created>1767689421666</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1767689421666</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -337,7 +341,8 @@
     <MESSAGE value="定时任务弄好了 下一步 舆情和前端" />
     <MESSAGE value="简单利用股票代码查询负面舆情" />
     <MESSAGE value="差不多调整了前端显示" />
-    <option name="LAST_COMMIT_MESSAGE" value="差不多调整了前端显示" />
+    <MESSAGE value="调整了项目 有些功能没必要删了" />
+    <option name="LAST_COMMIT_MESSAGE" value="调整了项目 有些功能没必要删了" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">

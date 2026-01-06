@@ -30,6 +30,8 @@ app.add_middleware(
 )
 
 
+app.include_router(snapshot_router)
+# app.include_router(hot_stocks_router)
 @app.get("/")
 async def root():
     return {"message": "欢迎使用 TXDYGPLHXT 快照服务", "docs": "/docs"}

@@ -1,15 +1,21 @@
 // src/router/index.ts
-import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '@/views/Home.vue'
-import BacktestAnalysis from '@/views/BacktestAnalysis.vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import SnapshotControl from '../views/SnapshotControl.vue'
 
 const routes = [
-  { path: '/', component: Home },
-  { path: '/backtest', component: BacktestAnalysis }
+  {
+    path: '/',
+    redirect: '/snapshot'
+  },
+  {
+    path: '/snapshot',
+    name: 'SnapshotControl',
+    component: SnapshotControl
+  }
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 })
 
