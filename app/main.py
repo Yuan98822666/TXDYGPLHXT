@@ -4,11 +4,11 @@ import asyncio
 import logging
 
 # 导入你的 API
-from app.api.v1.snapshot import router as snapshot_router
+from app.api.collector.snapshot import router as snapshot_router
 
 from fastapi.middleware.cors import CORSMiddleware
 # 新增导入调度器
-from app.services.auto_snapshot_scheduler import auto_snapshot_scheduler_loop
+from app.autotask.auto_snapshot_scheduler import auto_snapshot_scheduler_loop
 
 # 配置日志
 logging.basicConfig(level=logging.INFO)

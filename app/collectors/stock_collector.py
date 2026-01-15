@@ -3,12 +3,40 @@ import yaml
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Set
+from decimal import Decimal, InvalidOperation
 
 from app.utils.http_client import eastmoney_client
 from app.models.raw.raw_stock_huoyue import RawStockHuoyue
 from datetime import datetime
 
+# 辅助函数：安全地进行除法和四舍五入
+def safe_round_div(value, divisor, decimal_places=2):
+    """
+        安全的除法与四舍五入函数。
+        - 如果 value 为 None 或非数字字符串，返回 0.00。
+        - 如果计算出错，返回 0.00。
+        """
+    # 第一步：清洗数据。如果值为空，或者非数字字符，转为 0
+    try:
+        if value is None or value == "" or value == "--":
+            clean_value = 0
+        else:
+            # 尝试将输入转换为浮点数，测试是否为有效数字
+            # 这里使用 float 先做一次校验，兼容字符串数字如 "123.45"
+            clean_value = float(value)
+    except (ValueError, TypeError):
+        # 如果转换失败（例如传入了 "abc"），则强制设为 0
+        clean_value = 0
 
+    # 第二步：进行除法和四舍五入
+    try:
+        # 将清洗后的数字转为 Decimal 进行精确计算
+        result = Decimal(str(clean_value)) / Decimal(str(divisor))
+        # 四舍五入并转为 float 返回
+        return float(round(result, decimal_places))
+    except (InvalidOperation, TypeError, ZeroDivisionError):
+        # 理论上 divisor 是固定的（100/10000），不会除零，这里做双重保险
+        return 0.0
 # ==============================
 # 配置加载（安全路径 + 默认值）
 # ==============================
@@ -70,28 +98,42 @@ def fetch_stock_snapshot(secid: str, market_time: datetime, kz_no: int) -> RawSt
         stock_code=d["f57"],
         stock_name=d["f58"],
         exchange=exchange,
-        stock_zxj=d.get("f43") / 100.0 if d.get("f43") else None,  # 分 → 元
-        stock_zde=d.get("f169"),
-        stock_zdf=d.get("f170"),
-        stock_zjlg=d.get("f47") * 100,  # 手 → 股
-        stock_cjey=int(d.get("f48")) if d.get("f48") else None,
-        stock_hsl=d.get("f168"),
-        stock_zsz=int(d.get("f116")) if d.get("f116") else None,
-        stock_ltsz=int(d.get("f117")) if d.get("f117") else None,
-        stock_syl=d.get("f162"),
-        stock_sjl=d.get("f167"),
-        stock_zl_inflow=int(d.get("f137")) if d.get("f137") else None,
-        stock_cd_inflow=int(d.get("f140")) if d.get("f140") else None,
-        stock_dd_inflow=int(d.get("f143")) if d.get("f143") else None,
-        stock_zd_inflow=int(d.get("f146")) if d.get("f146") else None,
-        stock_xd_inflow=int(d.get("f149")) if d.get("f149") else None,
-        stock_zl_zb=d.get("f193"),
-        stock_cd_zb=d.get("f194"),
-        stock_dd_zb=d.get("f195"),
-        stock_zd_zb=d.get("f196"),
-        stock_xd_zb=d.get("f197"),
+
+        # stock_zxj: 分 -> 元，并保留2位小数
+        # 注意：这里原来的 else None 逻辑有误，我修正了
+        stock_zxj=safe_round_div(d.get("f43"), 100) if d.get("f43") is not None else None,
+
+        # 以下字段均改为除以 100 并保留 2 位小数
+        stock_zde=safe_round_div(d.get("f169"), 100),
+        stock_zdf=safe_round_div(d.get("f170"), 100),
+        stock_hsl=safe_round_div(d.get("f168"), 100),
+        stock_syl=safe_round_div(d.get("f162"), 100),
+        stock_sjl=safe_round_div(d.get("f167"), 100),
+        stock_zl_zb=safe_round_div(d.get("f193"), 100),
+        stock_cd_zb=safe_round_div(d.get("f194"), 100),
+        stock_dd_zb=safe_round_div(d.get("f195"), 100),
+        stock_zd_zb=safe_round_div(d.get("f196"), 100),
+        stock_xd_zb=safe_round_div(d.get("f197"), 100),
+
+        # stock_cjlg: 手 -> 股 (这是乘法，不需要除，也不需要四舍五入，因为股数通常是整数)
+        # 如果 d.get("f47") 可能为 None，需要处理
+        stock_cjlg=d.get("f47") * 100 if d.get("f47") is not None else None,
+
+        # 以下字段：除以 10000 并保留 2 位小数 (原来是 int，现在改为带小数的)
+        stock_cjey=safe_round_div(d.get("f48"), 10000),
+        stock_zsz=safe_round_div(d.get("f116"), 10000),
+        stock_ltsz=safe_round_div(d.get("f117"), 10000),
+
+        # 注意：资金流入这几个字段，如果你的数据库字段类型是 Integer/BigInt，
+        # 改成小数后会报错。如果必须存整数“万”，请用 int(round(x/10000))；
+        # 如果要存小数“万”，请确认数据库字段是 Numeric/Decimal 类型。
+        stock_zl_inflow=safe_round_div(d.get("f137"), 10000),
+        stock_cd_inflow=safe_round_div(d.get("f140"), 10000),
+        stock_dd_inflow=safe_round_div(d.get("f143"), 10000),
+        stock_zd_inflow=safe_round_div(d.get("f146"), 10000),
+        stock_xd_inflow=safe_round_div(d.get("f149"), 10000),
+
         source="eastmoney",
-        # raw_symbol=secid,
     )
 
 

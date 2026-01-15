@@ -4,7 +4,7 @@ import pytz
 from app.utils.kz_generator import next_kz_no
 from app.collectors.board_collector import collect_board_snapshot
 from app.collectors.stock_collector import collect_named_stocks
-from app.writers.snapshot_writer import write_block_and_stock_snapshots
+from app.utils.snapshot_writer import write_block_and_stock_snapshots
 
 def run_snapshot_cycle():
     shanghai_tz = pytz.timezone("Asia/Shanghai")

@@ -53,7 +53,7 @@ class RawStockHuoyue(Base):
     stock_zxj = Column(Float, nullable=True, comment="最新价")
     stock_zde = Column(Float, nullable=True, comment="涨跌额")
     stock_zdf = Column(Float, nullable=True, comment="涨跌幅（百分比）")
-    stock_zjlg = Column(BigInteger, nullable=True, comment="成交量（股）")
+    stock_cjlg = Column(BigInteger, nullable=True, comment="成交量（股）")
     stock_cjey = Column(BigInteger, nullable=True, comment="成交额（元）")
     # =========================
     # 5. 市值与换手率

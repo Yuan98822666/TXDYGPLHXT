@@ -3,7 +3,7 @@ import logging
 from sqlalchemy.orm import sessionmaker
 
 from app.db.session import engine
-from app.services.auto_snapshot_state import auto_snapshot_state
+from app.autotask.auto_snapshot_state import auto_snapshot_state
 from app.utils.trading_schedule import is_today_a_trading_day, is_currently_in_trading_hours
 from app.collectors.dispatcher import run_snapshot_cycle
 

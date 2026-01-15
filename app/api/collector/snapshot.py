@@ -1,6 +1,6 @@
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from app.collectors.dispatcher import run_snapshot_cycle
-from app.services.auto_snapshot_state import auto_snapshot_state
+from app.autotask.auto_snapshot_state import auto_snapshot_state
 
 router = APIRouter(prefix="/snapshot")
 @router.post("/blockstock", tags=["手动下载数据板块股票数据1次"])
