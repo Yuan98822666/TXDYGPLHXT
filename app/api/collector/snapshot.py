@@ -16,8 +16,10 @@ async def trigger_snapshot(background_tasks: BackgroundTasks):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"快照触发失败: {str(e)}")
 
-# === 新增接口 ===
-@router.get("/auto-status", tags=["自动快照控制"])
+
+
+
+@router.get("/auto-status", tags=["自动快照状态"])
 async def get_auto_snapshot_status():
     """获取自动快照当前状态（内存中）"""
     enabled = await auto_snapshot_state.is_enabled()

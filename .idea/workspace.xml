@@ -4,23 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="调整了项目 有些功能没必要删了  现在还原就剩采集了">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="第一次 完善采集功能">
+      <change afterPath="$PROJECT_DIR$/app/utils/common_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/snapshot_no.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/trading_day.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/v1/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/collector/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/v1/snapshot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/collector/snapshot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/collector/snapshot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/collector/snapshot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/autotask/auto_snapshot_scheduler.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/autotask/auto_snapshot_scheduler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/autotask/auto_snapshot_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/autotask/auto_snapshot_state.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/collectors/board_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/board_collector.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/collectors/dispatcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/dispatcher.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/collectors/stock_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/stock_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_limit_up_pool.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_stock_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_stock_huoyue.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/auto_snapshot_scheduler.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/autotask/auto_snapshot_scheduler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/auto_snapshot_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/autotask/auto_snapshot_state.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/writers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/autotask/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/writers/snapshot_writer.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/snapshot_writer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_sentiment.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/config/request_conf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/request_conf.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/http_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/http_client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/kz_generator.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/time_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/trading_schedule.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +39,7 @@
     <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
@@ -52,30 +52,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.block_huoyue_writer.executor": "Run",
-    "Python.collect_test.executor": "Debug",
-    "Python.init_db.executor": "Run",
-    "Python.main (1).executor": "Run",
-    "Python.main.executor": "Debug",
-    "Python.python -m scripts.init_db.executor": "Run",
-    "Python.test_block_snapshot_collector.executor": "Debug",
-    "Python.test_dispatcher_run.executor": "Debug",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "deletionFromPopupRequiresConfirmation": "false",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/tasks",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "PyConsoleConfigurable.Python 控制台"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.block_huoyue_writer.executor&quot;: &quot;Run&quot;,
+    &quot;Python.collect_test.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.init_db.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.python -m scripts.init_db.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_block_snapshot_collector.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.test_dispatcher_run.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;deletionFromPopupRequiresConfirmation&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Python Project/TXDYGPLHXT/app/tasks&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;PyConsoleConfigurable.Python 控制台&quot;
   }
-}]]></component>
+}</component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
       <console-settings module-name="TXDYGPLHXT" is-module-sdk="true">
@@ -93,8 +93,8 @@
       <recent name="E:\Python Project\TXDYGPLHXT\app\sentiment" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\Python Project\TXDYGPLHXT\app" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\utils" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\autotask" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\v1" />
@@ -339,7 +339,15 @@
       <option name="project" value="LOCAL" />
       <updated>1767692473180</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="第一次 完善采集功能">
+      <option name="closed" value="true" />
+      <created>1768468664879</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1768468664879</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -368,16 +376,15 @@
     <MESSAGE value="差不多调整了前端显示" />
     <MESSAGE value="调整了项目 有些功能没必要删了" />
     <MESSAGE value="调整了项目 有些功能没必要删了  现在还原就剩采集了" />
-    <option name="LAST_COMMIT_MESSAGE" value="调整了项目 有些功能没必要删了  现在还原就剩采集了" />
+    <MESSAGE value="第一次 完善采集功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="第一次 完善采集功能" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <default-breakpoints>
-        <breakpoint type="python-exception">
-          <properties notifyOnTerminate="true" exception="BaseException">
-            <option name="notifyOnTerminate" value="true" />
-          </properties>
+        <breakpoint enabled="true" type="jupyter-exception">
+          <properties exception="BaseException" />
         </breakpoint>
       </default-breakpoints>
     </breakpoint-manager>

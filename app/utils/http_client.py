@@ -3,15 +3,11 @@ import requests
 from typing import Optional, Dict, Any
 import time
 import random
-from app.config.settings import settings
 import json
 
 class EastMoneyClient:
     def __init__(self):
         self.session = requests.Session()
-        self.ut = settings.EASTMONEY_UT
-        self.cb_prefix = settings.EASTMONEY_CB_PREFIX
-        self.timeout = settings.EASTMONEY_TIMEOUT
 
         # 设置通用 headers 模拟浏览器
         self.session.headers.update({
@@ -21,20 +17,11 @@ class EastMoneyClient:
             "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
         })
 
-    def _build_cb(self) -> str:
-        """生成动态 callback，模拟 jQuery 时间戳"""
-        timestamp = str(int(time.time() * 1000))
-        return f"{self.cb_prefix}_{timestamp}"
 
     def get_jsonp(self, url: str, params: Dict[str, Any]) -> Dict[str, Any]:
-        params.update({
-            "ut": self.ut,
-            "cb": self._build_cb(),
-            "_": int(time.time() * 1000)
-        })
 
         time.sleep(random.uniform(0.1, 0.3))
-        resp = self.session.get(url, params=params, timeout=self.timeout)
+        resp = self.session.get(url, params=params)
         resp.raise_for_status()
 
         text = resp.text.strip()
