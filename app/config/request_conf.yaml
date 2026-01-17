@@ -1,6 +1,6 @@
 common:
-  ut: "8dec03ba335b81bf4ebdf7b29ec27d15"
-  cb: "jQuery112308004600294897531_1767433763641"
+  ut: "fa5fd1943c7b386f172d6893dbfba10b"
+  cb: "jQuery35107150120836688446_1768623753901"
   timeout: 10
   max_pages: 100
 
@@ -14,7 +14,7 @@ endpoints:
     fltt: "2"
     invt: "2"
     fs: "m:90+t:3"
-    fields: "f1,f2,f3,f4,f8,f12,f13,f14,f20,f62,f66,f69,f72,f75,f78,f81,f84,f87,f104,f105,f106,f124,f128,f136,f140,f141,f152,f184,f204,f205,f206"
+    fields: "f50,f1,f2,f3,f4,f8,f12,f13,f14,f20,f62,f66,f69,f72,f75,f78,f81,f84,f87,f104,f105,f106,f124,f128,f136,f140,f141,f152,f184,f204,f205,f206"
 
   board_industry:
     url: "https://push2.eastmoney.com/api/qt/clist/get"
@@ -25,7 +25,25 @@ endpoints:
     fltt: "2"
     invt: "2"
     fs: "m:90+t:2"
-    fields: "f1,f2,f3,f4,f8,f12,f13,f14,f20,f62,f66,f69,f72,f75,f78,f81,f84,f87,f104,f105,f106,f124,f128,f136,f140,f141,f152,f184,f204,f205,f206"
+    fields: "f50,f1,f2,f3,f4,f8,f12,f13,f14,f20,f62,f66,f69,f72,f75,f78,f81,f84,f87,f104,f105,f106,f124,f128,f136,f140,f141,f152,f184,f204,f205,f206"
+
+
+  board_info:
+    url: "https://push2.eastmoney.com/api/qt/stock/get"
+    invt: "2"
+    fltt: "2"
+    fields: "f50"
+    wbp2u: "3951356261349626|0|1|0|web"
+    dect: "1"
+    _: "1768623753902"
+
+
+
+
+
+
+
+
 
   stock_snapshot:
     url: "https://push2.eastmoney.com/api/qt/stock/get"

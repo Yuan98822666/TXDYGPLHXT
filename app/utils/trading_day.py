@@ -20,7 +20,7 @@
 from datetime import date, datetime, timedelta
 from typing import Optional
 from sqlalchemy.orm import Session
-from app.models.system.market_state_date import MarketStateDate
+from app.models.system.sys_market_state_date import MarketStateDate
 
 
 class TradingDayUtils:

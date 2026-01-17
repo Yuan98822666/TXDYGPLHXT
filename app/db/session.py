@@ -48,7 +48,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.config.settings import settings
-
+from contextlib import contextmanager
 
 # 创建数据库引擎
 # 配置说明：
@@ -64,3 +64,41 @@ engine = create_engine(settings.database_url, echo=settings.DB_ECHO, pool_size=s
 # - autoflush=False: 禁用自动刷新，需要显式 flush()
 # 这种配置提供更精细的事务控制
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False, )
+
+
+def get_db():
+    """
+    FastAPI 依赖项函数：用于路由中注入数据库会话。
+
+    使用方式:
+        @app.get("/xxx")
+        def read_data(db: Session = Depends(get_db)):
+            ...
+
+    注意: 此函数返回一个生成器，FastAPI 自动处理 yield 前后逻辑。
+    """
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@contextmanager
+def get_db_context():
+    """
+    上下文管理器：用于非 FastAPI 环境（如调度器、脚本）中安全获取数据库会话。
+
+    使用方式:
+        with get_db_context() as db:
+            db.query(...)
+
+    特点:
+        - 自动 commit/rollback 由调用方控制（此处仅提供会话）
+        - 自动关闭连接，防止连接泄漏
+    """
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

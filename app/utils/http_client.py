@@ -14,7 +14,9 @@
 """
 
 import requests
-from typing import Optional, Dict, Any
+from typing import  Dict, Any
+from requests.adapters import HTTPAdapter
+
 import time
 import random
 import json
@@ -33,6 +35,16 @@ class EastMoneyClient:
             "Accept": "*/*",
             "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
         })
+        # === 2. 扩大连接池容量（关键优化！）===
+        # pool_connections: 缓存多少个不同 host 的连接池（我们主要用 push2.eastmoney.com）
+        # pool_maxsize: 每个 host 最多允许的并发连接数（必须 ≥ ThreadPoolExecutor 的 max_workers）
+        adapter = HTTPAdapter(
+            pool_connections=20,
+            pool_maxsize=30,  # 支持最多 30 个并发连接
+            max_retries=0  # 不自动重试（由上层逻辑控制更合适）
+        )
+        self.session.mount("http://", adapter)
+        self.session.mount("https://", adapter)
 
     def get_jsonp(self, url: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """

@@ -44,12 +44,14 @@ class RawBlockHuoyue(Base):
     block_zdf = Column(Float, nullable=True, comment="板块涨跌幅（%）")
     block_zde = Column(Float, nullable=True, comment="板块涨跌额")
     block_hsl = Column(Float, nullable=True, comment="板块换手率（%）")
+    block_lb = Column(Float, nullable=True, comment="量比")
     # =========================
     # 4. 板块结构
     # =========================
     up_count = Column(Integer, nullable=True, comment="上涨家数")
     pi_count = Column(Integer, nullable=True, comment="平盘家数")
     dw_count = Column(Integer, nullable=True, comment="下跌家数")
+    stock_count = Column(Integer, nullable=True, comment="板块内股票家数")
 
 
     # =========================

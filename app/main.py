@@ -5,6 +5,7 @@ import logging
 
 # 导入你的 API
 from app.api.collector.snapshot import router as snapshot_router
+from app.api.collector.events import router as events_router
 
 from fastapi.middleware.cors import CORSMiddleware
 # 新增导入调度器
@@ -31,10 +32,12 @@ app.add_middleware(
 
 
 app.include_router(snapshot_router)
+app.include_router(events_router)
+
 # app.include_router(hot_stocks_router)
 @app.get("/")
 async def root():
-    return {"message": "欢迎使用 TXDYGPLHXT 快照服务", "docs": "/docs"}
+    return {"message": "欢迎来到  天下第一A股票股量化分析决策系统", "docs": "/docs"}
 
 
 if __name__ == "__main__":

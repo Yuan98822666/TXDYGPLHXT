@@ -4,23 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="终于完善了采集功能 他娘的">
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="终于完善了采集功能 补上了注释 再次开始四项行为过滤">
+      <change afterPath="$PROJECT_DIR$/app/api/collector/events.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/decision/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/decision/decision_confidence_score_daily.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/event/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/event/event_block_start.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/event/event_capital_persistence.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/event/event_stock_consensus.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/event/event_stock_dominance.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/decision/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/decision/decision_confidence_score_service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/event/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/event/block_start_service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/event/capital_persistence_service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/event/stock_consensus_service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/event/stock_dominance_service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/utils/continuous_segment.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/collector/snapshot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/collector/snapshot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/autotask/auto_snapshot_scheduler.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/autotask/auto_snapshot_scheduler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/autotask/auto_snapshot_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/autotask/auto_snapshot_state.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/collectors/board_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/board_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/dispatcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/dispatcher.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/stock_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/stock_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/db/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/db/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/config/request_conf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/request_conf.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/db/session.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/db/session.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/mentioned_stock_service.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/common_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/common_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/system/market_state_date.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/system/sys_market_state_date.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/utils/http_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/http_client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/snapshot_no.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/snapshot_no.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/snapshot_writer.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/snapshot_writer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/utils/trading_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/trading_day.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/init_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/init_db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +50,7 @@
     <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
@@ -72,7 +83,7 @@
     "deletionFromPopupRequiresConfirmation": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/tasks",
+    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/services/decision",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "PyConsoleConfigurable.Python 控制台"
   }
@@ -87,18 +98,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\services\decision" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\models\decision" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\models\event" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\services\event" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\tasks" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\api" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\schemas" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\behavior" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\sentiment" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\api\collector" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\utils" />
       <recent name="E:\Python Project\TXDYGPLHXT\app" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\autotask" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\api\v1" />
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
@@ -356,7 +367,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768544393068</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="终于完善了采集功能 补上了注释 再次开始四项行为过滤">
+      <option name="closed" value="true" />
+      <created>1768547712419</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1768547712419</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -387,7 +406,8 @@
     <MESSAGE value="调整了项目 有些功能没必要删了  现在还原就剩采集了" />
     <MESSAGE value="第一次 完善采集功能" />
     <MESSAGE value="终于完善了采集功能 他娘的" />
-    <option name="LAST_COMMIT_MESSAGE" value="终于完善了采集功能 他娘的" />
+    <MESSAGE value="终于完善了采集功能 补上了注释 再次开始四项行为过滤" />
+    <option name="LAST_COMMIT_MESSAGE" value="终于完善了采集功能 补上了注释 再次开始四项行为过滤" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
