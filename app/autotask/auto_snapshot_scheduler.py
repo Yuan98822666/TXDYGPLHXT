@@ -36,7 +36,6 @@ from app.db.session import engine
 from app.autotask.auto_snapshot_state import auto_snapshot_state
 from app.collectors.dispatcher import run_snapshot_cycle
 from app.utils.trading_day import TradingDayUtils
-from app.config.settings import settings
 
 logger = logging.getLogger(__name__)
 

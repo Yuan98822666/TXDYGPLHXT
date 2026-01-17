@@ -102,6 +102,7 @@ class Settings(BaseSettings):
     # ==============================
     APP_ENV: str = Field(default="dev", description="应用环境 (dev/test/prod)")
     APP_NAME: str = Field(default="TXDYGPLHXT", description="应用名称")
+    APP_PORT: int = Field(default="8084", description="应用端口")
 
     # ==============================
     # PostgreSQL 数据库配置

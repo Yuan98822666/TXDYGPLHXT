@@ -39,12 +39,7 @@ def is_trading_day(check_date: date) -> bool:
     return check_date.weekday() < 5  # Monday=0, Sunday=6
 
 
-def standard_response(
-    *,
-    success: bool = True,
-    message: str = "",
-    data: Optional[Dict[str, Any]] = None,
-) -> Dict[str, Any]:
+def standard_response(*, success: bool = True, message: str = "", data: Optional[Dict[str, Any]] = None, ) -> Dict[str, Any]:
     """
     统一 API 成功响应格式（按业务需求定制）。
 
@@ -67,7 +62,7 @@ def standard_response(
 
 
 # ====== 路由注册 ======
-router = APIRouter(prefix="/events", tags=["Events"])
+router = APIRouter()
 
 
 # ==============================

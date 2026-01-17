@@ -8,7 +8,7 @@
 from app.models.raw import raw_block_huoyue,raw_stock_huoyue
 from app.models.event import event_stock_consensus,event_capital_persistence,event_stock_dominance,event_block_start
 from app.models.system import sys_market_state_date
-from app.models.decision import decision_confidence_score_daily
+from app.models.decision import decision_confidence_score_daily,decision_stock_daily,decision_open_validation
 
 from app.db.session import engine
 from app.db.base import Base

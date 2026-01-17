@@ -23,10 +23,10 @@ from app.autotask.auto_snapshot_state import auto_snapshot_state
 from datetime import datetime
 
 # 创建 API 路由器，所有路由以 "/snapshot" 为前缀
-router = APIRouter(prefix="/snapshot")
+router = APIRouter()
 
 
-@router.post("/blockstock", tags=["手动下载数据板块股票数据1次"])
+@router.post("/blockstock", summary=["手动下载数据板块股票数据1次"])
 async def trigger_snapshot(background_tasks: BackgroundTasks):
     """
     手动触发一次板块快照采集与入库
@@ -68,7 +68,7 @@ async def trigger_snapshot(background_tasks: BackgroundTasks):
         raise HTTPException(status_code=500, detail=f"快照触发失败: {str(e)}")
 
 
-@router.get("/auto-status", tags=["自动快照状态"])
+@router.get("/auto-status", summary=["自动快照状态"])
 async def get_auto_snapshot_status():
     """
     获取自动快照当前状态（内存中）
@@ -100,7 +100,7 @@ async def get_auto_snapshot_status():
     return {"enabled": enabled}
 
 
-@router.post("/auto-toggle", tags=["自动快照控制"])
+@router.post("/auto-toggle", summary=["自动快照控制"])
 async def toggle_auto_snapshot():
     """
     切换自动快照开关（仅内存，重启恢复默认开启）

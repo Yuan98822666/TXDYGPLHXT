@@ -4,33 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="终于完善了采集功能 补上了注释 再次开始四项行为过滤">
-      <change afterPath="$PROJECT_DIR$/app/api/collector/events.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/models/decision/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/models/decision/decision_confidence_score_daily.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/models/event/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/models/event/event_block_start.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/models/event/event_capital_persistence.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/models/event/event_stock_consensus.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/models/event/event_stock_dominance.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/services/decision/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/services/decision/decision_confidence_score_service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/services/event/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/services/event/block_start_service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/services/event/capital_persistence_service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/services/event/stock_consensus_service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/services/event/stock_dominance_service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/utils/continuous_segment.py" afterDir="false" />
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="四项行为初步通过，逻辑待检查">
+      <change afterPath="$PROJECT_DIR$/app/api/decision/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/decision/decision_daily.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/event/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/autotask/auto_decision_scheduler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/decision/decision_open_validation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/decision/decision_stock_daily.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/decision/decision_open_validation_service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/services/decision/decision_stock_daily_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/collector/events.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/event/events.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/collector/snapshot.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/collector/snapshot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/board_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/board_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config/request_conf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/request_conf.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/db/session.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/db/session.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/autotask/auto_snapshot_scheduler.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/autotask/auto_snapshot_scheduler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/system/market_state_date.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/system/sys_market_state_date.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/http_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/http_client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/trading_day.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/trading_day.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/init_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/init_db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -83,7 +71,7 @@
     "deletionFromPopupRequiresConfirmation": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/services/decision",
+    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/api/decision",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "PyConsoleConfigurable.Python 控制台"
   }
@@ -98,87 +86,21 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\api\decision" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\services\decision" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\models\decision" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\models\event" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\services\event" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\tasks" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\api\event" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\collector" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\utils" />
       <recent name="E:\Python Project\TXDYGPLHXT\app" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\autotask" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\api" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
-    <configuration name="block_huoyue_writer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="TXDYGPLHXT" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app/services/writers" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app/services/writers/block_huoyue_writer.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="board_collector" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="TXDYGPLHXT" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app/collectors" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app/collectors/board_collector.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="collect_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="TXDYGPLHXT" />
-      <option name="ENV_FILES" value="$PROJECT_DIR$/.env" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="E:\Python Project\TXDYGPLHXT" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/collect_test.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TXDYGPLHXT" />
       <option name="ENV_FILES" value="$PROJECT_DIR$/.env" />
@@ -201,42 +123,9 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="python -m scripts.init_db" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="TXDYGPLHXT" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/docs" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="scripts.init_db" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="true" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="Python.board_collector" />
-      <item itemvalue="Python.block_huoyue_writer" />
-      <item itemvalue="Python.collect_test" />
-      <item itemvalue="Python.python -m scripts.init_db" />
-      <item itemvalue="Python.main" />
-    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.board_collector" />
-        <item itemvalue="Python.collect_test" />
-        <item itemvalue="Python.block_huoyue_writer" />
-        <item itemvalue="Python.python -m scripts.init_db" />
       </list>
     </recent_temporary>
   </component>
@@ -375,7 +264,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768547712419</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="四项行为初步通过，逻辑待检查">
+      <option name="closed" value="true" />
+      <created>1768632863826</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1768632863826</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -407,7 +304,8 @@
     <MESSAGE value="第一次 完善采集功能" />
     <MESSAGE value="终于完善了采集功能 他娘的" />
     <MESSAGE value="终于完善了采集功能 补上了注释 再次开始四项行为过滤" />
-    <option name="LAST_COMMIT_MESSAGE" value="终于完善了采集功能 补上了注释 再次开始四项行为过滤" />
+    <MESSAGE value="四项行为初步通过，逻辑待检查" />
+    <option name="LAST_COMMIT_MESSAGE" value="四项行为初步通过，逻辑待检查" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
