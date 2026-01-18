@@ -1,160 +1,173 @@
 """
-资本持续性事件服务
+资本持续性事件服务（CapitalPersistenceService）
 
-📌 文件说明：
-本服务识别“真金白银持续流入”的股票。
-- 输入：raw_stock_huoyue 分钟级个股资金流
-- 输出：event_capital_persistence 事件表记录
-- 核心逻辑：连续60分钟以上主力净流入，且满足强度与稳定性阈值
+功能：
+- 识别个股主力资金连续净流入的行为
+- 支持两种模式：
+    1. 盘中增量生成（is_final=False）→ 可多次调用，用于实时监控
+    2. 盘尾冻结生成（is_final=True）→ 每日一次，用于最终决策
 
-🎯 使用场景：
-- 盘中（is_final=False）：观察资金动向
-- 收盘（is_final=True）：作为决策生死门槛
+关键设计：
+- 同一股票在同一交易日，可存在两个事件：
+    • 一个 is_final=False（盘中最新状态）
+    • 一个 is_final=True（盘尾最终状态）
+- 删除旧事件时，只删除同类型（同 is_final 值）的记录，确保互不干扰
+- 幂等性：同一时间段内，相同事件不会重复插入（由数据库唯一索引保证）
 
-✅ 修复说明（2026-01-17）：
-- 修正 seg 字段访问错误：原代码误用 'stock_code_list'，实际应为 'stock_code'
-- 从原始 df 获取 stock_name（因非数值列未被聚合）
-- 添加防御性检查，避免 KeyError
+作者：基于系统 v1.0 设计规范重构
 """
 
 from datetime import date, datetime
-from typing import List
-import pandas as pd
+from typing import List, Optional
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
 
-from app.models.raw.raw_stock_huoyue import RawStockHuoyue
 from app.models.event.event_capital_persistence import EventCapitalPersistence
-from app.utils.continuous_segment import extract_continuous_segments
+from app.models.raw.raw_stock_huoyue import RawStockHuoyue
+from app.utils.continuous_segment import find_longest_continuous_positive_segment
 
 
 class CapitalPersistenceService:
+    """
+    资金持续性事件生成器
+
+    判定逻辑：
+    - 主力净流入 > 0
+    - 连续 N 分钟未中断（N >= 30 才生成事件）
+    - 盘尾阶段会检查尾盘30分钟是否撤退（若撤退则不生成最终事件）
+    """
+
     @staticmethod
-    def run_for_date(db: Session, trade_date: date, is_final: bool = False) -> List[EventCapitalPersistence]:
+    def generate_events_for_date(
+        db: Session,
+        trade_date: date,
+        is_final: bool = False,
+        from_time: Optional[str] = None,
+        to_time: Optional[str] = None
+    ) -> List[EventCapitalPersistence]:
         """
-        为指定交易日生成资本持续性事件。
+        为指定交易日生成资本持续性事件
 
-        ▶ 触发标准（第一版写死）：
-        - 持续时间 ≥ 60 分钟
-        - 正流入分钟占比 ≥ 70%
-        - 主力净流入累计 ≥ 300 万
-        - 区间价格回撤 ≤ 1%（即涨幅 ≥ -1%）
+        参数：
+        :param db: 数据库会话
+        :param trade_date: 交易日期
+        :param is_final: 是否为盘尾冻结事件（True=最终态，False=盘中临时）
+        :param from_time: （仅盘中使用）开始时间，格式 "HH:MM"
+        :param to_time:   （仅盘中使用）结束时间，格式 "HH:MM"
 
-        ▶ 参数说明：
-        db (Session): SQLAlchemy 数据库会话
-        trade_date (date): 目标交易日
-        is_final (bool): 是否为收盘冻结事件（默认 False）
-
-        ▶ 返回：
-        List[EventCapitalPersistence]: 符合条件的持续性事件列表（已持久化）
+        返回：
+        :return: 新生成的事件列表
         """
-        # Step 1: 获取当日原始分钟数据
-        raw_data = db.query(
-            RawStockHuoyue.stock_code,
-            RawStockHuoyue.stock_name,
-            RawStockHuoyue.market_time,
-            RawStockHuoyue.stock_zl_inflow,
-            RawStockHuoyue.stock_zl_zb,
-            RawStockHuoyue.stock_zxj
-        ).filter(
-            RawStockHuoyue.market_time >= trade_date,
-            RawStockHuoyue.market_time < trade_date.replace(day=trade_date.day + 1)
-        ).all()
-
-        if not raw_data:
-            return []
-
-        # 转为 DataFrame，并处理空值
-        df = pd.DataFrame([
-            {
-                'stock_code': r.stock_code,
-                'stock_name': r.stock_name,
-                'market_time': r.market_time,
-                'stock_zl_inflow': r.stock_zl_inflow or 0,
-                'stock_zl_zb': r.stock_zl_zb or 0.0,
-                'stock_zxj': r.stock_zxj or 0.0,
-            }
-            for r in raw_data
-        ])
-
-        if df.empty:
-            return []
-
-        # Step 2: 标记正流入分钟（主力未流出）
-        df['is_positive'] = df['stock_zl_inflow'] > 0
-
-        # Step 3: 提取连续“主力未流出”时间段（核心！）
-        # 注意：group_by='stock_code'，所以每个 segment 只属于一只股票
-        segments = extract_continuous_segments(
-            df=df,
-            group_by='stock_code',
-            time_col='market_time',
-            condition_col='is_positive',
-            min_duration=60  # ≥60分钟
+        # === 第一步：清理同类型旧事件 ===
+        # 关键改动：只删除相同 is_final 值的记录
+        # 例如：当 is_final=False 时，只删掉之前的临时事件，保留最终事件
+        delete_condition = and_(
+            EventCapitalPersistence.trade_date == trade_date,
+            EventCapitalPersistence.is_final == is_final  # 👈 核心！按类型隔离
         )
+        deleted_count = db.query(EventCapitalPersistence).filter(delete_condition).delete()
+        print(f"🧹 清理 {trade_date} 的 {'最终' if is_final else '临时'}资本持续事件，共 {deleted_count} 条")
 
-        # Step 4: 遍历每个连续段，计算指标并过滤
-        events = []
-        generated_at = datetime.now()
+        # === 第二步：确定查询时间范围 ===
+        if is_final:
+            # 盘尾冻结：使用全天数据（9:30-15:00）
+            start_time_str = "09:30"
+            end_time_str = "15:00"
+        else:
+            # 盘中增量：使用传入的时间窗口
+            if not from_time or not to_time:
+                raise ValueError("盘中增量模式必须提供 from_time 和 to_time")
+            start_time_str = from_time
+            end_time_str = to_time
 
-        for seg in segments:
-            try:
-                # ✅ 修复点 1: 直接使用 'stock_code'（不再是 'stock_code_list'）
-                stock_code = seg['stock_code']
+        # === 第三步：从原始数据中提取资金流序列 ===
+        raw_records = db.query(RawStockHuoyue).filter(
+            RawStockHuoyue.trade_date == trade_date,
+            RawStockHuoyue.time >= start_time_str,
+            RawStockHuoyue.time <= end_time_str,
+            RawStockHuoyue.zl_net_inflow.isnot(None)
+        ).order_by(RawStockHuoyue.time).all()
 
-                # ✅ 修复点 2: 从原始 df 获取 stock_name（因非数值列未被聚合）
-                # 取该股票任意一行即可（名称不变）
-                stock_sample = df[df['stock_code'] == stock_code].iloc[0]
-                stock_name = stock_sample['stock_name']
+        if not raw_records:
+            print(f"⚠️  {trade_date} {start_time_str}-{end_time_str} 无原始资金数据")
+            return []
 
-                duration = seg['duration']
-                zl_sum = seg.get('stock_zl_inflow_sum', 0)
+        # 按股票分组
+        stock_groups = {}
+        for record in raw_records:
+            stock_groups.setdefault(record.stock_code, []).append(record)
 
-                # 重新计算正流入占比（更准确）
-                mask = (
-                    (df['stock_code'] == stock_code) &
-                    (df['market_time'] >= seg['start_time']) &
-                    (df['market_time'] <= seg['end_time'])
-                )
-                pos_ratio = df.loc[mask, 'is_positive'].mean() if not df.loc[mask].empty else 0.0
+        new_events = []
 
-                min_price = seg.get('stock_zxj_min', 0)
-                max_price = seg.get('stock_zxj_max', 0)
-                price_change = (max_price / min_price - 1) if min_price > 0 else 0
-                avg_zl_zb = seg.get('stock_zl_zb_mean', 0)
+        # === 第四步：对每只股票计算最长连续正向资金流 ===
+        for stock_code, records in stock_groups.items():
+            # 提取 (time, zl_net_inflow) 序列
+            time_series = [(r.time, r.zl_net_inflow) for r in records]
 
-                # 应用阈值过滤
-                if pos_ratio >= 0.7 and zl_sum >= 3_000_000 and price_change >= -0.01:
-                    reason = (
-                        f"连续{duration}分钟主力净流入，累计 "
-                        f"{round(zl_sum / 10000, 1)} 万元，"
-                        f"正流入占比 {round(pos_ratio * 100, 1)}%"
-                    )
-                    event = EventCapitalPersistence(
-                        trade_date=trade_date,
-                        stock_code=stock_code,
-                        stock_name=stock_name,
-                        start_time=seg['start_time'],
-                        end_time=seg['end_time'],
-                        duration_minutes=duration,
-                        zl_inflow_sum=zl_sum,
-                        positive_minute_ratio=pos_ratio,
-                        price_change_pct=price_change,
-                        avg_zl_zb=avg_zl_zb,
-                        reason=reason,
-                        is_final=is_final,
-                        generated_at=generated_at
-                    )
-                    events.append(event)
+            # 使用工具函数找出最长连续 >0 的时间段
+            segment = find_longest_continuous_positive_segment(time_series)
 
-            except (KeyError, IndexError) as e:
-                # 防御性处理：跳过异常 segment
-                print(f"警告：处理 segment 时出错，跳过。错误: {e}, seg 内容: {seg}")
+            if not segment:
                 continue
 
-        # Step 5: 幂等写入
-        db.query(EventCapitalPersistence).filter(
-            EventCapitalPersistence.trade_date == trade_date
-        ).delete()
-        db.add_all(events)
+            duration_minutes = segment["duration_minutes"]
+            start_time = segment["start_time"]
+            end_time = segment["end_time"]
+
+            # === 第五步：应用业务规则 ===
+            # 规则1：只有持续 >=30 分钟才生成事件（盘中）
+            # 规则2：如果是盘尾最终事件，还需检查尾盘30分钟是否撤退
+            should_generate = False
+            reason = ""
+
+            if is_final:
+                # 盘尾模式：检查尾盘30分钟（14:30-15:00）是否有资金撤退
+                tail_withdrawn = CapitalPersistenceService._is_tail_capital_withdrawn(
+                    db, stock_code, trade_date
+                )
+                if duration_minutes >= 30 and not tail_withdrawn:
+                    should_generate = True
+                    reason = f"资金持续{duration_minutes}分钟，尾盘未撤退"
+                else:
+                    reason = f"持续{duration_minutes}分钟，但尾盘撤退={tail_withdrawn}"
+            else:
+                # 盘中模式：只要 >=30 分钟就生成
+                if duration_minutes >= 30:
+                    should_generate = True
+                    reason = f"盘中资金持续{duration_minutes}分钟"
+
+            if should_generate:
+                event = EventCapitalPersistence(
+                    trade_date=trade_date,
+                    stock_code=stock_code,
+                    start_time=start_time,
+                    end_time=end_time,
+                    duration_minutes=duration_minutes,
+                    is_final=is_final,  # 👈 明确标记类型
+                    generated_at=datetime.now(),
+                    remarks=reason
+                )
+                db.add(event)
+                new_events.append(event)
+                print(f"✅ 生成{'最终' if is_final else '临时'}事件: {stock_code}, 持续{duration_minutes}分钟")
+
         db.commit()
-        return events
+        print(f"📈 共生成 {len(new_events)} 条资本持续事件（{'最终' if is_final else '临时'}）")
+        return new_events
+
+    @staticmethod
+    def _is_tail_capital_withdrawn(db: Session, stock_code: str, trade_date: date) -> bool:
+        """
+        检查尾盘30分钟（14:30-15:00）是否出现主力净流入 <= 0
+
+        返回 True 表示有撤退，应否决最终事件
+        """
+        tail_records = db.query(RawStockHuoyue).filter(
+            RawStockHuoyue.trade_date == trade_date,
+            RawStockHuoyue.stock_code == stock_code,
+            RawStockHuoyue.time >= "14:30",
+            RawStockHuoyue.time <= "15:00",
+            RawStockHuoyue.zl_net_inflow <= 0
+        ).first()
+
+        return tail_records is not None

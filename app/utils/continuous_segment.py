@@ -1,5 +1,6 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple, Optional
 import pandas as pd
+import datetime
 
 
 def extract_continuous_segments(
@@ -72,3 +73,112 @@ def extract_continuous_segments(
     result = grouped[grouped['duration'] >= min_duration].to_dict('records')
 
     return result
+
+
+def find_longest_continuous_positive_segment(
+        time_value_pairs: List[Tuple[str, float]]
+) -> Optional[Dict[str, any]]:
+    """
+    【轻量型】从 (时间, 数值) 序列中找出“数值 > 0”的最长连续时间段。
+
+    专为「资金持续性」「控盘持续性」等事件设计，特点：
+    - 不依赖 pandas，纯 Python 实现，启动快、内存低
+    - 输入为简单元组列表，易于从 SQLAlchemy 查询结果直接构造
+    - 自动计算持续分钟数（基于时间差）
+
+    Args:
+        time_value_pairs: 形如 [("09:35", 120.5), ("09:36", 80.0), ...]
+                          时间格式必须为 "HH:MM"，数值为 float/int
+
+    Returns:
+        None（无连续正向段） 或 字典：
+        {
+            "start_time": "09:35",
+            "end_time": "10:20",
+            "duration_minutes": 45,
+            "total_value": 5000.0  # 正向期间总和（可选）
+        }
+
+    示例：
+        >>> data = [("09:30", 100), ("09:31", 200), ("09:32", -50), ("09:33", 150)]
+        >>> find_longest_continuous_positive_segment(data)
+        {'start_time': '09:30', 'end_time': '09:31', 'duration_minutes': 1, 'total_value': 300}
+    """
+    if not time_value_pairs:
+        return None
+
+    # 按时间排序（防御性编程）
+    sorted_pairs = sorted(time_value_pairs, key=lambda x: x[0])
+
+    longest_segment = None
+    current_start = None
+    current_sum = 0.0
+
+    for i, (time_str, value) in enumerate(sorted_pairs):
+        is_positive = value > 0
+
+        if is_positive:
+            # 开启或延续一个正向段
+            if current_start is None:
+                current_start = time_str
+                current_sum = value
+            else:
+                current_sum += value
+        else:
+            # 遇到非正向值，结束当前段
+            if current_start is not None:
+                # 计算当前段的结束时间和持续分钟
+                current_end = sorted_pairs[i - 1][0]  # 上一个时间点
+                duration = _calculate_duration_minutes(current_start, current_end)
+
+                candidate = {
+                    "start_time": current_start,
+                    "end_time": current_end,
+                    "duration_minutes": duration,
+                    "total_value": current_sum
+                }
+
+                # 更新最长段
+                if longest_segment is None or duration > longest_segment["duration_minutes"]:
+                    longest_segment = candidate
+
+                # 重置
+                current_start = None
+                current_sum = 0.0
+
+    # 处理最后一段（如果以正向结束）
+    if current_start is not None:
+        current_end = sorted_pairs[-1][0]
+        duration = _calculate_duration_minutes(current_start, current_end)
+        candidate = {
+            "start_time": current_start,
+            "end_time": current_end,
+            "duration_minutes": duration,
+            "total_value": current_sum
+        }
+        if longest_segment is None or duration > longest_segment["duration_minutes"]:
+            longest_segment = candidate
+
+    return longest_segment
+
+
+def _calculate_duration_minutes(start_time: str, end_time: str) -> int:
+    """
+    计算两个 "HH:MM" 时间字符串之间的分钟差（取整）
+
+    Args:
+        start_time: 起始时间，如 "09:30"
+        end_time: 结束时间，如 "10:15"
+
+    Returns:
+        分钟数（int），最小为 0
+    """
+    try:
+        fmt = "%H:%M"
+        start_dt = datetime.datetime.strptime(start_time, fmt)
+        end_dt = datetime.datetime.strptime(end_time, fmt)
+        diff_seconds = (end_dt - start_dt).total_seconds()
+        return max(0, int(diff_seconds // 60))
+    except Exception:
+        # 防御性处理：解析失败则返回 0
+        return 0

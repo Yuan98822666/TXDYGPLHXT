@@ -26,7 +26,6 @@ from app.services.event.block_start_service import BlockStartService
 from app.services.event.capital_persistence_service import CapitalPersistenceService
 from app.services.event.stock_dominance_service import StockDominanceService
 from app.services.event.stock_consensus_service import StockConsensusService
-from app.services.decision.decision_confidence_score_service import DecisionConfidenceScoreService
 
 
 # ====== 辅助函数 ======
@@ -172,36 +171,36 @@ def generate_stock_consensus(
     )
 
 
-@router.post("/generate/decision-score", summary="生成决策信心分（仅收盘）")
-def generate_decision_score(
-    trade_date: date = Query(..., description="目标交易日，格式：YYYY-MM-DD"),
-    db: Session = Depends(get_db)
-):
-    """
-    ### 功能说明
-    **仅基于 is_final=True 的事件**，生成当日最终决策信心分。
-
-    ### 重要规则
-    - 此接口**不接受 is_final 参数**
-    - 内部自动查询 `is_final=True` 的四类事件
-    - 若当日无收盘事件，将返回空结果
-
-    ### 使用时机
-    - 每日 15:10 后手动触发
-    - 补历史决策数据
-
-    ### ⚠️ 注意
-    请确保已先运行过 `/generate/closing` 或四类 `is_final=True` 事件生成。
-    """
-    if not is_trading_day(trade_date):
-        raise HTTPException(status_code=400, detail="非交易日，无法生成决策")
-
-    decisions = DecisionConfidenceScoreService.run_for_date(db, trade_date)
-    return standard_response(
-        data={
-            "decision_confidence_score": f"{len(decisions)}条"
-        }
-    )
+# @router.post("/generate/decision-score", summary="生成决策信心分（仅收盘）")
+# def generate_decision_score(
+#     trade_date: date = Query(..., description="目标交易日，格式：YYYY-MM-DD"),
+#     db: Session = Depends(get_db)
+# ):
+#     """
+#     ### 功能说明
+#     **仅基于 is_final=True 的事件**，生成当日最终决策信心分。
+#
+#     ### 重要规则
+#     - 此接口**不接受 is_final 参数**
+#     - 内部自动查询 `is_final=True` 的四类事件
+#     - 若当日无收盘事件，将返回空结果
+#
+#     ### 使用时机
+#     - 每日 15:10 后手动触发
+#     - 补历史决策数据
+#
+#     ### ⚠️ 注意
+#     请确保已先运行过 `/generate/closing` 或四类 `is_final=True` 事件生成。
+#     """
+#     if not is_trading_day(trade_date):
+#         raise HTTPException(status_code=400, detail="非交易日，无法生成决策")
+#
+#     decisions = DecisionConfidenceScoreService.run_for_date(db, trade_date)
+#     return standard_response(
+#         data={
+#             "decision_confidence_score": f"{len(decisions)}条"
+#         }
+#     )
 
 
 # ==============================
@@ -259,12 +258,12 @@ def generate_closing_routine(
     db: Session = Depends(get_db)
 ):
     """
-    ### 功能说明
+   ### 功能说明
     **收盘模式**：执行完整日终流程，生成最终决策依据。
 
     ### 自动生成内容
     1. 四类 `is_final=True` 的收盘冻结事件
-    2. 决策信心分（基于上述事件）
+    2. 盘尾决策（ALLOW/OBSERVE/FORBIDDEN）
 
     ### 使用场景
     - 每日 15:10 自动调度
@@ -272,8 +271,6 @@ def generate_closing_routine(
 
     ### 业务意义
     - 生成的事件和决策将作为次日交易的唯一合法输入
-    - 确保“过程事实”与“决策事实”分离
-
     ### 示例
     ```bash
     curl -X POST "http://localhost:8000/events/generate/closing?trade_date=2026-01-16"
@@ -289,7 +286,9 @@ def generate_closing_routine(
     c4 = len(StockConsensusService.run_for_date(db, trade_date, is_final=True))
 
     # Step 2: 生成决策
-    d1 = len(DecisionConfidenceScoreService.run_for_date(db, trade_date))
+    from app.services.decision.decision_stock_daily_service import DecisionStockDailyService
+    decisions = DecisionStockDailyService.run_daily_decision(db, trade_date)
+    d1 = len(decisions)
 
     return standard_response(
         data={

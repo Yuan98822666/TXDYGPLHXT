@@ -27,7 +27,7 @@ from app.utils.common_utils import CommonUtils
 config = settings.request_config
 common = config.common
 endpoints = config.endpoints
-
+commonutils = CommonUtils()
 
 def _fetch_single_lb(block_code: str) -> float:
     """
@@ -58,7 +58,7 @@ def _fetch_single_lb(block_code: str) -> float:
         data = eastmoney_client.get_jsonp(board_info_config.url, params)
         block_lb = data["data"].get("f50")
         if block_lb is not None:
-            return float(block_lb) / 100
+            return float(block_lb)
         else:
             return 0.0
     except Exception as e:
@@ -185,11 +185,11 @@ def collect_board_snapshot(market_time: datetime, kz_no: int) -> Tuple[List[RawB
                     "stock_count": item.get("f104", 0) + item.get("f105", 0) + item.get("f106", 0),  # 总家数
 
                     # 资金流字段：原始单位为元，转换为万元（除以10000）
-                    "block_zl_inflow": CommonUtils.safe_round_div(item.get("f62"), 10000),
-                    "block_cd_inflow": CommonUtils.safe_round_div(item.get("f66"), 10000),
-                    "block_dd_inflow": CommonUtils.safe_round_div(item.get("f72"), 10000),
-                    "block_zd_inflow": CommonUtils.safe_round_div(item.get("f78"), 10000),
-                    "block_xd_inflow": CommonUtils.safe_round_div(item.get("f84"), 10000),
+                    "block_zl_inflow": commonutils.safe_round_div(item.get("f62"), 10000),
+                    "block_cd_inflow": commonutils.safe_round_div(item.get("f66"), 10000),
+                    "block_dd_inflow": commonutils.safe_round_div(item.get("f72"), 10000),
+                    "block_zd_inflow": commonutils.safe_round_div(item.get("f78"), 10000),
+                    "block_xd_inflow": commonutils.safe_round_div(item.get("f84"), 10000),
 
                     # 资金流占比字段（百分比，保留原值）
                     "block_zl_zb": item.get("f184"),
@@ -211,9 +211,9 @@ def collect_board_snapshot(market_time: datetime, kz_no: int) -> Tuple[List[RawB
                 }
                 all_blocks_data.append(block_data)
 
-                # 提取点名股 secid
+                # 提取点名股 secid 只含主板上市
                 # 领涨股
-                if item.get("f140"):  # 股票代码存在
+                if commonutils.is_main_board(item.get("f140")):  # 股票代码存在
                     market = "1" if item.get("f141") == 1 else "0"
                     secid = f"{market}.{item['f140']}"
                     named_stock_secids.add(secid)

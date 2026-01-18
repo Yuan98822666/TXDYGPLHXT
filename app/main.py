@@ -6,7 +6,7 @@ import logging
 # 导入 API 路由
 from app.api.collector.snapshot import router as snapshot_router
 from app.api.event.events import router as events_router
-from app.api.decision.decision_daily import router as decision_router
+from app.api.decision.pwjc_routes import router as decision_router
 
 from fastapi.middleware.cors import CORSMiddleware
 
