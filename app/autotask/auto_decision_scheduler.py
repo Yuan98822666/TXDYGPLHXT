@@ -41,7 +41,7 @@ async def trigger_daily_decision():
 
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.post(f"{BASE_URL}/api/pwjc/run-daily",params={"trade_date": today.isoformat()})
+            response = await client.post(f"{BASE_URL}/api/pwjc/run-daily-decision",params={"trade_date": today.isoformat()})
             response.raise_for_status()
             result = response.json()
             logger.info(f"[决策调度] 盘尾决策完成: {result}")

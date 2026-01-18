@@ -118,7 +118,7 @@ class DecisionOpenValidationService:
         if open_record and open_record.close_price and decision.metrics_json.get("close_price"):
             try:
                 prev_close = float(decision.metrics_json["close_price"])
-                today_open = float(open_record.close_price)
+                today_open = float(open_record.stock_zxj)
                 open_change_pct = round((today_open - prev_close) / prev_close * 100, 2)
 
                 # 判断成功条件：开盘涨幅 ≥1%

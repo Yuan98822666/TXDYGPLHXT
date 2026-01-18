@@ -4,22 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="盘前盘后决策初步通过，逻辑待检查">
-      <change afterPath="$PROJECT_DIR$/app/api/decision/pwjc_routes.py" afterDir="false" />
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="盘前盘后决策初步通过，逻辑待检查（修正了数据获取）">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/decision/decision_daily.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/decision/pwjc_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/decision/pwjc_routes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/event/events.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/event/events.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/board_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/board_collector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/autotask/auto_decision_scheduler.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/autotask/auto_decision_scheduler.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/decision/decision_confidence_score_daily.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/decision/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/decision/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/decision/decision_confidence_score_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/services/decision/decision_open_validation_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/decision/decision_open_validation_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/decision/decision_stock_daily_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/decision/decision_stock_daily_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/event/capital_persistence_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/event/capital_persistence_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/common_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/common_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/continuous_segment.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/continuous_segment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/init_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/init_db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +65,7 @@
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/api/decision",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "PyConsoleConfigurable.Python 控制台"
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie"
   }
 }]]></component>
   <component name="PyConsoleOptionsProvider">
@@ -280,7 +272,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768643701057</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="盘前盘后决策初步通过，逻辑待检查（修正了数据获取）">
+      <option name="closed" value="true" />
+      <created>1768709274726</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1768709274726</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -314,7 +314,8 @@
     <MESSAGE value="终于完善了采集功能 补上了注释 再次开始四项行为过滤" />
     <MESSAGE value="四项行为初步通过，逻辑待检查" />
     <MESSAGE value="盘前盘后决策初步通过，逻辑待检查" />
-    <option name="LAST_COMMIT_MESSAGE" value="盘前盘后决策初步通过，逻辑待检查" />
+    <MESSAGE value="盘前盘后决策初步通过，逻辑待检查（修正了数据获取）" />
+    <option name="LAST_COMMIT_MESSAGE" value="盘前盘后决策初步通过，逻辑待检查（修正了数据获取）" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">

@@ -252,50 +252,50 @@ def generate_intraday_events(
     )
 
 
-@router.post("/generate/closing", summary="【收盘】执行完整收盘流程")
-def generate_closing_routine(
-    trade_date: date = Query(..., description="目标交易日，格式：YYYY-MM-DD"),
-    db: Session = Depends(get_db)
-):
-    """
-   ### 功能说明
-    **收盘模式**：执行完整日终流程，生成最终决策依据。
-
-    ### 自动生成内容
-    1. 四类 `is_final=True` 的收盘冻结事件
-    2. 盘尾决策（ALLOW/OBSERVE/FORBIDDEN）
-
-    ### 使用场景
-    - 每日 15:10 自动调度
-    - 手动补全某日最终决策
-
-    ### 业务意义
-    - 生成的事件和决策将作为次日交易的唯一合法输入
-    ### 示例
-    ```bash
-    curl -X POST "http://localhost:8000/events/generate/closing?trade_date=2026-01-16"
-    ```
-    """
-    if not is_trading_day(trade_date):
-        raise HTTPException(status_code=400, detail="非交易日，跳过收盘流程")
-
-    # Step 1: 生成四类收盘事件
-    c1 = len(BlockStartService.run_for_date(db, trade_date, is_final=True))
-    c2 = len(CapitalPersistenceService.run_for_date(db, trade_date, is_final=True))
-    c3 = len(StockDominanceService.run_for_date(db, trade_date, is_final=True))
-    c4 = len(StockConsensusService.run_for_date(db, trade_date, is_final=True))
-
-    # Step 2: 生成决策
-    from app.services.decision.decision_stock_daily_service import DecisionStockDailyService
-    decisions = DecisionStockDailyService.run_daily_decision(db, trade_date)
-    d1 = len(decisions)
-
-    return standard_response(
-        data={
-            "event_block_start": f"{c1}条",
-            "event_capital_persistence": f"{c2}条",
-            "event_stock_dominance": f"{c3}条",
-            "event_stock_consensus": f"{c4}条",
-            "decision_confidence_score": f"{d1}条"
-        }
-    )
+# @router.post("/generate/closing", summary="【收盘】执行完整收盘流程")
+# def generate_closing_routine(
+#     trade_date: date = Query(..., description="目标交易日，格式：YYYY-MM-DD"),
+#     db: Session = Depends(get_db)
+# ):
+#     """
+#    ### 功能说明
+#     **收盘模式**：执行完整日终流程，生成最终决策依据。
+#
+#     ### 自动生成内容
+#     1. 四类 `is_final=True` 的收盘冻结事件
+#     2. 盘尾决策（ALLOW/OBSERVE/FORBIDDEN）
+#
+#     ### 使用场景
+#     - 每日 15:10 自动调度
+#     - 手动补全某日最终决策
+#
+#     ### 业务意义
+#     - 生成的事件和决策将作为次日交易的唯一合法输入
+#     ### 示例
+#     ```bash
+#     curl -X POST "http://localhost:8000/events/generate/closing?trade_date=2026-01-16"
+#     ```
+#     """
+#     if not is_trading_day(trade_date):
+#         raise HTTPException(status_code=400, detail="非交易日，跳过收盘流程")
+#
+#     # Step 1: 生成四类收盘事件
+#     c1 = len(BlockStartService.run_for_date(db, trade_date, is_final=True))
+#     c2 = len(CapitalPersistenceService.run_for_date(db, trade_date, is_final=True))
+#     c3 = len(StockDominanceService.run_for_date(db, trade_date, is_final=True))
+#     c4 = len(StockConsensusService.run_for_date(db, trade_date, is_final=True))
+#
+#     # Step 2: 生成决策
+#     from app.services.decision.decision_stock_daily_service import DecisionStockDailyService
+#     decisions = DecisionStockDailyService.run_daily_decision(db, trade_date)
+#     d1 = len(decisions)
+#
+#     return standard_response(
+#         data={
+#             "event_block_start": f"{c1}条",
+#             "event_capital_persistence": f"{c2}条",
+#             "event_stock_dominance": f"{c3}条",
+#             "event_stock_consensus": f"{c4}条",
+#             "decision_confidence_score": f"{d1}条"
+#         }
+#     )

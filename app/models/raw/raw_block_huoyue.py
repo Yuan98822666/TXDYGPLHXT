@@ -29,7 +29,7 @@ class RawBlockHuoyue(Base):
     # =========================
     # 1. 事件与批次
     # =========================
-    event_id = Column(BigInteger, primary_key=True, autoincrement=True, comment="事件ID，全局唯一")
+    id = Column(BigInteger, primary_key=True, autoincrement=True, comment="事件ID，全局唯一")
     kz_no = Column(BigInteger, nullable=False, index=True, comment="快照批次号")
     # =========================
     # 2. 板块身份

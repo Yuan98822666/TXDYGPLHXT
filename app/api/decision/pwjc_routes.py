@@ -11,10 +11,10 @@ from app.services.decision.decision_stock_daily_service import DecisionStockDail
 from app.services.decision.decision_open_validation_service import DecisionOpenValidationService
 from app.services.event.block_start_service import BlockStartService
 
-router = APIRouter(prefix="/api/pwjc", tags=["盘尾决策闭环"])
+router = APIRouter()
 
 
-@router.post("/events/intraday")
+@router.post("/events/intraday", summary="盘中增量生成四类临时事件")
 def generate_intraday_events(
         trade_date: date = Query(...),
         from_time: str = Query(...),
@@ -39,11 +39,8 @@ def generate_intraday_events(
     return {"status": "success", "message": f"盘中事件生成完成 ({from_time}-{to_time})"}
 
 
-@router.post("/run-daily-decision")
-def run_daily_decision(
-        trade_date: date = Query(...),
-        db: Session = Depends(get_db)
-):
+@router.post("/run-daily-decision", summary="收盘决策核心：1. 生成四类最终事件2. 执行状态机决策3. 存储 close_price")
+def run_daily_decision(trade_date: date = Query(...), db: Session = Depends(get_db)):
     """
     生成四类最终事件并执行隔夜下注决策
 
@@ -77,7 +74,7 @@ def run_daily_decision(
     }
 
 
-@router.post("/validate-open")
+@router.post("/validate-open", summary="验证前一日 ALLOW 股票的开盘表现")
 def validate_open_performance(
         trade_date: date = Query(...),
         db: Session = Depends(get_db)

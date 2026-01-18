@@ -44,7 +44,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="TXDYGPLHXT 后台服务",
     description="提供板块活跃度快照采集与查询接口",
-    version="1.0.0",
+    version="1.1.1",
     lifespan=lifespan
 )
 
@@ -58,7 +58,7 @@ app.add_middleware(
 
 app.include_router(snapshot_router, prefix="/api/snapshot", tags=["快照采集"])
 app.include_router(events_router, prefix="/api/events", tags=["四项行为"])
-app.include_router(decision_router, prefix="/api/pwjc", tags=["决策"])
+app.include_router(decision_router, prefix="/api/pwjc", tags=["盘尾决策闭环"])
 
 
 @app.get("/")
@@ -72,4 +72,4 @@ async def root():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("app.main:app", host="localhost", port=8084, reload=True)
+    uvicorn.run("app.main:app", host="localhost", port=804, reload=True)
