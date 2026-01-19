@@ -52,7 +52,7 @@ def fetch_stock_snapshot(secid: str, market_time: datetime, kz_no: int) -> RawSt
 
     异常处理：
         - 所有字段都使用 .get() 方法避免 KeyError
-        - None 值通过 safe_round_div 和条件表达式安全处理
+        - None 值通过 purify 和条件表达式安全处理
     """
 
     # 从统一配置中心获取请求配置
@@ -79,49 +79,58 @@ def fetch_stock_snapshot(secid: str, market_time: datetime, kz_no: int) -> RawSt
     # 确定交易所（根据 secid 前缀）
     exchange = "SH" if secid.startswith("0.") else "SZ"  # 注意：这里可能有误，通常 0=SH, 1=SZ
 
-    # 构建个股快照模型
     return RawStockHuoyue(
         kz_no=kz_no,
         market_time=market_time,
         stock_code=d["f57"],
         stock_name=d["f58"],
         exchange=exchange,
+        # 最新价（元）
+        stock_zxj=CommonUtils.purify(d.get("f43")/100) if d.get("f43") is not None else None,
+        # 涨跌额（元）
+        stock_zde=CommonUtils.purify(d.get("f169")/100),
+        # 涨跌幅（%）
+        stock_zdf=CommonUtils.purify(d.get("f170")/100),
+        # 成交量（手）
+        stock_cjls=CommonUtils.purify(d.get("f47")),
+        # 成交额（元）
+        stock_cjey = CommonUtils.purify(d.get("f48")),
+        # 换手率（%）
+        stock_hsl=CommonUtils.purify(d.get("f168")/100),
+        # 总市值（元）
+        stock_zsz=CommonUtils.purify(d.get("f116")),
+        #流通市值（元）
+        stock_ltsz=CommonUtils.purify(d.get("f117")),
+        # 市盈率
+        stock_syl=CommonUtils.purify(d.get("f162")/100),
+        # 市净率
+        stock_sjl=CommonUtils.purify(d.get("f167")/100),
 
-        # 价格类字段：分 → 元（除以100，保留2位小数）
-        stock_zxj=CommonUtils.safe_round_div(d.get("f43"), 100) if d.get("f43") is not None else None,
+        # 主力资金净流入（元）
+        stock_zl_inflow=CommonUtils.purify(d.get("f137")),
+        # 超大单净流入（元）
+        stock_cd_inflow=CommonUtils.purify(d.get("f140")),
+        # 中单净流入（元）
+        stock_dd_inflow=CommonUtils.purify(d.get("f143")),
+        # 中单资金流入（元）
+        stock_zd_inflow=CommonUtils.purify(d.get("f146")),
+        # 小单净流入（元）
+        stock_xd_inflow=CommonUtils.purify(d.get("f149")),
 
-        # 百分比类字段：原始值 * 100 → 百分比（除以100，保留2位小数）
-        stock_zde=CommonUtils.safe_round_div(d.get("f169"), 100),  # 涨跌额（实际应为元，但API返回分？）
-        stock_zdf=CommonUtils.safe_round_div(d.get("f170"), 100),  # 涨跌幅
-        stock_hsl=CommonUtils.safe_round_div(d.get("f168"), 100),  # 换手率
-        stock_syl=CommonUtils.safe_round_div(d.get("f162"), 100),  # 市盈率
-        stock_sjl=CommonUtils.safe_round_div(d.get("f167"), 100),  # 市净率
-
-        # 资金流占比字段：百分比（除以100，保留2位小数）
-        stock_zl_zb=CommonUtils.safe_round_div(d.get("f193"), 100),
-        stock_cd_zb=CommonUtils.safe_round_div(d.get("f194"), 100),
-        stock_dd_zb=CommonUtils.safe_round_div(d.get("f195"), 100),
-        stock_zd_zb=CommonUtils.safe_round_div(d.get("f196"), 100),
-        stock_xd_zb=CommonUtils.safe_round_div(d.get("f197"), 100),
-
-        # 成交量字段：手 → 股（乘以100，因为1手=100股）
-        # 注意：股数通常是整数，所以不进行四舍五入
-        stock_cjlg=d.get("f47") * 100 if d.get("f47") is not None else None,
-
-        # 金额类字段：元 → 万元（除以10000，保留2位小数）
-        stock_cjey=CommonUtils.safe_round_div(d.get("f48"), 10000),  # 成交额
-        stock_zsz=CommonUtils.safe_round_div(d.get("f116"), 10000),  # 总市值
-        stock_ltsz=CommonUtils.safe_round_div(d.get("f117"), 10000),  # 流通市值
-
-        # 资金流字段：元 → 万元（除以10000，保留2位小数）
-        stock_zl_inflow=CommonUtils.safe_round_div(d.get("f137"), 10000),  # 主力资金流入
-        stock_cd_inflow=CommonUtils.safe_round_div(d.get("f140"), 10000),  # 超大单资金流入
-        stock_dd_inflow=CommonUtils.safe_round_div(d.get("f143"), 10000),  # 大单资金流入
-        stock_zd_inflow=CommonUtils.safe_round_div(d.get("f146"), 10000),  # 中单资金流入
-        stock_xd_inflow=CommonUtils.safe_round_div(d.get("f149"), 10000),  # 小单资金流入
+        # 主力资金净流入占比（%）
+        stock_zl_zb=CommonUtils.purify(d.get("f193")/100),
+        #超大单净流入占比（%）
+        stock_cd_zb=CommonUtils.purify(d.get("f194")/100),
+        #大单净流入占比（%）
+        stock_dd_zb=CommonUtils.purify(d.get("f195")/100),
+        #中单净流入占比（%）
+        stock_zd_zb=CommonUtils.purify(d.get("f196")/100),
+        #小单净流入占比（%）
+        stock_xd_zb=CommonUtils.purify(d.get("f197")/100),
 
         source="eastmoney",
     )
+    # 构建个股快照模型
 
 
 def collect_named_stocks(secids: Set[str], market_time: datetime, kz_no: int) -> List[RawStockHuoyue]:
@@ -150,7 +159,7 @@ def collect_named_stocks(secids: Set[str], market_time: datetime, kz_no: int) ->
     stocks = []
 
     # 创建线程池，并发采集（最大10个并发线程）
-    with ThreadPoolExecutor(10) as executor:
+    with ThreadPoolExecutor(20) as executor:
         # 提交所有采集任务
         futures = {
             executor.submit(fetch_stock_snapshot, secid, market_time, kz_no): secid

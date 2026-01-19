@@ -58,7 +58,7 @@ def _fetch_single_lb(block_code: str) -> float:
         data = eastmoney_client.get_jsonp(board_info_config.url, params)
         block_lb = data["data"].get("f50")
         if block_lb is not None:
-            return float(block_lb)
+            return float(commonutils.safe_round_div(block_lb))
         else:
             return 0.0
     except Exception as e:
@@ -166,8 +166,6 @@ def collect_board_snapshot(market_time: datetime, kz_no: int) -> Tuple[List[RawB
             for item in diff.values():
                 block_code = item["f12"]  # 板块代码
                 all_block_codes.append(block_code)
-
-                # 构建板块快照字典
                 block_data = {
                     "kz_no": kz_no,
                     "market_time": market_time,
@@ -175,40 +173,62 @@ def collect_board_snapshot(market_time: datetime, kz_no: int) -> Tuple[List[RawB
                     "block_name": item["f14"],  # 板块名称
                     "block_type": type_label,  # 板块类型：GN 或 HY
 
-                    # 以下字段需要进行单位转换和安全处理
-                    "block_zdf": item.get("f3"),  # 涨跌幅（百分比，保留原值）
-                    "block_zde": item.get("f4"),  # 涨跌额（元，保留原值）
-                    "block_hsl": item.get("f8"),  # 换手率（百分比，保留原值）
-                    "up_count": item.get("f104"),  # 上涨家数
-                    "dw_count": item.get("f105"),  # 下跌家数
-                    "pi_count": item.get("f106"),  # 平盘家数
-                    "stock_count": item.get("f104", 0) + item.get("f105", 0) + item.get("f106", 0),  # 总家数
+                    # 板块涨跌幅（%）
+                    "block_zdf": commonutils.purify(item.get("f3")),
+                    #板块涨跌额(元)
+                    "block_zde": commonutils.purify(item.get("f4")),
+                    #板块换手率（%）
+                    "block_hsl": commonutils.purify(item.get("f8")),
 
-                    # 资金流字段：原始单位为元，转换为万元（除以10000）
-                    "block_zl_inflow": commonutils.safe_round_div(item.get("f62"), 10000),
-                    "block_cd_inflow": commonutils.safe_round_div(item.get("f66"), 10000),
-                    "block_dd_inflow": commonutils.safe_round_div(item.get("f72"), 10000),
-                    "block_zd_inflow": commonutils.safe_round_div(item.get("f78"), 10000),
-                    "block_xd_inflow": commonutils.safe_round_div(item.get("f84"), 10000),
+                    # 上涨家数
+                    "up_count": commonutils.purify(item.get("f104")),
+                    #平盘家数
+                    "pi_count": commonutils.purify(item.get("f106")),
+                    # 下跌家数
+                    "dw_count": commonutils.purify(item.get("f105")),
+                    #板块内股票家数
+                    "stock_count": commonutils.purify(item.get("f104", 0)) + commonutils.purify(item.get("f105", 0)) + commonutils.purify(item.get("f106", 0)),  # 总家数
 
-                    # 资金流占比字段（百分比，保留原值）
-                    "block_zl_zb": item.get("f184"),
-                    "block_cd_zb": item.get("f69"),
-                    "block_dd_zb": item.get("f75"),
-                    "block_zd_zb": item.get("f81"),
-                    "block_xd_zb": item.get("f87"),
+                    # 板块主力资金净流入（元）
+                    "block_zl_inflow": commonutils.purify(item.get("f62")),
+                    #板块超大单资金净流入（元）
+                    "block_cd_inflow": commonutils.purify(item.get("f66")),
+                    #板块大单资金净流入（元）
+                    "block_dd_inflow": commonutils.purify(item.get("f72")),
+                    #板块中单资金净流入（元）
+                    "block_zd_inflow": commonutils.purify(item.get("f78")),
+                    #板块小单资金净流入（元）
+                    "block_xd_inflow": commonutils.purify(item.get("f84")),
 
-                    # 主力流入最多股信息
+                    # 板块主力资金净流入占比(%)
+                    "block_zl_zb": commonutils.purify(item.get("f184")),
+                    #板块超大单资金净流入占比(%)
+                    "block_cd_zb": commonutils.purify(item.get("f69")),
+                    #板块大单资金净流入占比(%)
+                    "block_dd_zb": commonutils.purify(item.get("f75")),
+                    #板块中单资金净流入占比(%)
+                    "block_zd_zb": commonutils.purify(item.get("f81")),
+                    #板块小单资金净流入占比(%)
+                    "block_xd_zb": commonutils.purify(item.get("f87")),
+
+                    # 板块资金流入最多个股代码
                     "money_stock_code": item.get("f205"),
+                    #板块资金流入最多个股名称
                     "money_stock_name": item.get("f204"),
+                    #板块资金流入最多个股所属市场1
                     "money_stock_type": item.get("f206"),
 
-                    # 领涨股信息
+                    # 板块领涨个股代码
                     "lider_stock_code": item.get("f140"),
+                    #板块领涨个股名称
                     "lider_stock_name": item.get("f128"),
+                    #板块领涨个股涨幅
                     "lider_stock_type": item.get("f141"),
+                    #板块领涨个股所属市场1 沪 0 深
                     "lider_stock_pct": item.get("f136"),  # 领涨股涨幅
                 }
+
+                # 构建板块快照字典
                 all_blocks_data.append(block_data)
 
                 # 提取点名股 secid 只含主板上市

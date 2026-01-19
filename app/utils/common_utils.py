@@ -17,43 +17,39 @@ class CommonUtils:
     """通用辅助工具类"""
 
     @staticmethod
-    def safe_round_div(value, divisor, decimal_places=2):
+    def safe_round_div(value, divisor=1, decimal_places=2):
         """
-        安全的除法与四舍五入函数（真正四舍五入，非银行家舍入）
+        安全除法与四舍五入。
+        - 若 value 为 None, "", "-", "--" 等无效值 → 返回 None（而非 0.0）
+        - 仅当 value 是有效数字时才进行计算
+        - 除零或计算异常时返回 None
+        """
+        # === 第一步：判断是否为“无数据”标识 ===
+        if value is None or value == "" or str(value).strip() in ("-", "--", "－", "——"):
+            return 0.00  # 👈 关键修改：返回 None，不是 0！
 
-        功能说明：
-        - 处理 None、空字符串、"--" 等无效输入
-        - 使用 Decimal 高精度计算
-        - 严格四舍五入（ROUND_HALF_UP）
-        - 异常时返回 0.00（float 类型）
-        """
-        # 第一步：清洗被除数
+        # === 第二步：尝试转为数字 ===
         try:
-            if value is None or value == "" or value == "-"or value == "_":
-                clean_value = 0
-            else:
-                clean_value = float(value)
+            num_value = float(value)
         except (ValueError, TypeError):
-            clean_value = 0
+            return 0.00  # 非数字字符串也视为无效
 
-        # 第二步：安全除法 + 四舍五入
+        # === 第三步：执行除法和四舍五入 ===
         try:
-            dividend = Decimal(str(clean_value))
+            dividend = Decimal(str(num_value))
             divisor_d = Decimal(str(divisor))
-
             if divisor_d == 0:
-                return 0.0
-
+                return 0.00
             result = dividend / divisor_d
-
-            # 构造 quantize 的目标格式，如 '0.01' 表示保留两位小数
-            quantize_exp = Decimal('0.' + '0' * decimal_places) if decimal_places > 0 else Decimal('1')
+            # 构造保留小数位的格式
+            if decimal_places > 0:
+                quantize_exp = Decimal('0.' + '0' * decimal_places)
+            else:
+                quantize_exp = Decimal('1')
             rounded_result = result.quantize(quantize_exp, rounding=ROUND_HALF_UP)
-
             return float(rounded_result)
-
         except Exception:
-            return 0.0
+            return 0.00  # 计算失败也返回 None
 
     @staticmethod
     def is_main_board(stock_code: str) -> bool:
@@ -85,3 +81,36 @@ class CommonUtils:
 
         # 其他情况（30=创业板，688=科创板，8=北交所等）都不是主板
         return False
+
+    @staticmethod
+    def purify(raw_data) -> float:
+        """
+        清洗数据规则：
+        - 如果是 int 或 float → 直接返回 float 值
+        - 如果是 None → 返回 0.0
+        - 如果是字符串：
+            - 若为 "", "-", "--", "－", "——" → 返回 0.0
+            - 若能转成数字 → 返回该数字
+            - 否则 → 返回 0.0
+        """
+        # 情况1: 是数字 → 直接返回
+        if isinstance(raw_data, (int, float)):
+            return float(raw_data)
+
+        # 情况2: 是 None → 返回 0.0
+        if raw_data is None:
+            return 0.0
+
+        # 情况3: 是字符串 → 清洗并尝试转换
+        if isinstance(raw_data, str):
+            s = raw_data.strip()
+            # 预定义的无效占位符
+            if s in ("", "-", "--", "－", "——"):
+                return 0.0
+            try:
+                return float(s)
+            except ValueError:
+                return 0.0
+
+        # 情况4: 其他类型（bool, list, dict 等）→ 返回 0.0
+        return 0.0

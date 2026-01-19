@@ -4,14 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="盘前盘后决策初步通过，逻辑待检查（修正了数据获取）">
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="干净的后端">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/decision/pwjc_routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/decision/pwjc_routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/event/events.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/event/events.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/autotask/auto_decision_scheduler.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/autotask/auto_decision_scheduler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/analysis/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/analysis/named_stock_routes.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/event/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/event/events.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/collectors/board_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/board_collector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/collectors/stock_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/stock_collector.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/decision/decision_open_validation_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/decision/decision_open_validation_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_stock_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_stock_huoyue.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/analysis/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/analysis/named_stock_analysis_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/common_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/common_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/init_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/init_db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +70,7 @@
     "deletionFromPopupRequiresConfirmation": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/api/decision",
+    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/api/analysis",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie"
   }
@@ -78,11 +85,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\api\analysis" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\services\analysis" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\decision" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\services\decision" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\models\decision" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\models\event" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\services\event" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\event" />
@@ -280,7 +287,23 @@
       <option name="project" value="LOCAL" />
       <updated>1768709274726</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="盘前盘后决策初步通过，逻辑待检查（修正了数据获取）">
+      <option name="closed" value="true" />
+      <created>1768746407795</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1768746407795</updated>
+    </task>
+    <task id="LOCAL-00020" summary="干净的后端">
+      <option name="closed" value="true" />
+      <created>1768821076023</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1768821076023</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -315,7 +338,8 @@
     <MESSAGE value="四项行为初步通过，逻辑待检查" />
     <MESSAGE value="盘前盘后决策初步通过，逻辑待检查" />
     <MESSAGE value="盘前盘后决策初步通过，逻辑待检查（修正了数据获取）" />
-    <option name="LAST_COMMIT_MESSAGE" value="盘前盘后决策初步通过，逻辑待检查（修正了数据获取）" />
+    <MESSAGE value="干净的后端" />
+    <option name="LAST_COMMIT_MESSAGE" value="干净的后端" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">

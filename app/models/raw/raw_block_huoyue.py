@@ -40,7 +40,6 @@ class RawBlockHuoyue(Base):
     # =========================
     # 3. 行情事实
     # =========================
-    # block_zs = Column(Float, nullable=True, comment="板块指数")
     block_zdf = Column(Float, nullable=True, comment="板块涨跌幅（%）")
     block_zde = Column(Float, nullable=True, comment="板块涨跌额")
     block_hsl = Column(Float, nullable=True, comment="板块换手率（%）")
@@ -57,17 +56,17 @@ class RawBlockHuoyue(Base):
     # =========================
     # 5. 板块资金
     # =========================
-    block_zl_inflow = Column(Float, nullable=True, comment="板块主力资金净流入")
-    block_cd_inflow = Column(Float, nullable=True, comment="板块超大单资金净流入")
-    block_dd_inflow = Column(Float, nullable=True, comment="板块大单资金净流入")
-    block_zd_inflow = Column(Float, nullable=True, comment="板块中单资金净流入")
-    block_xd_inflow = Column(Float, nullable=True, comment="板块小单资金净流入")
+    block_zl_inflow = Column(Float, nullable=True, comment="板块主力资金净流入（元）")
+    block_cd_inflow = Column(Float, nullable=True, comment="板块超大单资金净流入（元）")
+    block_dd_inflow = Column(Float, nullable=True, comment="板块大单资金净流入（元）")
+    block_zd_inflow = Column(Float, nullable=True, comment="板块中单资金净流入（元）")
+    block_xd_inflow = Column(Float, nullable=True, comment="板块小单资金净流入（元）")
 
-    block_zl_zb = Column(Float, nullable=True, comment="板块主力资金净流入占比")
-    block_cd_zb = Column(Float, nullable=True, comment="板块超大单资金净流入占比")
-    block_dd_zb = Column(Float, nullable=True, comment="板块大单资金净流入占比")
-    block_zd_zb = Column(Float, nullable=True, comment="板块中单资金净流入占比")
-    block_xd_zb = Column(Float, nullable=True, comment="板块小单资金净流入占比")
+    block_zl_zb = Column(Float, nullable=True, comment="板块主力资金净流入占比(%)")
+    block_cd_zb = Column(Float, nullable=True, comment="板块超大单资金净流入占比(%)")
+    block_dd_zb = Column(Float, nullable=True, comment="板块大单资金净流入占比(%)")
+    block_zd_zb = Column(Float, nullable=True, comment="板块中单资金净流入占比(%)")
+    block_xd_zb = Column(Float, nullable=True, comment="板块小单资金净流入占比(%)")
 
     # =========================
     # 6. 点名股票  板块领涨股 和 板块资金流入最多股 都是板块点名股

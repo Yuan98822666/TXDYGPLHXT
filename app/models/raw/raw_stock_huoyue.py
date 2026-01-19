@@ -50,15 +50,15 @@ class RawStockHuoyue(Base):
     # =========================
     # 4. 行情与成交字段
     # =========================
-    stock_zxj = Column(Float, nullable=True, comment="最新价")
-    stock_zde = Column(Float, nullable=True, comment="涨跌额")
-    stock_zdf = Column(Float, nullable=True, comment="涨跌幅（百分比）")
-    stock_cjlg = Column(BigInteger, nullable=True, comment="成交量（股）")
+    stock_zxj = Column(Float, nullable=True, comment="最新价（元）")
+    stock_zde = Column(Float, nullable=True, comment="涨跌额（元）")
+    stock_zdf = Column(Float, nullable=True, comment="涨跌幅（%）")
+    stock_cjls = Column(BigInteger, nullable=True, comment="成交量（手）")
     stock_cjey = Column(BigInteger, nullable=True, comment="成交额（元）")
     # =========================
     # 5. 市值与换手率
     # =========================
-    stock_hsl = Column(Float, nullable=True, comment="换手率（百分比）")
+    stock_hsl = Column(Float, nullable=True, comment="换手率（%）")
     stock_zsz = Column(BigInteger, nullable=True, comment="总市值（元）")
     stock_ltsz = Column(BigInteger, nullable=True, comment="流通市值（元）")
     stock_syl = Column(BigInteger, nullable=True, comment="市盈率（动）")
