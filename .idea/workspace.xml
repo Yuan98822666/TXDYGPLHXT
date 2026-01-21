@@ -5,19 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="干净的后端">
+      <change afterPath="$PROJECT_DIR$/app/api/view/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/analysis/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/analysis/named_stock_routes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/event/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/event/events.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/board_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/board_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/stock_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/stock_collector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/collectors/dispatcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/dispatcher.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models/raw/raw_stock_huoyue.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/raw/raw_stock_huoyue.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/analysis/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/analysis/named_stock_analysis_service.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/common_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils/common_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/continuous_segment.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/init_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/init_db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,7 +53,7 @@
     "Python.collect_test.executor": "Debug",
     "Python.init_db.executor": "Run",
     "Python.main (1).executor": "Run",
-    "Python.main.executor": "Run",
+    "Python.main.executor": "Debug",
     "Python.python -m scripts.init_db.executor": "Run",
     "Python.test_block_snapshot_collector.executor": "Debug",
     "Python.test_dispatcher_run.executor": "Debug",
@@ -70,7 +63,7 @@
     "deletionFromPopupRequiresConfirmation": "false",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/api/analysis",
+    "last_opened_file_path": "E:/Python Project/TXDYGPLHXT/app/services/view",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie"
   }
@@ -85,18 +78,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\Python Project\TXDYGPLHXT\app\api\analysis" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\services\analysis" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\api\decision" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\services\decision" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\models\decision" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\services\view" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\repositories" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\services\fundflow" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\api\derived" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\models\derived" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\api\derived" />
+      <recent name="E:\Python Project\TXDYGPLHXT\app\services\derived" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\event" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\collector" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\utils" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\api\autotask" />
     </key>
   </component>
   <component name="RunManager">
@@ -303,7 +296,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768821076023</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="干净的后端">
+      <option name="closed" value="true" />
+      <created>1768899655798</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1768899655798</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

@@ -67,17 +67,17 @@ class RawStockHuoyue(Base):
     # =========================
     # 6. 资金流向字段（五档）
     # =========================
-    stock_zl_inflow = Column(BigInteger, nullable=True, comment="主力资金净流入（元）")
-    stock_cd_inflow = Column(BigInteger, nullable=True, comment="超大单净流入（元）")
-    stock_dd_inflow = Column(BigInteger, nullable=True, comment="大单净流入（元）")
-    stock_zd_inflow = Column(BigInteger, nullable=True, comment="中单净流入（元）")
-    stock_xd_inflow = Column(BigInteger, nullable=True, comment="小单净流入（元）")
+    stock_zl_inflow = Column(BigInteger,default=0, nullable=True, comment="个股主力资金净流入（元）")
+    stock_cd_inflow = Column(BigInteger,default=0, nullable=True, comment="个股超大单净流入（元）")
+    stock_dd_inflow = Column(BigInteger,default=0, nullable=True, comment="个股大单净流入（元）")
+    stock_zd_inflow = Column(BigInteger,default=0, nullable=True, comment="个股中单净流入（元）")
+    stock_xd_inflow = Column(BigInteger,default=0, nullable=True, comment="个股小单净流入（元）")
 
-    stock_zl_zb = Column(Float, nullable=True, comment="主力资金净流入占比（%）")
-    stock_cd_zb = Column(Float, nullable=True, comment="超大单净流入占比（%）")
-    stock_dd_zb = Column(Float, nullable=True, comment="大单净流入占比（%）")
-    stock_zd_zb = Column(Float, nullable=True, comment="中单净流入占比（%）")
-    stock_xd_zb = Column(Float, nullable=True, comment="小单净流入占比（%）")
+    stock_zl_zb = Column(Float, nullable=True, comment="个股主力资金净流入占比（%）")
+    stock_cd_zb = Column(Float, nullable=True, comment="个股超大单净流入占比（%）")
+    stock_dd_zb = Column(Float, nullable=True, comment="个股大单净流入占比（%）")
+    stock_zd_zb = Column(Float, nullable=True, comment="个股中单净流入占比（%）")
+    stock_xd_zb = Column(Float, nullable=True, comment="个股小单净流入占比（%）")
 
     # =========================
     # 7. 接口溯源字段

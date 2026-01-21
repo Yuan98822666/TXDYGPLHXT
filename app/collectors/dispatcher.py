@@ -56,32 +56,32 @@ def run_snapshot_cycle():
     """
 
     # 设置上海时区
+    # 1. 获取带时区的上海时间（用于生成 kz_no）
     shanghai_tz = pytz.timezone("Asia/Shanghai")
+    market_time_shanghai = datetime.now(shanghai_tz)  # ✅ 带时区！
 
-    # 获取当前上海时间，并转换为 UTC（用于数据库存储）
-    # 注意：datetime.now(shanghai_tz) 返回带时区的 datetime
-    # .replace(tzinfo=timezone.utc) 将其标记为 UTC（实际时间值不变）
-    # 这样存储到数据库的是 UTC 时间，但代表的是上海时间点
-    market_time = datetime.now(shanghai_tz).replace(tzinfo=timezone.utc)
+    # 2. 生成快照批次号（必须传入带时区的时间！）
+    kz_no = next_kz_no(market_time_shanghai)
 
-    # 生成快照批次号
-    kz_no = next_kz_no(market_time)
     print(f"🚀 开始快照 | kz_no={kz_no}")
 
+
     try:
-        # 1. 采集板块 + 获取点名股 secid
-        blocks, secids = collect_board_snapshot(market_time, kz_no)
+        # 3. 为数据库准备 naive 时间（移除时区信息，但数值保持为上海本地时间）
+        market_time_for_db = market_time_shanghai.replace(tzinfo=None)
+
+        # 4. 采集板块 + 获取点名股 secid（传入 naive 时间用于存储）
+        blocks, secids = collect_board_snapshot(market_time_for_db, kz_no)
         print(f"📊 板块: {len(blocks)} | 点名股候选: {len(secids)}\t" + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-        # 2. 并发采集点名股详情
-        stocks = collect_named_stocks(secids, market_time, kz_no)
+        # 5. 并发采集点名股详情（同样传入 naive 时间）
+        stocks = collect_named_stocks(secids, market_time_for_db, kz_no)
         print(f"📈 点名股详情: {len(stocks)}\t" + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-        # 3. 批量写入数据库
+        # 6. 批量写入数据库
         write_block_and_stock_snapshots(blocks, stocks)
         print("✅ 快照入库完成\t" + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
     except Exception as e:
-        # 捕获所有异常，打印错误信息后重新抛出
         print(f"❌ 快照失败: {e}" + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         raise

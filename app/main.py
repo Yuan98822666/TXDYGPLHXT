@@ -5,6 +5,7 @@ import logging
 
 # 导入 API 路由
 from app.api.collector.snapshot import router as snapshot_router
+# from app.api.derived.minute_snapshot import router as derived_router
 # from app.api.event.events import router as events_router
 # from app.api.decision.pwjc_routes import router as decision_router
 # from app.api.analysis.named_stock_routes import router as named_stock_router
@@ -58,6 +59,7 @@ app.add_middleware(
 )
 
 app.include_router(snapshot_router, prefix="/api/snapshot", tags=["快照采集"])
+# app.include_router(derived_router, prefix="/api/minute", tags=["1分钟计算"])
 # app.include_router(named_stock_router, prefix="/api/analysis", tags=["前端星图"])
 
 @app.get("/")
