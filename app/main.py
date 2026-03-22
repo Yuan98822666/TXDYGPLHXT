@@ -4,7 +4,7 @@ import asyncio
 import logging
 
 # 导入 API 路由
-from app.api.collector.snapshot import router as snapshot_router
+# from app.api.collector.snapshot import router as snapshot_router
 # from app.api.derived.minute_snapshot import router as derived_router
 # from app.api.event.events import router as events_router
 # from app.api.decision.pwjc_routes import router as decision_router
@@ -13,7 +13,7 @@ from app.api.collector.snapshot import router as snapshot_router
 from fastapi.middleware.cors import CORSMiddleware
 
 # 导入调度器
-from app.autotask.auto_snapshot_scheduler import auto_snapshot_scheduler_loop
+# from app.autotask.auto_snapshot_scheduler import auto_snapshot_scheduler_loop
 # from app.autotask.auto_decision_scheduler import schedule_decision_tasks
 
 # 新增：APScheduler
@@ -29,7 +29,7 @@ decision_scheduler = AsyncIOScheduler()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # 启动快照调度器（协程循环）
-    asyncio.create_task(auto_snapshot_scheduler_loop())
+    # asyncio.create_task(auto_snapshot_scheduler_loop())
 
     # 启动决策调度器（基于 APScheduler）
     decision_scheduler.start()
@@ -58,7 +58,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(snapshot_router, prefix="/api/snapshot", tags=["快照采集"])
+# app.include_router(snapshot_router, prefix="/api/snapshot", tags=["快照采集"])
 # app.include_router(derived_router, prefix="/api/minute", tags=["1分钟计算"])
 # app.include_router(named_stock_router, prefix="/api/analysis", tags=["前端星图"])
 
