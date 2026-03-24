@@ -4,26 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="干净的后端">
-      <change beforePath="$PROJECT_DIR$/.env.example.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/collector/snapshot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/autotask/auto_snapshot_scheduler.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/autotask/auto_snapshot_state.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/board_collector.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/dispatcher.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/stock_collector.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/services功能.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/一分钟级的灵感.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/合格的板块.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/回测规则.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/数据获取流程.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/板块迁移(宪法).md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/游资顺风车.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/系统目标.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/量化哲学.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/量化知识1.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/项目结构.md" beforeDir="false" />
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="接下来是OpenClaw的时代了">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +59,7 @@
     &quot;deletionFromPopupRequiresConfirmation&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/Python Project/TXDYGPLHXT/app/services/view&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Python Project/TXDYGPLHXT&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.grazie&quot;
   }
@@ -90,11 +74,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\models\base" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\services\view" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\repositories" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\services\fundflow" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\derived" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\models\derived" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\derived" />
@@ -316,7 +300,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768899655798</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="接下来是OpenClaw的时代了">
+      <option name="closed" value="true" />
+      <created>1774162290209</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1774162290209</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -352,7 +344,8 @@
     <MESSAGE value="盘前盘后决策初步通过，逻辑待检查" />
     <MESSAGE value="盘前盘后决策初步通过，逻辑待检查（修正了数据获取）" />
     <MESSAGE value="干净的后端" />
-    <option name="LAST_COMMIT_MESSAGE" value="干净的后端" />
+    <MESSAGE value="接下来是OpenClaw的时代了" />
+    <option name="LAST_COMMIT_MESSAGE" value="接下来是OpenClaw的时代了" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
