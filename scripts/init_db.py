@@ -13,7 +13,7 @@ from app.models.base.base_stock import BaseStock
 from app.models.base.base_block import Base
 
 
-from app.models.raw import raw_block_huoyue,raw_stock_huoyue
+# from app.models.raw import raw_block_huoyue,raw_stock_huoyue
 
 
 from app.models.system import sys_market_state_date
