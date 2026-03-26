@@ -9,9 +9,16 @@
 # from app.models.decision import decision_stock_daily,decision_open_validation
 # from app.models.derived import derived_stock_minute,stock_minute_fundflow,block_minute_fundflow,derived_stock_block_anomaly,stock_snapshot
 
+from app.models.base.base_stock import BaseStock
+from app.models.base.base_block import Base
+
 
 from app.models.raw import raw_block_huoyue,raw_stock_huoyue
+
+
 from app.models.system import sys_market_state_date
+
+
 from app.db.session import engine
 from app.db.base import Base
 

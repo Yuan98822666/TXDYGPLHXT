@@ -19,7 +19,7 @@ class BaseBlock(Base):
     """
     表名：base_block
     中文名：板块基础信息表
-    
+
     列说明：
     - id: 唯一编号
     - block_code: 板块代码（东方财富板块ID，唯一）
