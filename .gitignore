@@ -33,6 +33,7 @@ node_modules/
 # Virtual Environment
 # ======================
 .env
+.idea/workspace.xml
 
 
 # ======================
