@@ -7,6 +7,7 @@ import logging
 
 # 导入 API 路由
 from app.api.collector.base_collector import router as base_collector_router
+from app.api.cookiemanager.eastmoney_cookie_router import router as cookie_router
 
 # 配置日志
 logging.basicConfig(level=logging.INFO)
@@ -29,6 +30,7 @@ app.add_middleware(
 
 # 注册路由
 app.include_router(base_collector_router, prefix="/api/collector/base", tags=["基础数据采集"])
+app.include_router(cookie_router, prefix="/api/cookie", tags=["Cookie 管理"])
 
 
 @app.get("/")

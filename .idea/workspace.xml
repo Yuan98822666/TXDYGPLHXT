@@ -4,34 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="base_block.py&#10;base_stock.py.py">
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py">
+      <change afterPath="$PROJECT_DIR$/app/api/cookiemanager/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/collector/base_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/collector/base_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/collector/snapshot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/view/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/autotask/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/autotask/auto_snapshot_scheduler.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/autotask/auto_snapshot_state.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/collectors/base_block_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/base_block_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/base_collector.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/collectors/base_block_stock_lnk_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/base_block_stock_lnk_collector.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/collectors/base_stock_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/base_stock_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/board_collector.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/dispatcher.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/stock_collector.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/unified_collector.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config/request_conf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/request_conf.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/db.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/base/base_stock.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/base/base_stock.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/raw/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_block_huoyue.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/raw/raw_stock_huoyue.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/snapshot_no.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/snapshot_writer.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/collect_test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/init_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/init_db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/db_util.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/utils/http_client.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/blocks.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/常用命令.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/总体架构.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/download_blocks.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/test_cookie.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +37,7 @@
     <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
@@ -105,11 +92,11 @@
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\derived" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Python Project\TXDYGPLHXT\app\api\cookiemanager" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\derived" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\services\derived" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\event" />
       <recent name="E:\Python Project\TXDYGPLHXT\app\api\collector" />
-      <recent name="E:\Python Project\TXDYGPLHXT\app\utils" />
     </key>
   </component>
   <component name="RunManager">
@@ -348,7 +335,15 @@
       <option name="project" value="LOCAL" />
       <updated>1774508913946</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py">
+      <option name="closed" value="true" />
+      <created>1774521947516</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1774521947516</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -387,7 +382,8 @@
     <MESSAGE value="接下来是OpenClaw的时代了" />
     <MESSAGE value="回滚到初始状态" />
     <MESSAGE value="base_block.py&#10;base_stock.py.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="base_block.py&#10;base_stock.py.py" />
+    <MESSAGE value="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
