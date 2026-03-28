@@ -4,21 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py">
-      <change afterPath="$PROJECT_DIR$/app/api/cookiemanager/__init__.py" afterDir="false" />
+    <list default="true" id="7597b91e-69b8-4f09-87a2-7da3e4f684db" name="更改" comment="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py&#10;自动cookie 改造完成">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/collector/base_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/collector/base_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/base_block_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/base_block_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/base_block_stock_lnk_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/base_block_stock_lnk_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/collectors/base_stock_collector.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/collectors/base_stock_collector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/db_util.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils/http_client.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/blocks.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/常用命令.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/总体架构.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/download_blocks.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/test_cookie.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,9 +21,27 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Yuan98822666"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Yuan98822666/TXDYGPLHXT.git",
+    "accountId": "ace8b8bb-1d74-4007-a138-957211009341"
+  }
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -343,7 +349,23 @@
       <option name="project" value="LOCAL" />
       <updated>1774521947516</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py&#10;自动cookie">
+      <option name="closed" value="true" />
+      <created>1774671131205</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1774671131205</updated>
+    </task>
+    <task id="LOCAL-00027" summary="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py&#10;自动cookie 改造完成">
+      <option name="closed" value="true" />
+      <created>1774671427610</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1774671427610</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -383,7 +405,9 @@
     <MESSAGE value="回滚到初始状态" />
     <MESSAGE value="base_block.py&#10;base_stock.py.py" />
     <MESSAGE value="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py" />
+    <MESSAGE value="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py&#10;自动cookie" />
+    <MESSAGE value="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py&#10;自动cookie 改造完成" />
+    <option name="LAST_COMMIT_MESSAGE" value="base_block.py&#10;base_stock.py&#10;base_block_stock_lnk.py&#10;自动cookie 改造完成" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
