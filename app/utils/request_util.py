@@ -24,7 +24,7 @@ import time
 import random
 import json
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from curl_cffi.requests import Session
 
 from app.utils.cookie_manager import get_cookies
@@ -272,6 +272,369 @@ class EastMoneyRequest:
             logger.error(f"获取股票列表失败: {e}")
 
         return None
+
+    # ==========================================
+    # v0.2.0 新增：涨停池/炸板池/跌停池/快照接口
+    # ==========================================
+
+    @classmethod
+    def get_zt_pool(cls) -> set:
+        """
+        获取涨停池股票代码集合
+
+        返回:
+            {"300750", "002460", ...}
+        """
+        cfg = cls._get_endpoint("zt_pool")
+        url = cfg.pop("url")
+
+        params = {
+            "np": cfg.get("np", "1"),
+            "fltt": cfg.get("fltt", "2"),
+            "invt": cfg.get("invt", "2"),
+            "fs": cfg.get("fs"),
+            "fields": cfg.get("fields"),
+            "fid": cfg.get("fid"),
+            "po": cfg.get("po", "1"),
+            "pz": cfg.get("pz", "500"),
+            "ut": cfg.get("ut"),
+        }
+
+        try:
+            data = cls.get_jsonp(url, params)
+            if data.get("rc") == 0:
+                diff = data.get("data", {}).get("diff", [])
+                return {item.get("f12") for item in diff if item.get("f12")}
+        except Exception as e:
+            logger.error(f"获取涨停池失败: {e}")
+
+        return set()
+
+    @classmethod
+    def get_zb_pool(cls) -> set:
+        """
+        获取炸板池股票代码集合
+
+        返回:
+            {"300750", "002460", ...}
+        """
+        cfg = cls._get_endpoint("zb_pool")
+        url = cfg.pop("url")
+
+        params = {
+            "np": cfg.get("np", "1"),
+            "fltt": cfg.get("fltt", "2"),
+            "invt": cfg.get("invt", "2"),
+            "fs": cfg.get("fs"),
+            "fields": cfg.get("fields"),
+            "fid": cfg.get("fid"),
+            "po": cfg.get("po", "1"),
+            "pz": cfg.get("pz", "500"),
+            "ut": cfg.get("ut"),
+        }
+
+        try:
+            data = cls.get_jsonp(url, params)
+            if data.get("rc") == 0:
+                diff = data.get("data", {}).get("diff", [])
+                return {item.get("f12") for item in diff if item.get("f12")}
+        except Exception as e:
+            logger.error(f"获取炸板池失败: {e}")
+
+        return set()
+
+    @classmethod
+    def get_dt_pool(cls) -> set:
+        """
+        获取跌停池股票代码集合
+
+        返回:
+            {"300750", "002460", ...}
+        """
+        cfg = cls._get_endpoint("dt_pool")
+        url = cfg.pop("url")
+
+        params = {
+            "np": cfg.get("np", "1"),
+            "fltt": cfg.get("fltt", "2"),
+            "invt": cfg.get("invt", "2"),
+            "fs": cfg.get("fs"),
+            "fields": cfg.get("fields"),
+            "fid": cfg.get("fid"),
+            "po": cfg.get("po", "1"),
+            "pz": cfg.get("pz", "500"),
+            "ut": cfg.get("ut"),
+        }
+
+        try:
+            data = cls.get_jsonp(url, params)
+            if data.get("rc") == 0:
+                diff = data.get("data", {}).get("diff", [])
+                return {item.get("f12") for item in diff if item.get("f12")}
+        except Exception as e:
+            logger.error(f"获取跌停池失败: {e}")
+
+        return set()
+
+    @classmethod
+    def get_stock_raw(cls, secid: str) -> Optional[Dict]:
+        """
+        获取单只股票的快照数据
+
+        参数:
+            secid: 东方财富格式标识，如 "0.000001"（平安银行）、"1.600519"（贵州茅台）
+
+        返回:
+            {
+                "spj": 100.5,      # 最新价
+                "zgj": 101.2,      # 最高价
+                "zdj": 99.8,       # 最低价
+                "kpj": 100.0,      # 开盘价
+                "cjl": 1000000,    # 成交量（手）
+                "cje": 100500000,  # 成交额（元）
+                ...
+            }
+        """
+        cfg = cls._get_endpoint("stock_raw")
+        url = cfg.pop("url")
+
+        params = {
+            "secid": secid,
+            "fields": cfg.get("fields"),
+            "ut": cfg.get("ut"),
+        }
+
+        try:
+            data = cls.get_jsonp(url, params)
+            if data.get("rc") == 0 and data.get("data"):
+                return data["data"]
+        except Exception as e:
+            logger.error(f"获取股票快照失败: {secid} - {e}")
+
+        return None
+
+    @classmethod
+    def get_block_snapshot_raw(cls) -> list:
+        """
+        获取所有板块的快照数据（概念+行业+风格）
+
+        返回:
+            [
+                {
+                    "f12": "BK0968",
+                    "f14": "固态电池",
+                    "f2": 1000.5,   # 最新指数
+                    "f3": 2.5,      # 涨跌幅
+                    ...
+                },
+                ...
+            ]
+        """
+        cfg = cls._get_endpoint("block_snapshot")
+        url = cfg.get("url")
+
+        params = {
+            "pn": "1",  # 必须添加页码参数
+            "np": cfg.get("np", "1"),
+            "fltt": cfg.get("fltt", "1"),
+            "invt": cfg.get("invt", "2"),
+            "dect": cfg.get("dect", "1"),
+            "wbp2u": cfg.get("wbp2u", "3951356261349626|0|1|0|web"),
+            "fs": cfg.get("fs"),
+            "fields": cfg.get("fields"),
+            "fid": cfg.get("fid"),
+            "po": cfg.get("po", "1"),
+            "pz": cfg.get("pz", "1000"),
+            "ut": cfg.get("ut"),
+        }
+
+        try:
+            data = cls.get_jsonp(url, params)
+            if data.get("rc") == 0:
+                diff = data.get("data", {}).get("diff", [])
+                return diff
+        except Exception as e:
+            logger.error(f"获取板块快照失败: {e}")
+
+        return []
+
+    @classmethod
+    def get_block_snapshot_all(cls) -> list:
+        """
+        分页获取所有板块的快照数据（概念+行业+风格）
+
+        说明：
+            东方财富接口每次最多返回100条数据，需要分页获取全量
+
+        返回:
+            [
+                {
+                    "f12": "BK0968",
+                    "f14": "固态电池",
+                    "f2": 1000.5,   # 最新指数
+                    "f3": 888,      # 涨跌幅（需要除以100）
+                    ...
+                },
+                ...
+            ]
+        """
+        cfg = cls._get_endpoint("block_snapshot")
+        url = cfg.get("url")
+
+        base_params = {
+            "np": cfg.get("np", "1"),
+            "fltt": cfg.get("fltt", "1"),
+            "invt": cfg.get("invt", "2"),
+            "dect": cfg.get("dect", "1"),
+            "wbp2u": cfg.get("wbp2u", "3951356261349626|0|1|0|web"),
+            "fs": cfg.get("fs"),
+            "fields": cfg.get("fields"),
+            "fid": cfg.get("fid"),
+            "po": cfg.get("po", "1"),
+            "pz": "100",  # 每页100条（接口限制）
+            "ut": cfg.get("ut"),
+        }
+
+        all_data = []
+        page = 1
+
+        while True:
+            params = {**base_params, "pn": str(page)}
+            try:
+                data = cls.get_jsonp(url, params)
+                if data.get("rc") != 0:
+                    break
+
+                diff = data.get("data", {}).get("diff", [])
+                if not diff:
+                    break
+
+                all_data.extend(diff)
+                
+                # 如果返回少于100条，说明是最后一页
+                if len(diff) < 100:
+                    break
+                    
+                page += 1
+            except Exception as e:
+                logger.error(f"获取板块快照失败 (page={page}): {e}")
+                break
+
+        logger.info(f"分页获取板块快照: 共{len(all_data)}条, {page}页")
+        return all_data
+
+    # ==========================================
+    # 特殊股票池接口
+    # ==========================================
+
+    @classmethod
+    def _get_special_pool(cls, pool_type: str, date_str: str) -> list:
+        """
+        获取特殊股票池数据（涨停/昨日涨停/强势股/炸板/跌停）
+
+        参数:
+            pool_type: 池类型 (zt/zrzt/qs/zb/dt)
+            date_str: 日期字符串 (YYYYMMDD)
+                - zrzt 用今天日期（getYesterdayZTPool(date=今天) = 今天这个交易日的"昨日涨停"）
+                - 其他池用前一交易日日期（盘后数据更完整）
+
+        返回:
+            股票池数据列表
+        """
+        # 接口映射（URL + sort 参数）
+        pool_config = {
+            "zt": {
+                "url": "https://push2ex.eastmoney.com/getTopicZTPool",
+                "sort": "fbt:asc",
+            },
+            "zrzt": {
+                "url": "https://push2ex.eastmoney.com/getYesterdayZTPool",
+                "sort": "zs:desc",
+            },
+            "qs": {
+                "url": "https://push2ex.eastmoney.com/getTopicQSPool",
+                "sort": "zdp:desc",
+            },
+            "zb": {
+                "url": "https://push2ex.eastmoney.com/getTopicZBPool",
+                "sort": "fbt:asc",
+            },
+            "dt": {
+                "url": "https://push2ex.eastmoney.com/getTopicDTPool",
+                "sort": "fund:asc",
+            },
+        }
+
+        cfg = pool_config.get(pool_type)
+        if not cfg:
+            logger.error(f"未知的股票池类型: {pool_type}")
+            return []
+
+        base_url = cfg["url"]
+        base_params = {
+            "ut": "7eea3edcaed734bea9cbfc24409ed989",
+            "dpt": "wz.ztzt",
+            "pagesize": "170",
+            "sort": cfg["sort"],
+            "date": date_str,
+        }
+
+        all_data = []
+        page_index = 0
+
+        while True:
+            params = {
+                **base_params,
+                "Pageindex": str(page_index),
+                "_": str(int(time.time() * 1000)),
+            }
+            try:
+                data = cls.get_jsonp(base_url, params)
+                if data.get("rc") != 0:
+                    break
+
+                pool = data.get("data", {}).get("pool", [])
+                if not pool:
+                    break
+
+                all_data.extend(pool)
+
+                # 如果返回少于 pagesize，说明是最后一页
+                if len(pool) < 170:
+                    break
+
+                page_index += 1
+            except Exception as e:
+                logger.error(f"获取{pool_type}股票池失败 (page={page_index}): {e}")
+                break
+
+        logger.info(f"获取{pool_type}股票池: 共{len(all_data)}条, {page_index + 1}页")
+        return all_data
+
+    @classmethod
+    def get_zt_pool(cls, date_str: str) -> list:
+        """获取涨停池"""
+        return cls._get_special_pool("zt", date_str)
+
+    @classmethod
+    def get_zrzt_pool(cls, date_str: str) -> list:
+        """获取昨日涨停池"""
+        return cls._get_special_pool("zrzt", date_str)
+
+    @classmethod
+    def get_qs_pool(cls, date_str: str) -> list:
+        """获取强势股池"""
+        return cls._get_special_pool("qs", date_str)
+
+    @classmethod
+    def get_zb_pool(cls, date_str: str) -> list:
+        """获取炸板池"""
+        return cls._get_special_pool("zb", date_str)
+
+    @classmethod
+    def get_dt_pool(cls, date_str: str) -> list:
+        """获取跌停池"""
+        return cls._get_special_pool("dt", date_str)
 
 
 # 兼容旧代码的别名

@@ -5,22 +5,18 @@
 
 
 # 显式导入所有 Model（非常重要）
-# from app.models.event import event_stock_consensus,event_capital_persistence,event_stock_dominance,event_block_start
-# from app.models.decision import decision_stock_daily,decision_open_validation
-# from app.models.derived import derived_stock_minute,stock_minute_fundflow,block_minute_fundflow,derived_stock_block_anomaly,stock_snapshot
-
-from app.models.base.base_stock import BaseStock
-from app.models.base.base_block import Base
-
-
-# from app.models.raw import raw_block_huoyue,raw_stock_huoyue
-
-
-from app.models.system import sys_market_state_date
 
 
 from app.db.session import engine
 from app.db.base import Base
+
+
+from app.models.system import sys_market_state_date
+from app.models.raw import  raw_min_stock,raw_day_stock,raw_day_block,raw_min_block
+from app.models.base import  base_stock,base_block
+from app.models.special import special_dt,special_qs,special_zb,special_zt,special_zrzt
+
+
 
 def init_db():
     """

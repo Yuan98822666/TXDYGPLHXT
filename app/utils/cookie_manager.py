@@ -39,6 +39,7 @@ class CookieManager:
     _cookies: Optional[Dict] = None
     _last_update: float = 0
     _cache_expire: int = 3600  # 缓存1小时
+    _last_log_source: Optional[str] = None  # 上次日志来源，避免重复输出
 
     @classmethod
     def get_cookies(cls) -> Dict[str, str]:
@@ -53,18 +54,25 @@ class CookieManager:
             cls._cookies = cookies
             cls._last_update = time.time()
             cls._save_cache(cookies)
-            logger.info("从浏览器获取 Cookie 成功")
+            if cls._last_log_source != "browser":
+                logger.info("从浏览器获取 Cookie 成功")
+                cls._last_log_source = "browser"
             return cookies
 
         # 尝试从缓存加载
         cookies = cls._load_cache()
         if cookies:
             cls._cookies = cookies
-            logger.info("从缓存加载 Cookie")
+            cls._last_update = time.time()  # 更新时间，避免下轮再次触发日志
+            if cls._last_log_source != "cache":
+                logger.info("从缓存加载 Cookie")
+                cls._last_log_source = "cache"
             return cookies
 
         # 使用默认 Cookie（需手动更新）
-        logger.debug("使用默认 Cookie")
+        if cls._last_log_source != "default":
+            logger.debug("使用默认 Cookie")
+            cls._last_log_source = "default"
         return cls._get_default_cookies()
 
     @classmethod
