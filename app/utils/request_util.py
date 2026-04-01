@@ -486,10 +486,11 @@ class EastMoneyRequest:
     @classmethod
     def get_block_snapshot_all(cls) -> list:
         """
-        分页获取所有板块的快照数据（概念+行业+风格）
+        分页获取所有板块的快照数据（仅概念+行业，排除风格）
 
         说明：
             东方财富接口每次最多返回100条数据，需要分页获取全量
+            只查询 GN（概念）和 HY（行业），排除 FG（风格）
 
         返回:
             [
@@ -506,46 +507,51 @@ class EastMoneyRequest:
         cfg = cls._get_endpoint("block_snapshot")
         url = cfg.get("url")
 
-        base_params = {
-            "np": cfg.get("np", "1"),
-            "fltt": cfg.get("fltt", "1"),
-            "invt": cfg.get("invt", "2"),
-            "dect": cfg.get("dect", "1"),
-            "wbp2u": cfg.get("wbp2u", "3951356261349626|0|1|0|web"),
-            "fs": cfg.get("fs"),
-            "fields": cfg.get("fields"),
-            "fid": cfg.get("fid"),
-            "po": cfg.get("po", "1"),
-            "pz": "100",  # 每页100条（接口限制）
-            "ut": cfg.get("ut"),
-        }
+        # 只查询 GN（概念）和 HY（行业），排除 FG（风格）
+        # m:90+t:3 = 概念板块
+        # m:90+s:4 = 行业板块
+        fs_list = ["m:90+t:3", "m:90+s:4"]
 
         all_data = []
-        page = 1
+        
+        for fs in fs_list:
+            base_params = {
+                "np": cfg.get("np", "1"),
+                "fltt": cfg.get("fltt", "1"),
+                "invt": cfg.get("invt", "2"),
+                "dect": cfg.get("dect", "1"),
+                "wbp2u": cfg.get("wbp2u", "3951356261349626|0|1|0|web"),
+                "fs": fs,
+                "fields": cfg.get("fields"),
+                "fid": cfg.get("fid"),
+                "po": cfg.get("po", "1"),
+                "pz": "100",
+                "ut": cfg.get("ut"),
+            }
+            
+            page = 1
+            while True:
+                params = {**base_params, "pn": str(page)}
+                try:
+                    data = cls.get_jsonp(url, params)
+                    if data.get("rc") != 0:
+                        break
 
-        while True:
-            params = {**base_params, "pn": str(page)}
-            try:
-                data = cls.get_jsonp(url, params)
-                if data.get("rc") != 0:
-                    break
+                    diff = data.get("data", {}).get("diff", [])
+                    if not diff:
+                        break
 
-                diff = data.get("data", {}).get("diff", [])
-                if not diff:
-                    break
-
-                all_data.extend(diff)
-                
-                # 如果返回少于100条，说明是最后一页
-                if len(diff) < 100:
-                    break
+                    all_data.extend(diff)
                     
-                page += 1
-            except Exception as e:
-                logger.error(f"获取板块快照失败 (page={page}): {e}")
-                break
+                    if len(diff) < 100:
+                        break
+                        
+                    page += 1
+                except Exception as e:
+                    logger.error(f"获取板块快照失败 (fs={fs}, page={page}): {e}")
+                    break
 
-        logger.info(f"分页获取板块快照: 共{len(all_data)}条, {page}页")
+        logger.info(f"分页获取板块快照: GN+HY共{len(all_data)}条")
         return all_data
 
     # ==========================================

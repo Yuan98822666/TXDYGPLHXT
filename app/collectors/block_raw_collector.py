@@ -22,9 +22,6 @@ from sqlalchemy.dialects.postgresql import insert
 
 logger = logging.getLogger(__name__)
 
-# 只采集 GN（概念）和 HY（行业），排除 FG（风格）
-BLOCK_TYPES = {"GN", "HY"}
-
 
 class BlockRawCollector:
     """板块快照采集器"""
@@ -79,23 +76,17 @@ class BlockRawCollector:
         # 生成批次号
         raw_no, trade_date, snapshot_time = generate_batch_no()
 
-        # 分页获取所有板块数据
+        # 分页获取 GN+HY 板块数据（已在 API 层过滤）
         all_data = EastMoneyRequest.get_block_snapshot_all()
 
         if not all_data:
             return {"total": 0, "success": 0, "elapsed_seconds": 0}
 
-        # 过滤：只保留 GN（概念）和 HY（行业），排除 FG（风格）
-        filtered_data = [
-            item for item in all_data 
-            if item.get("f13") in BLOCK_TYPES
-        ]
-        
-        logger.info(f"板块快照：全量 {len(all_data)} 条，过滤后 GN+HY 共 {len(filtered_data)} 条")
+        logger.info(f"板块快照：GN+HY 共 {len(all_data)} 条")
 
         # 解析数据
         results = []
-        for item in filtered_data:
+        for item in all_data:
             try:
                 parsed = cls._parse_block_data(item)
                 if parsed.get("block_code"):
