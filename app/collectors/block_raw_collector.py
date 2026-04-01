@@ -2,7 +2,8 @@
 """
 板块快照采集器
 
-功能：每分钟采集所有板块（GN+HY+FG）的快照数据，写入 raw_min_block 表
+功能：每分钟采集概念（GN）和行业（HY）板块的快照数据，写入 raw_min_block 表
+注意：只采集 GN+HY，排除风格（FG）
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -11,7 +12,6 @@ import logging
 import time
 from datetime import datetime
 from typing import List, Dict
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from app.utils.request_util import EastMoneyRequest
 from app.utils.batch_no import generate_batch_no
@@ -21,6 +21,9 @@ from app.db.session import get_db_context
 from sqlalchemy.dialects.postgresql import insert
 
 logger = logging.getLogger(__name__)
+
+# 只采集 GN（概念）和 HY（行业），排除 FG（风格）
+BLOCK_TYPES = {"GN", "HY"}
 
 
 class BlockRawCollector:
@@ -56,11 +59,11 @@ class BlockRawCollector:
             "block_cd_zb": cls._safe_divide(item.get("f69")),   # 超大单占比
             "block_dd_zb": cls._safe_divide(item.get("f75")),   # 大单占比
             "block_zd_zb": cls._safe_divide(item.get("f81")),   # 中单占比
-            "block_xd_zb": cls._safe_divide(item.get("f87")),  # 小单占比
+            "block_xd_zb": cls._safe_divide(item.get("f87")),   # 小单占比
             "block_ltg": item.get("f39"),                   # 流通股
-            "block_up_stock": item.get("f104"),             # 上涨家数
-            "block_pi_stock": item.get("f105"),             # 平盘家数
-            "block_dw_stock": item.get("f106"),             # 下跌家数
+            "block_up_stock": item.get("f104"),            # 上涨家数
+            "block_pi_stock": item.get("f105"),            # 平盘家数
+            "block_dw_stock": item.get("f106"),            # 下跌家数
             "leader_stock_code": item.get("f140"),          # 领涨股代码
             "leader_stock_name": item.get("f128"),          # 领涨股名称
             "leader_stock_zdf": cls._safe_divide(item.get("f136")),  # 领涨股涨幅
@@ -70,21 +73,29 @@ class BlockRawCollector:
 
     @classmethod
     def collect(cls) -> Dict:
-        """采集板块快照数据"""
+        """采集板块快照数据（仅 GN+HY）"""
         start_time = time.time()
 
         # 生成批次号
         raw_no, trade_date, snapshot_time = generate_batch_no()
 
-        # 分页获取所有板块数据（每次100条，全量需分页）
+        # 分页获取所有板块数据
         all_data = EastMoneyRequest.get_block_snapshot_all()
 
         if not all_data:
             return {"total": 0, "success": 0, "elapsed_seconds": 0}
 
+        # 过滤：只保留 GN（概念）和 HY（行业），排除 FG（风格）
+        filtered_data = [
+            item for item in all_data 
+            if item.get("f13") in BLOCK_TYPES
+        ]
+        
+        logger.info(f"板块快照：全量 {len(all_data)} 条，过滤后 GN+HY 共 {len(filtered_data)} 条")
+
         # 解析数据
         results = []
-        for item in all_data:
+        for item in filtered_data:
             try:
                 parsed = cls._parse_block_data(item)
                 if parsed.get("block_code"):
@@ -113,11 +124,11 @@ class BlockRawCollector:
                     logger.error(f"入库失败: {data.get('block_code')} - {ex}")
             db.commit()
 
-        # 从板块快照中提取领涨股和资金流入最多股，标记为关注
+        # 从板块快照中提取领涨股和资金流入最多股，标记为关注（仅限主板）
         new_imp_count = cls._mark_block_stocks_as_imp(results)
 
         elapsed = time.time() - start_time
-        logger.info(f"板块快照采集完成: 共{len(results)}条, 耗时{elapsed:.2f}s, 新增关注股票 {new_imp_count} 只")
+        logger.info(f"板块快照采集完成: GN+HY共{len(results)}条, 耗时{elapsed:.2f}s, 新增关注股票 {new_imp_count} 只")
 
         return {
             "total": len(results),
@@ -131,10 +142,8 @@ class BlockRawCollector:
         """
         从板块快照中提取领涨股和资金流入最多股，标记为关注
 
-        只标记 stock_imp != 1 的股票，避免重复写入
-
-        返回:
-            新增标记的股票数量
+        只标记主板股票（SH_ZB/SZ_ZB），排除科创板、创业板、北交所
+        只标记 stock_imp != 1 的股票
         """
         # 收集所有领涨股和资金最多股的股票代码
         all_codes = set()
@@ -150,40 +159,34 @@ class BlockRawCollector:
             return 0
 
         with get_db_context() as db:
-            # 查出 stock_imp != 1 的股票（即未标记的）
+            # 查出未标记的主板股票
             existing_imp = db.query(BaseStock.stock_code).filter(
                 BaseStock.stock_code.in_(all_codes),
-                BaseStock.stock_imp == 1
+                BaseStock.stock_imp == 1,
+                BaseStock.stock_type.in_(["SH_ZB", "SZ_ZB"])
             ).all()
             already_marked = {row[0] for row in existing_imp}
 
             new_codes = all_codes - already_marked
             if not new_codes:
-                logger.debug(f"领涨/资金股标记：无新增（{len(all_codes)} 只均已标记）")
+                logger.debug(f"领涨/资金股标记：无新增（{len(all_codes)} 只均已标记或非主板）")
                 return 0
 
+            # 只更新主板股票
             db.query(BaseStock).filter(
-                BaseStock.stock_code.in_(new_codes)
+                BaseStock.stock_code.in_(new_codes),
+                BaseStock.stock_type.in_(["SH_ZB", "SZ_ZB"])
             ).update({"stock_imp": 1}, synchronize_session=False)
             db.commit()
-            logger.info(f"标记领涨/资金股为关注: {len(new_codes)} 只 -> {sorted(new_codes)}")
+            logger.info(f"标记领涨/资金股为关注: {len(new_codes)} 只（非主板股票已过滤）")
 
         return len(new_codes)
-
-        elapsed = time.time() - start_time
-        logger.info(f"板块快照采集完成: 共{len(results)}条, 耗时{elapsed:.2f}s")
-
-        return {
-            "total": len(results),
-            "success": success,
-            "elapsed_seconds": round(elapsed, 2),
-        }
 
 
 if __name__ == "__main__":
     import json
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-    print("=== 板块快照采集测试 ===")
+    print("=== 板块快照采集测试（仅 GN+HY）===")
     result = BlockRawCollector.collect()
     print(json.dumps(result, ensure_ascii=False))

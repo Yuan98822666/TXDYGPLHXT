@@ -22,6 +22,9 @@ from app.db.session import get_db_context
 
 logger = logging.getLogger(__name__)
 
+# 只采集 GN（概念）和 HY（行业），排除风格（FG）
+BLOCK_TYPES = {"GN", "HY"}
+
 
 class DayCollector:
     """日K数据采集器"""
@@ -179,15 +182,34 @@ class DayCollector:
                     "elapsed_seconds": time.time() - start_time,
                 }
 
+            # 获取 GN+HY 的板块代码集合
+            from app.models.base.base_block import BaseBlock
+            gn_hy_blocks = db.query(BaseBlock.block_code).filter(
+                BaseBlock.block_type.in_(["GN", "HY"])
+            ).all()
+            gn_hy_codes = {row[0] for row in gn_hy_blocks}
+
+            # 过滤：只保留 GN+HY 板块
+            filtered_snapshots = [
+                s for s in last_snapshots
+                if s.block_code in gn_hy_codes
+            ]
+            
+            logger.info(f"板块日K：快照 {len(last_snapshots)} 条，过滤后 GN+HY 共 {len(filtered_snapshots)} 条")
+
             # 删除旧数据（replace 模式才删除，append 模式直接追加）
             if action == "replace":
-                db.query(RawDayBlock).filter(RawDayBlock.trade_date == trade_date).delete()
+                # 只删除 GN+HY 的日K数据，保留其他
+                db.query(RawDayBlock).filter(
+                    RawDayBlock.trade_date == trade_date,
+                    RawDayBlock.block_code.in_(gn_hy_codes)
+                ).delete(synchronize_session=False)
                 db.commit()
-                logger.info(f"[{action}] 已删除当日旧数据")
+                logger.info(f"[{action}] 已删除当日 GN+HY 旧数据")
 
             # 复制到日K表
             day_records = []
-            for snapshot in last_snapshots:
+            for snapshot in filtered_snapshots:
                 record = RawDayBlock(
                     block_code=snapshot.block_code,
                     block_name=snapshot.block_name,
