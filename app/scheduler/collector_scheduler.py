@@ -170,12 +170,22 @@ class CollectorScheduler:
         """调度器主循环"""
         logger.info("采集调度器启动")
 
-        # 初始化：执行一次采集
-        try:
-            self.run_raw_collection()
-            self.run_special_pool_collection()
-        except Exception as e:
-            logger.error(f"初始化采集失败: {e}")
+        # 初始化：只在交易时间内执行采集（非交易时段跳过初始化采集）
+        current_time = datetime.now().time()
+        is_trading_hours = (
+            dt_time(9, 25) <= current_time <= dt_time(11, 30) or
+            dt_time(13, 0) <= current_time <= dt_time(15, 5)
+        )
+        
+        if is_trading_hours:
+            logger.info("交易时段启动，执行初始化采集...")
+            try:
+                self.run_raw_collection()
+                self.run_special_pool_collection()
+            except Exception as e:
+                logger.error(f"初始化采集失败: {e}")
+        else:
+            logger.info("非交易时段启动，跳过初始化采集")
 
         day_k_collected = False
 
