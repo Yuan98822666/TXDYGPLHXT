@@ -1,7 +1,7 @@
 """
 所有 ORM Model 的 Declarative Base
 
-功能说明：
+功能说明.md：
 - 提供 SQLAlchemy 声明式映射的基类
 - 所有数据模型都应继承此类
 - 实现自动表名推断和基础元数据管理

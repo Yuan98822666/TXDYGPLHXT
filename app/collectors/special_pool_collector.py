@@ -149,19 +149,19 @@ class SpecialPoolCollector:
     @classmethod
     def _update_stock_imp(cls, stock_codes: set):
         """
-        标记特殊股票为关注（只更新未标记的）
+        标记特殊股票为关注（仅限主板股票）
 
-        返回:
-            新增标记数量
+        非主板股票（科创板KCB、创业板CYB、北交所BJS）不标记关注
         """
         if not stock_codes:
             return 0
         with get_db_context() as db:
             try:
-                # 只查 stock_imp != 1 的，即未标记的
+                # 只查 stock_imp != 1 的，即未标记的主板股票
                 existing = db.query(BaseStock.stock_code).filter(
                     BaseStock.stock_code.in_(stock_codes),
-                    BaseStock.stock_imp == 1
+                    BaseStock.stock_imp == 1,
+                    BaseStock.stock_type.in_(["SH_ZB", "SZ_ZB"])
                 ).all()
                 already_marked = {row[0] for row in existing}
                 new_codes = stock_codes - already_marked
@@ -171,11 +171,12 @@ class SpecialPoolCollector:
 
                 from sqlalchemy import update
                 stmt = update(BaseStock).where(
-                    BaseStock.stock_code.in_(new_codes)
+                    BaseStock.stock_code.in_(new_codes),
+                    BaseStock.stock_type.in_(["SH_ZB", "SZ_ZB"])
                 ).values(stock_imp=1)
                 db.execute(stmt)
                 db.commit()
-                logger.info(f"标记特殊股票为关注: {len(new_codes)} 只 -> {sorted(new_codes)}")
+                logger.info(f"标记特殊股票为关注: {len(new_codes)} 只（非主板股票已过滤）")
                 return len(new_codes)
             except Exception as e:
                 db.rollback()

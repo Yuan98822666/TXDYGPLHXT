@@ -15,7 +15,7 @@ raw:
       time: "09:25:00"
       type: "once"
     - name: "早盘连续竞价"
-      start_time: "09:31:30"
+      start_time: "09:30:30"
       end_time: "11:30:00"
       interval_seconds: 30
       type: "interval"
@@ -39,7 +39,7 @@ special_pool:
       time: "09:25:00"
       type: "once"
     - name: "早盘连续竞价"
-      start_time: "09:31:30"
+      start_time: "09:30:30"
       end_time: "11:30:00"
       interval_seconds: 30
       type: "interval"
@@ -54,14 +54,21 @@ special_pool:
   scope:
     zt: true
     zrzt: true
-    qs: true
     zb: true
     dt: true
 
-# 日K采集配置 (raw_day_*) - 收盘后一次
+# 日K采集配置 (raw_day_*) - 早盘收盘各一次，收盘那次删除当日数据后重新采集
 day_k:
   enabled: true
-  collect_time: "15:05:00"
+  schedules:
+    - name: "早盘日K"
+      time: "09:27:00"
+      type: "once"
+      action: "append"
+    - name: "收盘日K"
+      time: "15:05:00"
+      type: "once"
+      action: "replace"
   scope:
     stock: true
     block: true

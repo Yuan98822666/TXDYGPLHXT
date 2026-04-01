@@ -148,13 +148,20 @@ class CollectorScheduler:
         except Exception as e:
             logger.error(f"特殊股票池采集失败: {e}")
 
-    def run_day_k_collection(self):
-        """执行日K采集"""
+    def run_day_k_collection(self, action: str = "replace"):
+        """
+        执行日K采集
+        
+        参数:
+            action: 操作类型
+                - "append": 追加模式（09:27:00 早盘日K）
+                - "replace": 删除后重新采集模式（15:05:00 收盘日K）
+        """
         try:
             from app.collectors.day_collector import DayCollector
 
-            logger.info("执行日K采集...")
-            DayCollector.collect_all()
+            logger.info(f"执行日K采集... (action={action})")
+            DayCollector.collect_all(action=action)
             logger.info("日K采集完成")
         except Exception as e:
             logger.error(f"日K采集失败: {e}")
@@ -204,8 +211,21 @@ class CollectorScheduler:
             if self.is_market_close_time() and not day_k_collected:
                 day_k_config = self.config.get("day_k", {})
                 if day_k_config.get("enabled", True):
-                    self.run_day_k_collection()
-                    day_k_collected = True
+                    schedules = day_k_config.get("schedules", [])
+                    for schedule in schedules:
+                        if schedule.get("action") == "replace" and self.should_run_now(schedule):
+                            self.run_day_k_collection(action="replace")
+                            day_k_collected = True
+                            break
+
+            # 检查早盘日K采集（09:27:00）
+            day_k_config = self.config.get("day_k", {})
+            if day_k_config.get("enabled", True) and not day_k_collected:
+                schedules = day_k_config.get("schedules", [])
+                for schedule in schedules:
+                    if schedule.get("action") == "append" and self.should_run_now(schedule):
+                        self.run_day_k_collection(action="append")
+                        break
 
             # 新的一天，重置日K采集标记
             if current_time < dt_time(15, 0):

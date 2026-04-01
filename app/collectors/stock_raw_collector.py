@@ -137,14 +137,28 @@ class StockRawCollector:
 
     @classmethod
     def _mark_pool_stocks_as_imp(cls, stock_codes: Set[str]):
-        """标记特殊股票为关注"""
+        """
+        标记特殊股票为关注（仅限主板股票）
+        
+        非主板股票（科创板KCB、创业板CYB、北交所BJS）不标记关注
+        """
         if not stock_codes:
             return
+        
         with get_db_context() as db:
+            # 只更新主板股票（SH_ZB/SZ_ZB），排除科创板、创业板、北交所
             db.query(BaseStock).filter(
-                BaseStock.stock_code.in_(stock_codes)
+                BaseStock.stock_code.in_(stock_codes),
+                BaseStock.stock_type.in_(["SH_ZB", "SZ_ZB"])
             ).update({"stock_imp": 1}, synchronize_session=False)
             db.commit()
+            
+            # 统计实际更新的数量
+            updated_count = db.query(BaseStock).filter(
+                BaseStock.stock_code.in_(stock_codes),
+                BaseStock.stock_type.in_(["SH_ZB", "SZ_ZB"])
+            ).count()
+            logger.info(f"标记 {updated_count} 只主板股票为关注（非主板股票已过滤）")
 
     @classmethod
     def collect(cls) -> Dict:

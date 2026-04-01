@@ -2,8 +2,10 @@
 """
 日K数据采集器
 
-功能：从 raw_min_* 快照表获取收盘时刻数据，复制到 raw_day_* 表
-入库规则：每日收盘后（15:00后）执行，复制当天最后一笔快照数据
+功能：从 raw_min_* 快照表获取数据，复制到 raw_day_* 表
+入库规则：
+    - 早盘（09:27:00）：append 模式，直接追加
+    - 收盘（15:05:00）：replace 模式，删除当日数据后重新采集
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -25,26 +27,17 @@ class DayCollector:
     """日K数据采集器"""
 
     @classmethod
-    def collect_stock_day(cls) -> Dict:
+    def collect_stock_day(cls, action: str = "replace") -> Dict:
         """
         采集股票日K数据
 
-        从 raw_min_stock 复制当天最后一笔快照数据到 raw_day_stock
+        参数:
+            action: 操作类型
+                - "append": 追加模式（09:27:00 早盘日K，直接插入）
+                - "replace": 删除后重新采集模式（15:05:00 收盘日K，删除当日数据后重新插入）
         """
         start_time = time.time()
         trade_date = get_latest_trade_day()
-
-        # 检查是否已收盘（15:00后）
-        now = datetime.now().time()
-        is_after_close = now.hour >= 15 or (now.hour == 14 and now.minute >= 55)
-
-        if not is_after_close:
-            return {
-                "status": "skipped",
-                "message": "未到收盘时间，跳过采集",
-                "count": 0,
-                "elapsed_seconds": 0,
-            }
 
         with get_db_context() as db:
             # 查询当天最后一笔快照数据（按 snapshot_time 降序）
@@ -75,12 +68,15 @@ class DayCollector:
                     "status": "success",
                     "message": "无快照数据",
                     "count": 0,
+                    "action": action,
                     "elapsed_seconds": time.time() - start_time,
                 }
 
-            # 删除旧数据
-            db.query(RawDayStock).filter(RawDayStock.trade_date == trade_date).delete()
-            db.commit()
+            # 删除旧数据（replace 模式才删除，append 模式直接追加）
+            if action == "replace":
+                db.query(RawDayStock).filter(RawDayStock.trade_date == trade_date).delete()
+                db.commit()
+                logger.info(f"[{action}] 已删除当日旧数据")
 
             # 复制到日K表
             day_records = []
@@ -126,37 +122,29 @@ class DayCollector:
             db.commit()
 
         elapsed = time.time() - start_time
-        logger.info(f"股票日K采集完成: {len(day_records)} 条, 耗时 {elapsed:.2f}s")
+        logger.info(f"股票日K采集完成: {len(day_records)} 条, 耗时 {elapsed:.2f}s, action={action}")
 
         return {
             "status": "success",
             "message": "股票日K采集完成",
             "count": len(day_records),
             "trade_date": str(trade_date),
+            "action": action,
             "elapsed_seconds": round(elapsed, 2),
         }
 
     @classmethod
-    def collect_block_day(cls) -> Dict:
+    def collect_block_day(cls, action: str = "replace") -> Dict:
         """
         采集板块日K数据
 
-        从 raw_min_block 复制当天最后一笔快照数据到 raw_day_block
+        参数:
+            action: 操作类型
+                - "append": 追加模式（09:27:00 早盘日K，直接插入）
+                - "replace": 删除后重新采集模式（15:05:00 收盘日K，删除当日数据后重新插入）
         """
         start_time = time.time()
         trade_date = get_latest_trade_day()
-
-        # 检查是否已收盘
-        now = datetime.now().time()
-        is_after_close = now.hour >= 15 or (now.hour == 14 and now.minute >= 55)
-
-        if not is_after_close:
-            return {
-                "status": "skipped",
-                "message": "未到收盘时间，跳过采集",
-                "count": 0,
-                "elapsed_seconds": 0,
-            }
 
         with get_db_context() as db:
             # 查询当天最后一笔快照数据
@@ -187,12 +175,15 @@ class DayCollector:
                     "status": "success",
                     "message": "无快照数据",
                     "count": 0,
+                    "action": action,
                     "elapsed_seconds": time.time() - start_time,
                 }
 
-            # 删除旧数据
-            db.query(RawDayBlock).filter(RawDayBlock.trade_date == trade_date).delete()
-            db.commit()
+            # 删除旧数据（replace 模式才删除，append 模式直接追加）
+            if action == "replace":
+                db.query(RawDayBlock).filter(RawDayBlock.trade_date == trade_date).delete()
+                db.commit()
+                logger.info(f"[{action}] 已删除当日旧数据")
 
             # 复制到日K表
             day_records = []
@@ -234,25 +225,34 @@ class DayCollector:
             db.commit()
 
         elapsed = time.time() - start_time
-        logger.info(f"板块日K采集完成: {len(day_records)} 条, 耗时 {elapsed:.2f}s")
+        logger.info(f"板块日K采集完成: {len(day_records)} 条, 耗时 {elapsed:.2f}s, action={action}")
 
         return {
             "status": "success",
             "message": "板块日K采集完成",
             "count": len(day_records),
             "trade_date": str(trade_date),
+            "action": action,
             "elapsed_seconds": round(elapsed, 2),
         }
 
     @classmethod
-    def collect_all(cls) -> Dict:
-        """采集所有日K数据"""
-        stock_result = cls.collect_stock_day()
-        block_result = cls.collect_block_day()
+    def collect_all(cls, action: str = "replace") -> Dict:
+        """
+        采集所有日K数据
+        
+        参数:
+            action: 操作类型
+                - "append": 追加模式（09:27:00 早盘日K，直接插入）
+                - "replace": 删除后重新采集模式（15:05:00 收盘日K，删除当日数据后重新插入）
+        """
+        stock_result = cls.collect_stock_day(action=action)
+        block_result = cls.collect_block_day(action=action)
 
         return {
             "stock": stock_result,
             "block": block_result,
+            "action": action,
             "total_stock": stock_result.get("count", 0),
             "total_block": block_result.get("count", 0),
         }
@@ -263,5 +263,5 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
     print("=== 日K数据采集测试 ===\n")
-    result = DayCollector.collect_all()
+    result = DayCollector.collect_all(action="replace")
     print(json.dumps(result, ensure_ascii=False, indent=2))
