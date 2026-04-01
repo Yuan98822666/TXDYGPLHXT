@@ -394,8 +394,6 @@ class EastMoneyRequest:
         import random
         import time as time_module
         import json as json_module
-        import requests as req_module
-        from urllib.parse import urlencode
 
         try:
             ts = int(time_module.time() * 1000)
@@ -409,33 +407,14 @@ class EastMoneyRequest:
                 "_": ts + 1,
             }
             
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0",
-                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-                "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Cache-Control": "no-cache",
-                "Pragma": "no-cache",
-                "Sec-Fetch-Dest": "document",
-                "Sec-Fetch-Mode": "navigate",
-                "Sec-Fetch-Site": "none",
-                "Sec-Fetch-User": "?1",
-                "Upgrade-Insecure-Requests": "1",
-            }
-            
             url = "https://push2.eastmoney.com/api/qt/stock/get"
-            resp = req_module.get(url, params=params, headers=headers, timeout=15)
-            text = resp.text.strip()
-            json_str = text.split(cb + "(", 1)[1].rsplit(")", 1)[0]
-            d = json_module.loads(json_str)
-            if d.get("rc") == 0 and d.get("data"):
-                return d["data"]
+            
+            # 使用 curl_cffi 和 Session（和 get_jsonp 一样）
+            data = cls.get_jsonp(url, params)
+            if data and data.get("rc") == 0 and data.get("data"):
+                return data["data"]
         except Exception as e:
-            # 报错时输出完整 URL，方便用浏览器验证
-            full_url = f"{url}?{urlencode(params)}"
-            logger.error(f"获取股票快照失败: {secid}")
-            logger.error(f"错误: {e}")
-            logger.error(f"请求 URL: {full_url}")
+            logger.error(f"获取股票快照失败: {secid} - {e}")
         return None
 
     @classmethod
