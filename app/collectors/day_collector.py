@@ -22,9 +22,6 @@ from app.db.session import get_db_context
 
 logger = logging.getLogger(__name__)
 
-# 只采集 GN（概念）和 HY（行业），排除风格（FG）
-BLOCK_TYPES = {"GN", "HY"}
-
 
 class DayCollector:
     """日K数据采集器"""
