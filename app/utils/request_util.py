@@ -386,31 +386,56 @@ class EastMoneyRequest:
 
         返回:
             {
-                "spj": 100.5,      # 最新价
-                "zgj": 101.2,      # 最高价
-                "zdj": 99.8,       # 最低价
-                "kpj": 100.0,      # 开盘价
-                "cjl": 1000000,    # 成交量（手）
-                "cje": 100500000,  # 成交额（元）
+                "f43": 1005000,    # 最新价（分）
+                "f44": 1012000,    # 最高价（分）
                 ...
             }
         """
-        cfg = cls._get_endpoint("stock_raw")
-        url = cfg.pop("url")
-
-        params = {
-            "secid": secid,
-            "fields": cfg.get("fields"),
-            "ut": cfg.get("ut"),
-        }
+        import random
+        import time as time_module
+        import json as json_module
+        import requests as req_module
+        from urllib.parse import urlencode
 
         try:
-            data = cls.get_jsonp(url, params)
-            if data.get("rc") == 0 and data.get("data"):
-                return data["data"]
+            ts = int(time_module.time() * 1000)
+            cb = f'jQuery{random.randint(10000000000000000, 99999999999999999)}_{ts}'
+            
+            params = {
+                "secid": secid,
+                "fields": "f43,f44,f45,f46,f47,f48,f51,f52,f60,f85,f116,f117,f137,f140,f143,f146,f149,f162,f167,f168,f169,f170,f171,f193,f194,f195,f196,f197",
+                "ut": "fa5fd1943c7b386f172d6893dbfba10b",
+                "cb": cb,
+                "_": ts + 1,
+            }
+            
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache",
+                "Sec-Fetch-Dest": "document",
+                "Sec-Fetch-Mode": "navigate",
+                "Sec-Fetch-Site": "none",
+                "Sec-Fetch-User": "?1",
+                "Upgrade-Insecure-Requests": "1",
+            }
+            
+            url = "https://push2.eastmoney.com/api/qt/stock/get"
+            resp = req_module.get(url, params=params, headers=headers, timeout=15)
+            text = resp.text.strip()
+            json_str = text.split(cb + "(", 1)[1].rsplit(")", 1)[0]
+            d = json_module.loads(json_str)
+            if d.get("rc") == 0 and d.get("data"):
+                return d["data"]
         except Exception as e:
-            logger.error(f"获取股票快照失败: {secid} - {e}")
-
+            # 报错时输出完整 URL，方便用浏览器验证
+            full_url = f"{url}?{urlencode(params)}"
+            logger.error(f"获取股票快照失败: {secid}")
+            logger.error(f"错误: {e}")
+            logger.error(f"请求 URL: {full_url}")
         return None
 
     @classmethod

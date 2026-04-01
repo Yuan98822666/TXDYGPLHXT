@@ -16,7 +16,7 @@ from typing import Dict, List
 from sqlalchemy.dialects.postgresql import insert
 from app.utils.request_util import EastMoneyRequest
 from app.utils.trade_calendar import get_latest_trade_day, get_prev_trade_day
-from app.models.special import SpecialZt, SpecialZrzt, SpecialQs, SpecialZb, SpecialDt
+from app.models.special import SpecialZt, SpecialZrzt, SpecialZb, SpecialDt
 from app.models.base.base_stock import BaseStock
 from app.db.session import get_db_context
 
@@ -70,33 +70,6 @@ class SpecialPoolCollector:
             "zs": cls._safe_float(item.get("zs")),
             "yfbt": cls._safe_int(item.get("yfbt")),
             "ylbc": cls._safe_int(item.get("ylbc")),
-            "hybk": item.get("hybk"),
-            "zt_days": cls._safe_int(zttj.get("days")),
-            "zt_count": cls._safe_int(zttj.get("ct")),
-            "trade_date": trade_date,
-        }
-
-    @classmethod
-    def _parse_qs_data(cls, item: Dict, trade_date: date) -> Dict:
-        """解析强势股池数据"""
-        zttj = item.get("zttj", {}) or {}
-        return {
-            "stock_code": item.get("c"),
-            "stock_name": item.get("n"),
-            "mkt": cls._safe_int(item.get("m")),
-            "price": cls._safe_float(item.get("p")),
-            "ztp": item.get("ztp"),
-            "ztf": item.get("ztf"),
-            "zdp": cls._safe_float(item.get("zdp")),
-            "amount": cls._safe_float(item.get("amount")),
-            "ltsz": cls._safe_float(item.get("ltsz")),
-            "tshare": cls._safe_float(item.get("tshare")),
-            "hs": cls._safe_float(item.get("hs")),
-            "lb": cls._safe_float(item.get("lb")),
-            "zf": cls._safe_float(item.get("zf")),
-            "zs": cls._safe_float(item.get("zs")),
-            "nh": cls._safe_int(item.get("nh")),
-            "cc": cls._safe_int(item.get("cc")),
             "hybk": item.get("hybk"),
             "zt_days": cls._safe_int(zttj.get("days")),
             "zt_count": cls._safe_int(zttj.get("ct")),
@@ -224,7 +197,6 @@ class SpecialPoolCollector:
         type_map = {
             "zt": {"model": SpecialZt, "func": "get_zt_pool", "date_func": get_latest_trade_day},
             "zrzt": {"model": SpecialZrzt, "func": "get_zrzt_pool", "date_func": get_prev_trade_day},
-            "qs": {"model": SpecialQs, "func": "get_qs_pool", "date_func": get_latest_trade_day},
             "zb": {"model": SpecialZb, "func": "get_zb_pool", "date_func": get_latest_trade_day},
             "dt": {"model": SpecialDt, "func": "get_dt_pool", "date_func": get_latest_trade_day},
         }
@@ -237,9 +209,9 @@ class SpecialPoolCollector:
         api_func = getattr(EastMoneyRequest, config["func"])
 
         # 获取日期
-        # - zrzt（昨日涨停）: 用今天日期（getYesterdayZTPool(date=今天) = 今天这个交易日的"昨日涨停"）
+        # - zrzt（昨日涨停）: 用今天日期
         # - zt（今日涨停池）: 用今天日期，盘中采集实时数据，盘后（16点后）采集完整数据
-        # - qs/zb/dt: 用今天
+        # - zb/dt: 用今天
         trade_date = get_latest_trade_day()
         date_str = cls._date_str(trade_date)
 
@@ -247,7 +219,7 @@ class SpecialPoolCollector:
 
         # 获取数据
         try:
-            # get_zt_pool / get_zrzt_pool / get_qs_pool / get_zb_pool / get_dt_pool
+            # get_zt_pool / get_zrzt_pool / get_zb_pool / get_dt_pool
             raw_data = api_func(date_str)
         except Exception as e:
             logger.error(f"获取数据失败: {e}")

@@ -11,7 +11,6 @@ import logging
 import time
 from datetime import datetime
 from typing import List, Dict, Set
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from app.utils.request_util import EastMoneyRequest
 from app.utils.batch_no import generate_batch_no
@@ -23,7 +22,7 @@ from app.db.session import get_db_context
 
 logger = logging.getLogger(__name__)
 
-MAX_WORKERS = 30  # 线程数
+MAX_WORKERS = 1  # 单线程，避免触发限流
 
 
 class StockRawCollector:
@@ -184,17 +183,16 @@ class StockRawCollector:
 
         logger.info(f"开始采集 {len(all_stocks)} 只股票快照")
 
-        # 多线程采集
+        # 单线程顺序采集（每请求间隔1秒，避免触发限流）
         results = []
-        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-            futures = {
-                executor.submit(cls._fetch_one_stock, stock, ztzt_map): stock
-                for stock in all_stocks
-            }
-            for future in as_completed(futures):
-                result = future.result()
-                if result:
-                    results.append(result)
+        for i, stock in enumerate(all_stocks):
+            result = cls._fetch_one_stock(stock, ztzt_map)
+            if result:
+                results.append(result)
+            # 间隔1秒，避免请求密度过高
+            if (i + 1) % 50 == 0:
+                logger.info(f"已采集 {i + 1}/{len(all_stocks)} 只，成功 {len(results)} 只")
+            time.sleep(1)
 
         # 批量入库
         with get_db_context() as db:
