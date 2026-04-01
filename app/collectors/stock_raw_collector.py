@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import logging
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import List, Dict, Set
 
@@ -22,7 +23,7 @@ from app.db.session import get_db_context
 
 logger = logging.getLogger(__name__)
 
-MAX_WORKERS = 1  # 单线程，避免触发限流
+MAX_WORKERS = 10  # 线程并发数
 
 
 class StockRawCollector:
@@ -197,16 +198,25 @@ class StockRawCollector:
 
         logger.info(f"开始采集 {len(all_stocks)} 只股票快照")
 
-        # 单线程顺序采集（每请求间隔1秒，避免触发限流）
+        # 多线程采集（10并发，每请求间隔0.5秒）
         results = []
-        for i, stock in enumerate(all_stocks):
-            result = cls._fetch_one_stock(stock, ztzt_map)
-            if result:
-                results.append(result)
-            # 间隔1秒，避免请求密度过高
-            if (i + 1) % 50 == 0:
-                logger.info(f"已采集 {i + 1}/{len(all_stocks)} 只，成功 {len(results)} 只")
-            time.sleep(1)
+        BATCH_SIZE = 50  # 每批50只
+        
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            for i in range(0, len(all_stocks), BATCH_SIZE):
+                batch = all_stocks[i:i + BATCH_SIZE]
+                futures = {
+                    executor.submit(cls._fetch_one_stock, stock, ztzt_map): stock
+                    for stock in batch
+                }
+                for future in as_completed(futures):
+                    result = future.result()
+                    if result:
+                        results.append(result)
+                # 批次间隔0.5秒
+                if i + BATCH_SIZE < len(all_stocks):
+                    time.sleep(0.5)
+                    logger.info(f"已采集 {min(i + BATCH_SIZE, len(all_stocks))}/{len(all_stocks)} 只")
 
         # 批量入库
         with get_db_context() as db:
