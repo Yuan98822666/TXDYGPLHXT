@@ -420,7 +420,7 @@ class EastMoneyRequest:
             url = f"https://{domain}/api/qt/stock/get"
             
             try:
-                logger.info(f"尝试域名: {domain}")
+                logger.debug(f"尝试域名: {domain}")
                 resp = session.get(url, params=params, cookies=cookies, timeout=10)
                 resp.raise_for_status()
                 
@@ -433,12 +433,12 @@ class EastMoneyRequest:
                     data = json.loads(text)
                 
                 if data and data.get("rc") == 0 and data.get("data"):
-                    logger.info(f"域名 {domain} 成功")
+                    logger.debug(f"域名 {domain} 成功")
                     return data["data"]
                     
             except Exception as e:
                 last_error = e
-                logger.warning(f"域名 {domain} 失败: {str(e)[:60]}")
+                logger.debug(f"域名 {domain} 失败: {str(e)[:60]}")
                 # 重置 session 强制重建连接
                 cls._session = None
         
