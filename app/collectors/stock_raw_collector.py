@@ -177,12 +177,14 @@ class StockRawCollector:
             cls._mark_pool_stocks_as_imp(set(ztzt_map.keys()))
 
         # 获取需要采集的股票列表
-        pool_stocks = cls._get_pool_stocks()
-
+        # 查询数据库里总共有多少只关注股，同时获取列表
         with get_db_context() as db:
             imp_stocks = db.query(BaseStock).filter(
                 BaseStock.stock_imp == 1
             ).all()
+            total_imp_count = len(imp_stocks)
+
+        pool_stocks = cls._get_pool_stocks()
 
         all_stocks = [
             {
@@ -196,7 +198,7 @@ class StockRawCollector:
                 all_stocks.append(ps)
                 seen.add(ps["stock_code"])
 
-        logger.info(f"开始采集 {len(all_stocks)} 只股票快照")
+        logger.info(f"关注股票总数: {total_imp_count} 只（数据库），本次采集 {len(all_stocks)} 只（去重后）")
 
         # 多线程采集（10并发，每请求间隔0.5秒）
         results = []
@@ -239,7 +241,7 @@ class StockRawCollector:
                 success = 0
 
         elapsed = time.time() - start_time
-        logger.info(f"股票快照采集完成: {success}/{len(all_stocks)} 条, 耗时 {elapsed:.2f}s")
+        logger.info(f"股票快照采集完成: {success}/{total_imp_count} 只（入库/关注总数）, {len(all_stocks)} 只（本次去重）, 耗时 {elapsed:.2f}s")
 
         return {
             "total": len(all_stocks),

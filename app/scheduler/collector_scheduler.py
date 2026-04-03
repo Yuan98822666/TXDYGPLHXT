@@ -131,8 +131,9 @@ class CollectorScheduler:
             from app.collectors.block_raw_collector import BlockRawCollector
 
             logger.info("执行快照采集...")
-            StockRawCollector.collect()
+            # 先跑板块（标记新增关注股），再跑股票（采集所有关注股）
             BlockRawCollector.collect()
+            StockRawCollector.collect()
             logger.info("快照采集完成")
         except Exception as e:
             logger.error(f"快照采集失败: {e}")
