@@ -379,7 +379,7 @@ class EastMoneyRequest:
     @classmethod
     def get_stock_raw(cls, secid: str) -> Optional[Dict]:
         """
-        获取单只股票的快照数据
+        获取单只股票的快照数据（支持多域名切换）
 
         参数:
             secid: 东方财富格式标识，如 "0.000001"（平安银行）、"1.600519"（贵州茅台）
@@ -393,28 +393,56 @@ class EastMoneyRequest:
         """
         import random
         import time as time_module
-        import json as json_module
 
-        try:
-            ts = int(time_module.time() * 1000)
-            cb = f'jQuery{random.randint(10000000000000000, 99999999999999999)}_{ts}'
+        ts = int(time_module.time() * 1000)
+        cb = f'jQuery{random.randint(10000000000000000, 99999999999999999)}_{ts}'
+        
+        params = {
+            "secid": secid,
+            "fields": "f43,f44,f45,f46,f47,f48,f51,f52,f60,f85,f116,f117,f137,f140,f143,f146,f149,f162,f167,f168,f169,f170,f171,f193,f194,f195,f196,f197",
+            "ut": "fa5fd1943c7b386f172d6893dbfba10b",
+            "cb": cb,
+            "_": ts + 1,
+        }
+
+        # 多域名列表（按优先级）
+        domains = [
+            "push2.eastmoney.com",
+            "push2delay.eastmoney.com",
+            "push2his.eastmoney.com",
+        ]
+
+        cookies = get_cookies()
+        last_error = None
+
+        for domain in domains:
+            session = cls._get_session()
+            url = f"https://{domain}/api/qt/stock/get"
             
-            params = {
-                "secid": secid,
-                "fields": "f43,f44,f45,f46,f47,f48,f51,f52,f60,f85,f116,f117,f137,f140,f143,f146,f149,f162,f167,f168,f169,f170,f171,f193,f194,f195,f196,f197",
-                "ut": "fa5fd1943c7b386f172d6893dbfba10b",
-                "cb": cb,
-                "_": ts + 1,
-            }
-            
-            url = "https://push2.eastmoney.com/api/qt/stock/get"
-            
-            # 使用 curl_cffi 和 Session（和 get_jsonp 一样）
-            data = cls.get_jsonp(url, params)
-            if data and data.get("rc") == 0 and data.get("data"):
-                return data["data"]
-        except Exception as e:
-            logger.error(f"获取股票快照失败: {secid} - {e}")
+            try:
+                logger.info(f"尝试域名: {domain}")
+                resp = session.get(url, params=params, cookies=cookies, timeout=10)
+                resp.raise_for_status()
+                
+                text = resp.text.strip()
+                # 解析 JSONP
+                if f"{cb}(" in text:
+                    json_str = text.split(f"{cb}(", 1)[1].rsplit(")", 1)[0]
+                    data = json.loads(json_str)
+                else:
+                    data = json.loads(text)
+                
+                if data and data.get("rc") == 0 and data.get("data"):
+                    logger.info(f"域名 {domain} 成功")
+                    return data["data"]
+                    
+            except Exception as e:
+                last_error = e
+                logger.warning(f"域名 {domain} 失败: {str(e)[:60]}")
+                # 重置 session 强制重建连接
+                cls._session = None
+        
+        logger.error(f"获取股票快照失败: {secid} - 所有域名均失败")
         return None
 
     @classmethod
