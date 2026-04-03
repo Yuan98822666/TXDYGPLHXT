@@ -141,15 +141,14 @@ class StockRawCollector:
     @classmethod
     def _mark_pool_stocks_as_imp(cls, stock_codes: Set[str]):
         """
-        标记特殊股票为关注（仅限主板股票）
-        
-        非主板股票（科创板KCB、创业板CYB、北交所BJS）不标记关注
+        标记涨停/炸板/跌停股票为关注
+
+        全部标记，不限制板块类型
         """
         if not stock_codes:
             return
         
         with get_db_context() as db:
-            # 更新所有板的股票（含创业板、科创板、北交所）
             db.query(BaseStock).filter(
                 BaseStock.stock_code.in_(stock_codes),
             ).update({"stock_imp": 1}, synchronize_session=False)
