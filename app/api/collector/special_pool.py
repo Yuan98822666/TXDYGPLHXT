@@ -73,7 +73,6 @@ async def get_pool_types():
         "types": [
             {"code": "zt", "name": "涨停池", "date": "最近交易日"},
             {"code": "zrzt", "name": "昨日涨停池", "date": "次近交易日"},
-            {"code": "qs", "name": "强势股池", "date": "最近交易日"},
             {"code": "zb", "name": "炸板池", "date": "最近交易日"},
             {"code": "dt", "name": "跌停池", "date": "最近交易日"},
         ]
