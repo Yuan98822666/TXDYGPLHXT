@@ -133,10 +133,10 @@ class BlockRawCollector:
         """
         从板块快照中提取领涨股和资金流入最多股，标记为关注
 
-        只标记主板股票（SH_ZB/SZ_ZB），排除科创板、创业板、北交所
-        只标记 stock_imp != 1 的股票
+        只标记主板股票（深交所主板/上证所主板/创业板/科创板）
+        只标记 stock_imp != 1 的股票（去重）
         """
-        # 收集所有领涨股和资金最多股的股票代码
+        # 收集所有领涨股和资金最多股的股票代码（Python 层去重）
         all_codes = set()
         for item in block_results:
             leader = item.get("leader_stock_code")
@@ -150,28 +150,30 @@ class BlockRawCollector:
             return 0
 
         with get_db_context() as db:
-            # 查出未标记的主板股票
-            existing_imp = db.query(BaseStock.stock_code).filter(
-                BaseStock.stock_code.in_(all_codes),
-                BaseStock.stock_imp == 1,
-                BaseStock.stock_type.in_(["深交所主板", "上证所主板", "创业板", "科创板"])
-            ).all()
-            already_marked = {row[0] for row in existing_imp}
+            # 查出所有在 base_stock 表中的已标记股票（已标记的跳过）
+            already_marked = {
+                row[0] for row in db.query(BaseStock.stock_code).filter(
+                    BaseStock.stock_code.in_(all_codes),
+                    BaseStock.stock_imp == 1,
+                ).all()
+            }
 
+            # 从待标记集合中排除已标记的
             new_codes = all_codes - already_marked
             if not new_codes:
-                logger.debug(f"领涨/资金股标记：无新增（{len(all_codes)} 只均已标记或非主板）")
+                logger.debug(f"领涨/资金股标记：无新增（{len(all_codes)} 只均已标记）")
                 return 0
 
-            # 只更新主板股票
-            db.query(BaseStock).filter(
+            # 过滤主板类型，只更新主板股票
+            updated = db.query(BaseStock).filter(
                 BaseStock.stock_code.in_(new_codes),
-                BaseStock.stock_type.in_(["深交所主板", "上证所主板", "创业板", "科创板"])
+                BaseStock.stock_type.in_(["深交所主板", "上证所主板", "创业板", "科创板"]),
+                BaseStock.stock_imp == 0,
             ).update({"stock_imp": 1}, synchronize_session=False)
             db.commit()
-            logger.info(f"标记领涨/资金股为关注: {len(new_codes)} 只（非主板股票已过滤）")
+            logger.info(f"标记领涨/资金股为关注: {updated} 只（{len(new_codes) - updated} 只非主板）")
 
-        return len(new_codes)
+        return updated
 
 
 if __name__ == "__main__":

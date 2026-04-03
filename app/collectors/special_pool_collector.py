@@ -149,35 +149,34 @@ class SpecialPoolCollector:
     @classmethod
     def _update_stock_imp(cls, stock_codes: set):
         """
-        标记特殊股票为关注（仅限主板股票）
+        标记特殊股票池中的股票为关注
 
-        非主板股票不标记关注
+        只标记主板股票（深交所主板/上证所主板/创业板/科创板）
+        只标记 stock_imp == 0 的（去重）
         """
         if not stock_codes:
             return 0
         with get_db_context() as db:
             try:
-                # 查出已经标记过的
-                existing = db.query(BaseStock.stock_code).filter(
+                # 查出已标记过的，跳过
+                already_marked = {row[0] for row in db.query(BaseStock.stock_code).filter(
                     BaseStock.stock_code.in_(stock_codes),
                     BaseStock.stock_imp == 1,
-                    BaseStock.stock_type.in_(["深交所主板", "上证所主板", "创业板", "科创板"])
-                ).all()
-                already_marked = {row[0] for row in existing}
-                new_codes = stock_codes - already_marked
+                ).all()}
 
+                new_codes = stock_codes - already_marked
                 if not new_codes:
                     return 0
 
-                from sqlalchemy import update
-                stmt = update(BaseStock).where(
+                # 只更新主板 + 未标记的
+                updated = db.query(BaseStock).filter(
                     BaseStock.stock_code.in_(new_codes),
-                    BaseStock.stock_type.in_(["深交所主板", "上证所主板", "创业板", "科创板"])
-                ).values(stock_imp=1)
-                db.execute(stmt)
+                    BaseStock.stock_type.in_(["深交所主板", "上证所主板", "创业板", "科创板"]),
+                    BaseStock.stock_imp == 0,
+                ).update({"stock_imp": 1}, synchronize_session=False)
                 db.commit()
-                logger.info(f"标记特殊股票为关注: {len(new_codes)} 只（非主板股票已过滤）")
-                return len(new_codes)
+                logger.info(f"标记特殊股票池为关注: {updated} 只（{len(new_codes) - updated} 只非主板）")
+                return updated
             except Exception as e:
                 db.rollback()
                 logger.error(f"更新 stock_imp 失败: {e}")

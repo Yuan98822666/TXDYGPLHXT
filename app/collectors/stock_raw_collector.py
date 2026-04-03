@@ -144,21 +144,19 @@ class StockRawCollector:
         标记涨停/炸板/跌停股票为关注
 
         全部标记，不限制板块类型
+        只标记 stock_imp == 0 的（去重）
         """
         if not stock_codes:
             return
         
         with get_db_context() as db:
-            db.query(BaseStock).filter(
-                BaseStock.stock_code.in_(stock_codes),
-            ).update({"stock_imp": 1}, synchronize_session=False)
-            db.commit()
-            
-            # 统计实际更新的数量
+            # 只更新未标记的（去重）
             updated_count = db.query(BaseStock).filter(
                 BaseStock.stock_code.in_(stock_codes),
-            ).count()
-            logger.info(f"标记 {updated_count} 只主板股票为关注（非主板股票已过滤）")
+                BaseStock.stock_imp == 0,
+            ).update({"stock_imp": 1}, synchronize_session=False)
+            db.commit()
+            logger.info(f"标记涨停/炸板/跌停股为关注: {updated_count} 只")
 
     @classmethod
     def collect(cls) -> Dict:
