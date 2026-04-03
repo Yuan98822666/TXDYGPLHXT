@@ -154,7 +154,7 @@ class BlockRawCollector:
             existing_imp = db.query(BaseStock.stock_code).filter(
                 BaseStock.stock_code.in_(all_codes),
                 BaseStock.stock_imp == 1,
-                BaseStock.stock_type.in_(["上海主板", "中小板", "创业板", "科创板"])
+                BaseStock.stock_type.in_(["深交所主板", "上证所主板", "创业板", "科创板"])
             ).all()
             already_marked = {row[0] for row in existing_imp}
 
@@ -166,7 +166,7 @@ class BlockRawCollector:
             # 只更新主板股票
             db.query(BaseStock).filter(
                 BaseStock.stock_code.in_(new_codes),
-                BaseStock.stock_type.in_(["上海主板", "中小板", "创业板", "科创板"])
+                BaseStock.stock_type.in_(["深交所主板", "上证所主板", "创业板", "科创板"])
             ).update({"stock_imp": 1}, synchronize_session=False)
             db.commit()
             logger.info(f"标记领涨/资金股为关注: {len(new_codes)} 只（非主板股票已过滤）")

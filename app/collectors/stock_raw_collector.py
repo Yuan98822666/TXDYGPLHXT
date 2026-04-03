@@ -4,7 +4,7 @@
 
 功能：采集 stock_imp=1 的股票快照数据，写入 raw_min_stock 表
 
-stock_type 实际值： 上海主板/中小板/创业板/科创板
+stock_type 实际值： 上证所主板/深交所主板/创业板/科创板
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
