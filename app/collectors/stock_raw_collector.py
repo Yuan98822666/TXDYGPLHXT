@@ -3,6 +3,8 @@
 股票快照采集器
 
 功能：采集 stock_imp=1 的股票快照数据，写入 raw_min_stock 表
+
+stock_type 实际值： 上海主板/中小板/创业板/科创板
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -147,17 +149,15 @@ class StockRawCollector:
             return
         
         with get_db_context() as db:
-            # 只更新主板股票（SH_ZB/SZ_ZB），排除科创板、创业板、北交所
+            # 更新所有板的股票（含创业板、科创板、北交所）
             db.query(BaseStock).filter(
                 BaseStock.stock_code.in_(stock_codes),
-                BaseStock.stock_type.in_(["SH_ZB", "SZ_ZB"])
             ).update({"stock_imp": 1}, synchronize_session=False)
             db.commit()
             
             # 统计实际更新的数量
             updated_count = db.query(BaseStock).filter(
                 BaseStock.stock_code.in_(stock_codes),
-                BaseStock.stock_type.in_(["SH_ZB", "SZ_ZB"])
             ).count()
             logger.info(f"标记 {updated_count} 只主板股票为关注（非主板股票已过滤）")
 

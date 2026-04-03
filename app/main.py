@@ -78,7 +78,7 @@ app.include_router(cookie_router, prefix="/api/cookie", tags=["Cookie 管理"])
 async def root():
     return {
         "message": "天下第一股票量化系统",
-        "version": "v0.2.0",
+        "version": "v0.3.0",
         "docs": "/docs",
         "scheduler": "自动启动"
     }
