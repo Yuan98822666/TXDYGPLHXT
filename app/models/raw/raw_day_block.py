@@ -3,9 +3,10 @@
 板块日K表 ORM 模型
 
 表名：raw_day_block
-用途：每日收盘后入库，与 raw_min_block 字段保持一致
+用途：每日开盘时初始化，盘中追加分析记录，收盘后更新最终数据
 """
 from sqlalchemy import Column, BigInteger, String, Integer, Numeric, Date, DateTime, Index
+from sqlalchemy.dialects.postgresql import JSONB
 from datetime import datetime, timezone
 from app.db.base import Base
 
@@ -14,9 +15,11 @@ class RawDayBlock(Base):
     """
     板块日K表
 
-    采集频率：每日收盘后（15:00-15:30）
-    采集范围：所有板块（GN + HY + FG）
-    采集来源：从 raw_min_block 快照表获取收盘时数据
+    采集频率：
+        - 早盘（09:25-09:30）：从 min 快照初始化
+        - 盘中：更新 notes 和 score
+        - 收盘（15:05）：更新最终数据
+    采集范围：GN + HY 板块
     """
     __tablename__ = "raw_day_block"
 
@@ -67,6 +70,10 @@ class RawDayBlock(Base):
     # 资金流入最多股
     money_stock_code = Column(String(20), comment="资金流入最多个股代码")
     money_stock_name = Column(String(100), comment="资金流入最多个股名称")
+
+    # 分析与评分
+    notes = Column(JSONB, default=list, comment="分析记录，格式：[{\"seq\":1,\"time\":\"09:30:00\",\"type\":\"open\",\"content\":\"高开2.3%\"}]")
+    score = Column(Integer, comment="量化得分（0-100）")
 
     # 入库时间
     created_at = Column(

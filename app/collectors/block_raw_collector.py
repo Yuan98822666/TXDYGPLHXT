@@ -3,6 +3,7 @@
 板块快照采集器
 
 功能：每分钟采集概念（GN）和行业（HY）板块的快照数据，写入 raw_min_block 表
+     同时检查 raw_day_block 表，无当日数据则插入
 注意：只采集 GN+HY，排除风格（FG）
 """
 import sys, os
@@ -16,7 +17,9 @@ from typing import List, Dict
 from app.utils.request_util import EastMoneyRequest
 from app.utils.batch_no import generate_batch_no
 from app.models.raw.raw_min_block import RawMinBlock
+from app.models.raw.raw_day_block import RawDayBlock
 from app.models.base.base_stock import BaseStock
+from app.models.base.base_block import BaseBlock
 from app.db.session import get_db_context
 from sqlalchemy.dialects.postgresql import insert
 
@@ -114,6 +117,9 @@ class BlockRawCollector:
                 except Exception as ex:
                     logger.error(f"入库失败: {data.get('block_code')} - {ex}")
             db.commit()
+            
+            # 入库后检查 day 表，无当日数据则插入
+            cls._ensure_day_records(db, results, trade_date, raw_no)
 
         # 从板块快照中提取领涨股和资金流入最多股，标记为关注（仅限主板）
         new_imp_count = cls._mark_block_stocks_as_imp(results)
@@ -174,6 +180,77 @@ class BlockRawCollector:
             logger.info(f"标记领涨/资金股为关注: {updated} 只（{len(new_codes) - updated} 只非主板）")
 
         return updated
+
+    @classmethod
+    def _ensure_day_records(cls, db, results: List[Dict], trade_date, raw_no: str):
+        """
+        检查 raw_day_block 表，无当日数据则插入
+        
+        注意：板块是固定的，早盘已全部插入，盘中不会再新增
+        此方法主要用于兜底，确保数据完整性
+        """
+        if not results:
+            return
+        
+        # 提取本次采集的板块代码
+        block_codes = {r["block_code"] for r in results}
+        
+        # 查询 day 表中已存在的板块（只查本次涉及的）
+        existing = {
+            row[0] for row in db.query(RawDayBlock.block_code).filter(
+                RawDayBlock.trade_date == trade_date,
+                RawDayBlock.block_code.in_(block_codes)
+            ).all()
+        }
+        
+        # 找出需要插入的板块
+        new_codes = block_codes - existing
+        if not new_codes:
+            return
+        
+        # 从 results 中获取需要插入的数据
+        new_records = []
+        for r in results:
+            if r["block_code"] in new_codes:
+                record = RawDayBlock(
+                    block_code=r["block_code"],
+                    block_name=r.get("block_name"),
+                    raw_no=raw_no,
+                    trade_date=trade_date,
+                    block_zs=r.get("block_zs"),
+                    block_ltg=r.get("block_ltg"),
+                    block_stock_count=r.get("block_stock_count"),
+                    block_zdf=r.get("block_zdf"),
+                    block_lb=r.get("block_lb"),
+                    block_hsl=r.get("block_hsl"),
+                    stock_cjls=r.get("stock_cjls"),
+                    block_up_stock=r.get("block_up_stock"),
+                    block_pi_stock=r.get("block_pi_stock"),
+                    block_dw_stock=r.get("block_dw_stock"),
+                    block_zl_inflow=r.get("block_zl_inflow"),
+                    block_cd_inflow=r.get("block_cd_inflow"),
+                    block_dd_inflow=r.get("block_dd_inflow"),
+                    block_zd_inflow=r.get("block_zd_inflow"),
+                    block_xd_inflow=r.get("block_xd_inflow"),
+                    block_zl_zb=r.get("block_zl_zb"),
+                    block_cd_zb=r.get("block_cd_zb"),
+                    block_dd_zb=r.get("block_dd_zb"),
+                    block_zd_zb=r.get("block_zd_zb"),
+                    block_xd_zb=r.get("block_xd_zb"),
+                    leader_stock_code=r.get("leader_stock_code"),
+                    leader_stock_name=r.get("leader_stock_name"),
+                    leader_stock_zdf=r.get("leader_stock_zdf"),
+                    money_stock_code=r.get("money_stock_code"),
+                    money_stock_name=r.get("money_stock_name"),
+                    notes=[],
+                    score=None,
+                )
+                new_records.append(record)
+        
+        if new_records:
+            db.bulk_save_objects(new_records)
+            db.commit()
+            logger.info(f"日K表新增: {len(new_records)} 个板块（{trade_date}）")
 
 
 if __name__ == "__main__":

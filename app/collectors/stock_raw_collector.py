@@ -3,6 +3,7 @@
 股票快照采集器
 
 功能：采集 stock_imp=1 的股票快照数据，写入 raw_min_stock 表
+     同时检查 raw_day_stock 表，无当日数据则插入
 
 stock_type 实际值： 上证所主板/深交所主板/创业板/科创板
 """
@@ -20,6 +21,7 @@ from app.utils.batch_no import generate_batch_no
 from app.utils.trade_calendar import get_latest_trade_day
 from app.utils.stock_calculator import StockCalculator
 from app.models.raw.raw_min_stock import RawMinStock
+from app.models.raw.raw_day_stock import RawDayStock
 from app.models.base.base_stock import BaseStock
 from app.db.session import get_db_context
 
@@ -159,6 +161,84 @@ class StockRawCollector:
             logger.info(f"标记涨停/炸板/跌停股为关注: {updated_count} 只")
 
     @classmethod
+    def _ensure_day_records(cls, db, results: List[Dict], trade_date, raw_no: str):
+        """
+        检查 raw_day_stock 表，无当日数据则插入
+        
+        参数:
+            db: 数据库会话
+            results: 本次采集的结果列表
+            trade_date: 交易日期
+            raw_no: 批次号
+        """
+        if not results:
+            return
+        
+        # 提取本次采集的股票代码
+        stock_codes = {r["stock_code"] for r in results}
+        
+        # 查询 day 表中已存在的股票（只查本次涉及的）
+        existing = {
+            row[0] for row in db.query(RawDayStock.stock_code).filter(
+                RawDayStock.trade_date == trade_date,
+                RawDayStock.stock_code.in_(stock_codes)
+            ).all()
+        }
+        
+        # 找出需要插入的股票
+        new_codes = stock_codes - existing
+        if not new_codes:
+            return
+        
+        # 从 results 中获取需要插入的数据
+        new_records = []
+        for r in results:
+            if r["stock_code"] in new_codes:
+                record = RawDayStock(
+                    stock_code=r["stock_code"],
+                    raw_no=raw_no,
+                    trade_date=trade_date,
+                    stock_zsj=r.get("stock_zsj"),
+                    stock_kpj=r.get("stock_kpj"),
+                    stock_zgj=r.get("stock_zgj"),
+                    stock_zdj=r.get("stock_zdj"),
+                    stock_spj=r.get("stock_spj"),
+                    stock_ztj=r.get("stock_ztj"),
+                    stock_dtj=r.get("stock_dtj"),
+                    stock_cjl=r.get("stock_cjl"),
+                    stock_cje=r.get("stock_cje"),
+                    stock_zdf=r.get("stock_zdf"),
+                    stock_zf=r.get("stock_zf"),
+                    stock_zde=r.get("stock_zde"),
+                    stock_hsl=r.get("stock_hsl"),
+                    stock_sjhsl=r.get("stock_sjhsl"),
+                    stock_syl=r.get("stock_syl"),
+                    stock_sjl=r.get("stock_sjl"),
+                    stock_zsz=r.get("stock_zsz"),
+                    stock_ltsz=r.get("stock_ltsz"),
+                    stock_ltg=r.get("stock_ltg"),
+                    stock_ztzt=r.get("stock_ztzt", 0),
+                    stock_zl_inflow=r.get("stock_zl_inflow"),
+                    stock_cd_inflow=r.get("stock_cd_inflow"),
+                    stock_dd_inflow=r.get("stock_dd_inflow"),
+                    stock_zd_inflow=r.get("stock_zd_inflow"),
+                    stock_xd_inflow=r.get("stock_xd_inflow"),
+                    stock_zl_zb=r.get("stock_zl_zb"),
+                    stock_cd_zb=r.get("stock_cd_zb"),
+                    stock_dd_zb=r.get("stock_dd_zb"),
+                    stock_zd_zb=r.get("stock_zd_zb"),
+                    stock_xd_zb=r.get("stock_xd_zb"),
+                    notes=[],
+                    score=None,
+                )
+                new_records.append(record)
+        
+        if new_records:
+            db.bulk_save_objects(new_records)
+            db.commit()
+            logger.info(f"日K表新增: {len(new_records)} 只股票（{trade_date}）")
+
+    @classmethod
     def collect(cls) -> Dict:
         """采集股票快照"""
         start_time = time.time()
@@ -232,6 +312,9 @@ class StockRawCollector:
                     db.add(RawMinStock(**data))
                 db.commit()
                 success = len(results)
+                
+                # 入库后检查 day 表，无当日数据则插入
+                cls._ensure_day_records(db, results, trade_date, raw_no)
             except Exception as e:
                 db.rollback()
                 logger.error(f"入库失败: {e}")
