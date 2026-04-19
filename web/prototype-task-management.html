@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务管理 - 原型设计</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Toggle 开关样式 */
+        .toggle {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle.active {
+            background: #22c55e;
+        }
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .toggle.active::after {
+            transform: translateX(24px);
+        }
+        
+        /* 状态标签 */
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-running { background: #dcfce7; color: #166534; }
+        .status-idle { background: #f3f4f6; color: #6b7280; }
+        .status-disabled { background: #fee2e2; color: #991b1b; }
+        
+        /* 加载动画 */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- 顶部导航 -->
+    <nav class="bg-slate-800 text-white px-4 py-3 shadow-lg">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">📊</span>
+                <span class="text-xl font-bold">天下第一股票量化系统</span>
+            </div>
+            <div class="flex gap-6">
+                <a href="prototype-home.html" class="hover:text-blue-300">🏠 首页</a>
+                <a href="#" class="hover:text-blue-300">📊 看板</a>
+                <a href="#" class="text-blue-300 font-medium">⚙️ 任务管理</a>
+                <a href="#" class="hover:text-blue-300 opacity-60">🧠 分析决策</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容 -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        
+        <!-- 页面标题 -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">⚙️ 任务管理</h1>
+            <p class="text-gray-500 mt-1">管理采集任务和调度配置</p>
+        </div>
+
+        <!-- 第一行：调度器状态 + 快捷操作 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            
+            <!-- 调度器状态卡片 -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <span class="text-2xl">🔄</span> 调度器状态
+                </h2>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div id="schedulerStatus" class="text-xl font-bold text-green-600">运行中</div>
+                        <div class="text-sm text-gray-500 mt-1">自动执行已启用的任务</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="btnSchedulerStart" onclick="startScheduler()" 
+                            class="px-3 py-1.5 bg-green-500 text-white rounded text-sm hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                            启动
+                        </button>
+                        <button id="btnSchedulerStop" onclick="stopScheduler()"
+                            class="px-3 py-1.5 bg-red-500 text-white rounded text-sm hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                            停止
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快捷操作卡片 -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <span class="text-2xl">⚡</span> 快捷操作
+                </h2>
+                <div class="flex flex-col gap-2">
+                    <button onclick="enableAllTasks()" 
+                        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                        开启所有任务
+                    </button>
+                    <button onclick="disableAllTasks()"
+                        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm">
+                        关闭所有任务
+                    </button>
+                </div>
+            </div>
+
+            <!-- 配置操作卡片 -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <span class="text-2xl">💾</span> 配置管理
+                </h2>
+                <div class="flex flex-col gap-2">
+                    <button onclick="saveConfig()"
+                        class="px-4 py-2 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-sm">
+                        保存配置到文件
+                    </button>
+                    <button onclick="reloadConfig()"
+                        class="px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600 text-sm">
+                        从文件重新加载
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第二行：任务列表 -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                <span class="text-2xl">📋</span> 任务列表
+            </h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b-2 border-gray-200">
+                            <th class="text-left py-3 px-4">任务名称</th>
+                            <th class="text-left py-3 px-4">状态</th>
+                            <th class="text-center py-3 px-4">开关</th>
+                            <th class="text-left py-3 px-4">上次执行</th>
+                            <th class="text-left py-3 px-4">执行结果</th>
+                            <th class="text-center py-3 px-4">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="taskTableBody">
+                        <!-- 任务行会通过 JS 动态生成 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 第三行：调度配置 -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold flex items-center gap-2">
+                    <span class="text-2xl">⏰</span> 调度配置
+                </h2>
+                <select id="taskSelect" onchange="loadScheduleConfig()" 
+                    class="px-3 py-1.5 border rounded text-sm">
+                    <option value="raw">快照采集</option>
+                    <option value="special_pool">特殊股票池采集</option>
+                    <option value="day_k">日K采集</option>
+                </select>
+            </div>
+            
+            <div id="scheduleConfig" class="space-y-4">
+                <!-- 调度配置会通过 JS 动态生成 -->
+            </div>
+            
+            <!-- 添加新调度按钮 -->
+            <div class="mt-4 pt-4 border-t">
+                <button onclick="showAddScheduleModal()"
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                    + 添加调度配置
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 添加调度配置弹窗 -->
+    <div id="addScheduleModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h3 class="text-lg font-semibold mb-4">添加调度配置</h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">调度名称</label>
+                    <input type="text" id="scheduleName" class="w-full px-3 py-2 border rounded" placeholder="如：早盘采集">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-1">类型</label>
+                    <select id="scheduleType" onchange="toggleScheduleFields()" class="w-full px-3 py-2 border rounded">
+                        <option value="once">定点执行</option>
+                        <option value="interval">区间执行</option>
+                    </select>
+                </div>
+                
+                <div id="onceFields">
+                    <label class="block text-sm font-medium mb-1">执行时间</label>
+                    <input type="time" id="scheduleTime" class="w-full px-3 py-2 border rounded" value="09:30">
+                </div>
+                
+                <div id="intervalFields" class="hidden space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">开始时间</label>
+                            <input type="time" id="scheduleStartTime" class="w-full px-3 py-2 border rounded" value="09:31">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1">结束时间</label>
+                            <input type="time" id="scheduleEndTime" class="w-full px-3 py-2 border rounded" value="11:30">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">执行间隔（秒）</label>
+                        <input type="number" id="scheduleInterval" class="w-full px-3 py-2 border rounded" value="30" min="5">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end gap-2 mt-6">
+                <button onclick="hideAddScheduleModal()" 
+                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                    取消
+                </button>
+                <button onclick="addSchedule()"
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                    添加
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 提示 -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded shadow-lg hidden">
+        操作成功
+    </div>
+
+    <script>
+        // ==================== 模拟数据 ====================
+        let schedulerRunning = true;
+        
+        let tasks = [
+            {
+                name: 'raw',
+                display_name: '快照采集',
+                enabled: true,
+                status: 'idle',
+                last_run_time: '2026-04-19T17:30:00',
+                last_run_status: 'success'
+            },
+            {
+                name: 'special_pool',
+                display_name: '特殊股票池采集',
+                enabled: true,
+                status: 'idle',
+                last_run_time: '2026-04-19T17:25:00',
+                last_run_status: 'success'
+            },
+            {
+                name: 'day_k',
+                display_name: '日K采集',
+                enabled: false,
+                status: 'disabled',
+                last_run_time: '2026-04-19T15:05:00',
+                last_run_status: 'success'
+            }
+        ];
+        
+        let schedules = {
+            raw: [
+                { name: '开盘竞价', type: 'once', time: '09:25:00' },
+                { name: '早盘连续竞价', type: 'interval', start_time: '09:31:30', end_time: '11:30:00', interval_seconds: 30 },
+                { name: '午盘连续竞价', type: 'interval', start_time: '13:00:00', end_time: '14:57:00', interval_seconds: 30 },
+                { name: '收盘采集', type: 'once', time: '15:00:00' }
+            ],
+            special_pool: [
+                { name: '开盘采集', type: 'once', time: '09:30:00' },
+                { name: '盘中采集', type: 'interval', start_time: '09:35:00', end_time: '14:50:00', interval_seconds: 300 },
+                { name: '收盘采集', type: 'once', time: '15:05:00' }
+            ],
+            day_k: [
+                { name: '早盘日K', type: 'once', time: '09:27:00', action: 'append' },
+                { name: '收盘日K', type: 'once', time: '15:05:00', action: 'replace' }
+            ]
+        };
+
+        // ==================== 初始化 ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTaskTable();
+            loadScheduleConfig();
+            updateSchedulerButtons();
+        });
+
+        // ==================== 调度器控制 ====================
+        function updateSchedulerButtons() {
+            const startBtn = document.getElementById('btnSchedulerStart');
+            const stopBtn = document.getElementById('btnSchedulerStop');
+            const statusEl = document.getElementById('schedulerStatus');
+            
+            startBtn.disabled = schedulerRunning;
+            stopBtn.disabled = !schedulerRunning;
+            
+            if (schedulerRunning) {
+                statusEl.textContent = '运行中';
+                statusEl.className = 'text-xl font-bold text-green-600';
+            } else {
+                statusEl.textContent = '已停止';
+                statusEl.className = 'text-xl font-bold text-red-600';
+            }
+        }
+        
+        function startScheduler() {
+            schedulerRunning = true;
+            updateSchedulerButtons();
+            showToast('调度器已启动');
+        }
+        
+        function stopScheduler() {
+            schedulerRunning = false;
+            updateSchedulerButtons();
+            showToast('调度器已停止');
+        }
+
+        // ==================== 任务控制 ====================
+        function renderTaskTable() {
+            const tbody = document.getElementById('taskTableBody');
+            tbody.innerHTML = tasks.map(task => `
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="py-3 px-4">
+                        <div class="font-medium">${task.display_name}</div>
+                        <div class="text-sm text-gray-500">${task.name}</div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="status-badge ${getStatusClass(task)}">${getStatusText(task)}</span>
+                    </td>
+                    <td class="py-3 px-4 text-center">
+                        <div class="toggle ${task.enabled ? 'active' : ''}" 
+                             onclick="toggleTask('${task.name}')"></div>
+                    </td>
+                    <td class="py-3 px-4 text-sm text-gray-600">
+                        ${formatTime(task.last_run_time)}
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="${task.last_run_status === 'success' ? 'text-green-600' : 'text-red-600'}">
+                            ${task.last_run_status === 'success' ? '✓ 成功' : '✗ 失败'}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="runTask('${task.name}')" 
+                            class="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600">
+                            执行
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function getStatusClass(task) {
+            if (!task.enabled) return 'status-disabled';
+            if (task.status === 'running') return 'status-running';
+            return 'status-idle';
+        }
+        
+        function getStatusText(task) {
+            if (!task.enabled) return '已禁用';
+            if (task.status === 'running') return '运行中';
+            return '空闲';
+        }
+        
+        function formatTime(isoTime) {
+            if (!isoTime) return '-';
+            const d = new Date(isoTime);
+            return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
+        }
+        
+        function toggleTask(name) {
+            const task = tasks.find(t => t.name === name);
+            if (task) {
+                task.enabled = !task.enabled;
+                task.status = task.enabled ? 'idle' : 'disabled';
+                renderTaskTable();
+                showToast(`${task.display_name} 已${task.enabled ? '开启' : '关闭'}`);
+            }
+        }
+        
+        function runTask(name) {
+            const task = tasks.find(t => t.name === name);
+            if (task) {
+                task.status = 'running';
+                renderTaskTable();
+                
+                // 模拟执行
+                setTimeout(() => {
+                    task.status = 'idle';
+                    task.last_run_time = new Date().toISOString();
+                    task.last_run_status = 'success';
+                    renderTaskTable();
+                    showToast(`${task.display_name} 执行完成`);
+                }, 2000);
+            }
+        }
+        
+        function enableAllTasks() {
+            tasks.forEach(t => { t.enabled = true; t.status = 'idle'; });
+            renderTaskTable();
+            showToast('所有任务已开启');
+        }
+        
+        function disableAllTasks() {
+            tasks.forEach(t => { t.enabled = false; t.status = 'disabled'; });
+            renderTaskTable();
+            showToast('所有任务已关闭');
+        }
+
+        // ==================== 调度配置 ====================
+        function loadScheduleConfig() {
+            const taskName = document.getElementById('taskSelect').value;
+            const config = schedules[taskName];
+            const container = document.getElementById('scheduleConfig');
+            
+            container.innerHTML = config.map((s, i) => `
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="font-medium">${s.name}</div>
+                        <div class="flex gap-2">
+                            <button onclick="editSchedule(${i})" class="text-blue-500 hover:text-blue-700 text-sm">编辑</button>
+                            <button onclick="deleteSchedule(${i})" class="text-red-500 hover:text-red-700 text-sm">删除</button>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                        ${renderScheduleDetail(s)}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderScheduleDetail(s) {
+            if (s.type === 'once') {
+                let detail = `定点执行：${s.time}`;
+                if (s.action) detail += ` (${s.action === 'append' ? '追加' : '替换'})`;
+                return detail;
+            } else {
+                return `区间执行：${s.start_time} ~ ${s.end_time}，间隔 ${s.interval_seconds} 秒`;
+            }
+        }
+        
+        function deleteSchedule(index) {
+            const taskName = document.getElementById('taskSelect').value;
+            if (confirm('确定删除此调度配置？')) {
+                schedules[taskName].splice(index, 1);
+                loadScheduleConfig();
+                showToast('调度配置已删除');
+            }
+        }
+        
+        function editSchedule(index) {
+            showToast('编辑功能开发中...');
+        }
+
+        // ==================== 添加调度弹窗 ====================
+        function showAddScheduleModal() {
+            document.getElementById('addScheduleModal').classList.remove('hidden');
+            document.getElementById('addScheduleModal').classList.add('flex');
+            toggleScheduleFields();
+        }
+        
+        function hideAddScheduleModal() {
+            document.getElementById('addScheduleModal').classList.add('hidden');
+            document.getElementById('addScheduleModal').classList.remove('flex');
+        }
+        
+        function toggleScheduleFields() {
+            const type = document.getElementById('scheduleType').value;
+            document.getElementById('onceFields').classList.toggle('hidden', type !== 'once');
+            document.getElementById('intervalFields').classList.toggle('hidden', type !== 'interval');
+        }
+        
+        function addSchedule() {
+            const taskName = document.getElementById('taskSelect').value;
+            const name = document.getElementById('scheduleName').value || '新调度';
+            const type = document.getElementById('scheduleType').value;
+            
+            let newSchedule = { name, type };
+            
+            if (type === 'once') {
+                const time = document.getElementById('scheduleTime').value;
+                newSchedule.time = time + ':00';
+            } else {
+                newSchedule.start_time = document.getElementById('scheduleStartTime').value + ':00';
+                newSchedule.end_time = document.getElementById('scheduleEndTime').value + ':00';
+                newSchedule.interval_seconds = parseInt(document.getElementById('scheduleInterval').value);
+            }
+            
+            schedules[taskName].push(newSchedule);
+            loadScheduleConfig();
+            hideAddScheduleModal();
+            showToast('调度配置已添加');
+        }
+
+        // ==================== 配置管理 ====================
+        function saveConfig() {
+            showToast('配置已保存到文件');
+        }
+        
+        function reloadConfig() {
+            showToast('配置已重新加载');
+        }
+
+        // ==================== Toast 提示 ====================
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 2000);
+        }
+    </script>
+</body>
+</html>
