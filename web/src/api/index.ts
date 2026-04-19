@@ -43,6 +43,86 @@ export async function getCollectorStatus() {
   return fetchAPI<any>('/api/collector/status')
 }
 
+// ============ 任务管理接口 ============
+
+// 获取所有任务状态
+export async function getTaskStatus() {
+  return fetchAPI<any>('/api/task/status')
+}
+
+// 开启所有任务
+export async function enableAllTasks() {
+  return fetchAPI<any>('/api/task/start-all', { method: 'POST' })
+}
+
+// 关闭所有任务
+export async function disableAllTasks() {
+  return fetchAPI<any>('/api/task/stop-all', { method: 'POST' })
+}
+
+// 开启单个任务
+export async function enableTask(taskName: string) {
+  return fetchAPI<any>(`/api/task/${taskName}/enable`, { method: 'POST' })
+}
+
+// 关闭单个任务
+export async function disableTask(taskName: string) {
+  return fetchAPI<any>(`/api/task/${taskName}/disable`, { method: 'POST' })
+}
+
+// 手动执行单个任务
+export async function runTaskOnce(taskName: string) {
+  return fetchAPI<any>(`/api/task/${taskName}/run`, { method: 'POST' })
+}
+
+// 获取任务调度配置
+export async function getTaskSchedule(taskName: string) {
+  return fetchAPI<any>(`/api/task/${taskName}/schedule`)
+}
+
+// 更新调度配置
+export async function updateTaskSchedule(taskName: string, index: number, updates: Record<string, any>) {
+  return fetchAPI<any>(`/api/task/${taskName}/schedule`, {
+    method: 'PUT',
+    body: JSON.stringify({ index, updates })
+  })
+}
+
+// 添加调度配置
+export async function addTaskSchedule(taskName: string, schedule: Record<string, any>) {
+  return fetchAPI<any>(`/api/task/${taskName}/schedule`, {
+    method: 'POST',
+    body: JSON.stringify(schedule)
+  })
+}
+
+// 删除调度配置
+export async function removeTaskSchedule(taskName: string, scheduleIndex: number) {
+  return fetchAPI<any>(`/api/task/${taskName}/schedule/${scheduleIndex}`, { 
+    method: 'DELETE' 
+  })
+}
+
+// 启动调度器
+export async function startScheduler() {
+  return fetchAPI<any>('/api/task/scheduler/start', { method: 'POST' })
+}
+
+// 停止调度器
+export async function stopScheduler() {
+  return fetchAPI<any>('/api/task/scheduler/stop', { method: 'POST' })
+}
+
+// 保存配置
+export async function saveConfig() {
+  return fetchAPI<any>('/api/task/config/save', { method: 'POST' })
+}
+
+// 重载配置
+export async function reloadConfig() {
+  return fetchAPI<any>('/api/task/config/reload', { method: 'POST' })
+}
+
 // ============ 类型定义 ============
 
 export interface Stock {
