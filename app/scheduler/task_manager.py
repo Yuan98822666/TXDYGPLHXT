@@ -16,11 +16,13 @@
 """
 import threading
 import logging
+import time as time_module
 from datetime import datetime, time as dt_time
 from typing import Dict, List, Optional, Callable, Any
 from pathlib import Path
 from dataclasses import dataclass, field
 from enum import Enum
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import yaml
 
@@ -158,6 +160,7 @@ class TaskManager:
         # 调度器状态
         self._running: bool = False
         self._thread: Optional[threading.Thread] = None
+        self._lock: threading.Lock = threading.Lock()  # 任务执行锁（防止同一任务重复触发）
         
         # 上次执行时间记录（用于区间调度）
         self._last_interval_run: Dict[str, int] = {}
@@ -537,9 +540,10 @@ class TaskManager:
         调度器主循环
         
         设计：
-            - 单线程循环，节省资源
+            - 单线程控制循环，不阻塞等待任务
+            - 任务通过线程池并发执行（避免互相等待）
             - 只在交易时段内检查任务
-            - 每个任务独立检查是否应该执行
+            - 同一任务正在执行时不会重复触发
         """
         logger.info("调度器主循环启动")
         
@@ -548,9 +552,7 @@ class TaskManager:
             logger.info("交易时段启动，执行初始化采集...")
             for task_name in ["raw", "special_pool"]:
                 if self.tasks[task_name].enabled:
-                    self.run_task_once(task_name)
-        
-        day_k_collected = False  # 日K采集标记（每日只执行一次）
+                    self._trigger_task_async(task_name)
         
         while self._running:
             now = datetime.now()
@@ -561,35 +563,57 @@ class TaskManager:
                 self._sleep(10)
                 continue
             
-            # 检查每个任务
+            # 检查每个任务（尝试触发，不等待结果）
             for task_name, task in self.tasks.items():
                 if not task.enabled:
+                    continue
+                
+                # 检查任务是否正在执行中
+                if task.status == TaskStatus.RUNNING:
                     continue
                 
                 # 检查调度配置
                 for schedule in task.schedules:
                     if self._should_run(schedule, task_name):
-                        # 执行任务
-                        if task_name == "day_k":
-                            action = schedule.action or "replace"
-                            result = self._execute_funcs[task_name](action=action)
-                            if action == "replace":
-                                day_k_collected = True
-                        else:
-                            result = self.run_task_once(task_name)
-                        
-                        # 更新状态
-                        task.last_run_time = now
-                        task.last_run_status = result
+                        self._trigger_task_async(task_name, schedule)
                         break
-            
-            # 新的一天重置日K标记
-            if current_time < dt_time(9, 0):
-                day_k_collected = False
             
             self._sleep(1)
         
         logger.info("调度器主循环退出")
+    
+    def _trigger_task_async(self, task_name: str, schedule: Optional[Schedule] = None):
+        """
+        异步触发任务执行（不阻塞主循环）
+        
+        参数：
+            task_name: 任务名称
+            schedule: 调度配置（用于日K的 action 参数）
+        """
+        def _run():
+            task = self.tasks.get(task_name)
+            if not task:
+                return
+            
+            task.status = TaskStatus.RUNNING
+            task.last_run_time = datetime.now()
+            
+            try:
+                if task_name == "day_k":
+                    action = schedule.action if schedule else "replace"
+                    result = self._execute_funcs[task_name](action=action)
+                else:
+                    result = self._execute_funcs[task_name]()
+                
+                task.last_run_status = result
+            except Exception as e:
+                logger.error(f"任务执行异常: {task_name} - {e}")
+                task.last_run_status = f"failed: {str(e)}"
+            finally:
+                task.status = TaskStatus.IDLE
+        
+        thread = threading.Thread(target=_run, daemon=True)
+        thread.start()
     
     def _is_trading_hours(self) -> bool:
         """是否在交易时段内"""
@@ -675,8 +699,7 @@ class TaskManager:
     
     def _sleep(self, seconds: float):
         """休眠（可被中断）"""
-        import time
-        time.sleep(seconds)
+        time_module.sleep(seconds)
 
 
 # ==================== 便捷函数 ====================

@@ -406,6 +406,7 @@ class EastMoneyRequest:
         }
 
         # 多域名列表（按优先级）
+        # push2.eastmoney.com 为主域名，delay/his 为备用
         domains = [
             "push2.eastmoney.com",
             "push2delay.eastmoney.com",
@@ -421,7 +422,7 @@ class EastMoneyRequest:
             
             try:
                 logger.debug(f"尝试域名: {domain}")
-                resp = session.get(url, params=params, cookies=cookies, timeout=10)
+                resp = session.get(url, params=params, cookies=cookies, timeout=3)  # 3秒超时，快速失败
                 resp.raise_for_status()
                 
                 text = resp.text.strip()
