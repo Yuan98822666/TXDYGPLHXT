@@ -219,7 +219,12 @@ class BlockRawCollector:
                 ).all()
             }
 
-            # 只插入不存在的
+            # 插入不存在的（从 base_block 获取 stock_count）
+            from app.models.base.base_block import BaseBlock
+            block_info = {
+                row.block_code: row.stock_count 
+                for row in db.query(BaseBlock.block_code, BaseBlock.stock_count).all()
+            }
             to_insert = [b for b in block_results if b.get("block_code") and b.get("block_code") not in existing]
             for data in to_insert:
                 try:
@@ -230,7 +235,7 @@ class BlockRawCollector:
                         trade_date=trade_date,
                         block_zs=data.get("block_zs"),
                         block_ltg=data.get("block_ltg"),
-                        block_stock_count=data.get("block_stock_count"),
+                        block_stock_count=block_info.get(data["block_code"]),
                         block_zdf=data.get("block_zdf"),
                         block_lb=data.get("block_lb"),
                         block_hsl=data.get("block_hsl"),

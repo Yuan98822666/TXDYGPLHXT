@@ -179,12 +179,13 @@ class DayCollector:
                     "elapsed_seconds": time.time() - start_time,
                 }
 
-            # 获取 GN+HY 的板块代码集合
+            # 获取 GN+HY 的板块代码集合（含股票数量）
             from app.models.base.base_block import BaseBlock
-            gn_hy_blocks = db.query(BaseBlock.block_code).filter(
+            gn_hy_blocks = db.query(BaseBlock.block_code, BaseBlock.stock_count).filter(
                 BaseBlock.block_type.in_(["GN", "HY"])
             ).all()
             gn_hy_codes = {row[0] for row in gn_hy_blocks}
+            block_stock_count_map = {row[0]: row[1] for row in gn_hy_blocks}
 
             # 过滤：只保留 GN+HY 板块
             filtered_snapshots = [
@@ -214,7 +215,7 @@ class DayCollector:
                     trade_date=trade_date,
                     block_zs=snapshot.block_zs,
                     block_ltg=snapshot.block_ltg,
-                    block_stock_count=snapshot.block_stock_count,
+                    block_stock_count=block_stock_count_map.get(snapshot.block_code),
                     block_zdf=snapshot.block_zdf,
                     block_lb=snapshot.block_lb,
                     block_hsl=snapshot.block_hsl,
