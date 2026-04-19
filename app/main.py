@@ -1,7 +1,13 @@
 """
 天下第一股票量化系统 - FastAPI 入口
 
-版本：v0.2.0
+版本：v0.3.0
+
+更新：
+    - 新增任务管理模块（TaskManager）
+    - 支持任务级别的开关控制
+    - 支持调度配置动态修改
+    - 配置完全内存化
 """
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
@@ -18,12 +24,27 @@ logger = logging.getLogger(__name__)
 # ==========================================
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """应用生命周期管理"""
+    """
+    应用生命周期管理
+    
+    启动时：
+        - 加载任务配置到内存
+        - 启动任务调度器
+    
+    关闭时：
+        - 停止调度器
+        - 可选：保存配置到文件
+    """
     # 启动
     try:
-        from app.scheduler.collector_scheduler import start_scheduler
+        from app.scheduler.task_manager import get_task_manager, start_scheduler
+        # 初始化任务管理器（加载配置）
+        manager = get_task_manager()
+        logger.info(f"任务配置加载完成，共 {len(manager.tasks)} 个任务")
+        
+        # 启动调度器
         start_scheduler()
-        logger.info("采集调度器已自动启动")
+        logger.info("任务调度器已自动启动")
     except Exception as e:
         logger.error(f"启动调度器失败: {e}")
     
@@ -31,9 +52,9 @@ async def lifespan(app: FastAPI):
     
     # 关闭
     try:
-        from app.scheduler.collector_scheduler import stop_scheduler
+        from app.scheduler.task_manager import stop_scheduler
         stop_scheduler()
-        logger.info("采集调度器已停止")
+        logger.info("任务调度器已停止")
     except Exception as e:
         logger.error(f"停止调度器失败: {e}")
 
@@ -64,13 +85,15 @@ from app.api.collector.raw_collector import router as raw_collector_router
 from app.api.collector.special_pool import router as special_pool_router
 from app.api.collector.schedule_api import router as schedule_router
 from app.api.collector.scheduler_api import router as scheduler_router
+from app.api.collector.task_api import router as task_router
 from app.api.cookiemanager.eastmoney_cookie_router import router as cookie_router
 
 app.include_router(base_collector_router, prefix="/api/collector/base", tags=["基础数据采集"])
 app.include_router(raw_collector_router, prefix="/api/collector/raw", tags=["快照数据采集"])
 app.include_router(special_pool_router, prefix="/api/collector/special", tags=["特殊股票池采集"])
 app.include_router(schedule_router, prefix="/api/collector/schedule", tags=["采集频率配置"])
-app.include_router(scheduler_router, tags=["采集调度器"])
+app.include_router(scheduler_router, tags=["采集调度器（旧）"])
+app.include_router(task_router, tags=["任务管理"])
 app.include_router(cookie_router, prefix="/api/cookie", tags=["Cookie 管理"])
 
 
