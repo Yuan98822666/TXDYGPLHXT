@@ -170,10 +170,10 @@ export async function addStockMark(code: string) {
 }
 
 // 移除关注（单个）
-export async function removeStockMark(code: string) {
+export async function removeStockMark(code: string, skipDays = 0) {
   return fetchAPI<any>('/stock/mark/remove', {
     method: 'POST',
-    body: JSON.stringify({ code })
+    body: JSON.stringify({ code, skip_days: skipDays })
   })
 }
 

@@ -11,6 +11,7 @@
 - stock_type    : 股票上市板块类型
 - stock_risk    : 风险警示状态（0=有风险, 1=正常）
 - stock_imp     : 自选股标记（0=未添加, 1=已添加）
+- skip_until    : 跳过采集截止时间（可选，设置后在此时间前不采集）
 - pdate_time    : 数据更新时间
 """
 from sqlalchemy import Column, String, Integer, DateTime
@@ -33,6 +34,7 @@ class BaseStock(Base):
     - stock_type    : 股票上市板块类型（SH_ZB/SZ_ZB/KCB/CYB/BJS）
     - stock_risk    : 风险警示状态（0=有风险ST/*ST/退市, 1=正常）
     - stock_imp     : 自选股标记（0=未添加, 1=已添加，用户手动维护）
+    - skip_until    : 跳过采集截止时间（UTC时区，设置后在此时间前不采集该股票）
     - pdate_time    : 数据更新时间（UTC时区）
     """
     __tablename__ = "base_stock"
@@ -50,6 +52,9 @@ class BaseStock(Base):
     stock_type = Column(String(20), nullable=False, index=True, comment="股票上市板块类型")
     stock_risk = Column(Integer, nullable=False, default=1, index=True, comment="风险状态：0=有风险, 1=正常")
     stock_imp = Column(Integer, nullable=False, default=0, index=True, comment="自选标记：0=未添加, 1=已添加")
+
+    # 跳过采集
+    skip_until = Column(DateTime, nullable=True, index=True, comment="跳过采集截止时间（UTC时区），设置后在此时间前不采集")
 
     # 更新时间
     pdate_time = Column(

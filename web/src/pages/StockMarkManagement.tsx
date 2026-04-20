@@ -5,7 +5,7 @@ import {
   getMarkStats,
   searchStocks,
   addStockMark,
-  toggleStockMark,
+  removeStockMark,
   batchAddStockMark,
   batchRemoveStockMark,
   clearAllMarks,
@@ -21,6 +21,7 @@ interface Stock {
   stock_type: string
   stock_risk: number
   stock_imp: number
+  skip_until?: string | null
   pdate_time: string
 }
 
@@ -74,6 +75,11 @@ export default function StockMarkManagement() {
   // 批量操作
   const [selectedCodes, setSelectedCodes] = useState<Set<string>>(new Set())
   const [showBatchPanel, setShowBatchPanel] = useState(false)
+  
+  // 取消关注弹窗
+  const [showRemoveModal, setShowRemoveModal] = useState(false)
+  const [removeTarget, setRemoveTarget] = useState<Stock | null>(null)
+  const [skipDays, setSkipDays] = useState(0)
   
   // 加载数据
   const loadStocks = useCallback(async () => {
@@ -142,12 +148,39 @@ export default function StockMarkManagement() {
   
   // 切换关注状态
   const handleToggle = async (code: string) => {
+    const stock = stocks.find(s => s.code === code)
+    if (!stock) return
+    
+    // 如果当前是关注状态，弹出确认框
+    if (stock.stock_imp === 1) {
+      setRemoveTarget(stock)
+      setSkipDays(0)
+      setShowRemoveModal(true)
+      return
+    }
+    
+    // 当前未关注，直接添加
     try {
-      await toggleStockMark(code)
+      await addStockMark(code)
       loadStocks()
       loadStats()
     } catch (err) {
-      console.error('切换失败:', err)
+      console.error('添加失败:', err)
+    }
+  }
+  
+  // 确认取消关注
+  const handleConfirmRemove = async () => {
+    if (!removeTarget) return
+    try {
+      await removeStockMark(removeTarget.code, skipDays)
+      setShowRemoveModal(false)
+      setRemoveTarget(null)
+      setSkipDays(0)
+      loadStocks()
+      loadStats()
+    } catch (err) {
+      console.error('取消关注失败:', err)
     }
   }
   
@@ -433,59 +466,74 @@ export default function StockMarkManagement() {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {stocks.map((stock) => (
-                  <tr key={stock.code} className="hover:bg-gray-50">
-                    <td className="px-4 py-3">
-                      <input
-                        type="checkbox"
-                        checked={selectedCodes.has(stock.code)}
-                        onChange={() => handleSelect(stock.code)}
-                        className="rounded"
-                      />
-                    </td>
-                    <td className="px-4 py-3 font-mono text-sm">{stock.code}</td>
-                    <td className="px-4 py-3 text-sm font-medium">{stock.name}</td>
-                    <td className="px-4 py-3">
-                      <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs">
-                        {STOCK_TYPE_MAP[stock.stock_type] || stock.stock_type}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-500">
-                      {EXCHANGE_MAP[stock.exchange] || stock.exchange}
-                    </td>
-                    <td className="px-4 py-3">
-                      {stock.stock_risk === 0 ? (
-                        <span className="px-2 py-1 bg-red-50 text-red-600 rounded text-xs">风险</span>
-                      ) : (
-                        <span className="px-2 py-1 bg-green-50 text-green-600 rounded text-xs">正常</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <button
-                        onClick={() => handleToggle(stock.code)}
-                        className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                          stock.stock_imp === 1
-                            ? 'bg-amber-100 text-amber-600 hover:bg-amber-200'
-                            : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
-                        }`}
-                      >
-                        {stock.stock_imp === 1 ? '⭐' : '☆'}
-                      </button>
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <button
-                        onClick={() => handleToggle(stock.code)}
-                        className={`px-3 py-1 rounded text-sm ${
-                          stock.stock_imp === 1
-                            ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                            : 'bg-amber-500 text-white hover:bg-amber-600'
-                        }`}
-                      >
-                        {stock.stock_imp === 1 ? '取消关注' : '添加关注'}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {stocks.map((stock) => {
+                  // 计算跳过状态
+                  const isSkipping = stock.skip_until && new Date(stock.skip_until) > new Date()
+                  const skipRemaining = isSkipping 
+                    ? Math.ceil((new Date(stock.skip_until!).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+                    : 0
+                  
+                  return (
+                    <tr key={stock.code} className={`hover:bg-gray-50 ${isSkipping ? 'bg-slate-50' : ''}`}>
+                      <td className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          checked={selectedCodes.has(stock.code)}
+                          onChange={() => handleSelect(stock.code)}
+                          className="rounded"
+                        />
+                      </td>
+                      <td className="px-4 py-3 font-mono text-sm">{stock.code}</td>
+                      <td className="px-4 py-3 text-sm font-medium">
+                        {stock.name}
+                        {isSkipping && (
+                          <span className="ml-2 px-1.5 py-0.5 bg-slate-200 text-slate-600 rounded text-xs" title={`跳过采集，剩余 ${skipRemaining} 天`}>
+                            ⏸{skipRemaining}天
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs">
+                          {STOCK_TYPE_MAP[stock.stock_type] || stock.stock_type}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-500">
+                        {EXCHANGE_MAP[stock.exchange] || stock.exchange}
+                      </td>
+                      <td className="px-4 py-3">
+                        {stock.stock_risk === 0 ? (
+                          <span className="px-2 py-1 bg-red-50 text-red-600 rounded text-xs">风险</span>
+                        ) : (
+                          <span className="px-2 py-1 bg-green-50 text-green-600 rounded text-xs">正常</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          onClick={() => handleToggle(stock.code)}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                            stock.stock_imp === 1
+                              ? 'bg-amber-100 text-amber-600 hover:bg-amber-200'
+                              : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+                          }`}
+                        >
+                          {stock.stock_imp === 1 ? '⭐' : '☆'}
+                        </button>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          onClick={() => handleToggle(stock.code)}
+                          className={`px-3 py-1 rounded text-sm ${
+                            stock.stock_imp === 1
+                              ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              : 'bg-amber-500 text-white hover:bg-amber-600'
+                          }`}
+                        >
+                          {stock.stock_imp === 1 ? '取消关注' : '添加关注'}
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
             
@@ -517,6 +565,60 @@ export default function StockMarkManagement() {
           </>
         )}
       </div>
+      
+      {/* 取消关注确认弹窗 */}
+      {showRemoveModal && removeTarget && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">取消关注确认</h3>
+            <p className="text-gray-600 mb-4">
+              确定要取消关注 <strong>{removeTarget.code} {removeTarget.name}</strong> 吗？
+            </p>
+            
+            {/* 跳过采集选项 */}
+            <div className="bg-slate-50 rounded-lg p-4 mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700">跳过采集</span>
+                <select
+                  value={skipDays}
+                  onChange={(e) => setSkipDays(Number(e.target.value))}
+                  className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                >
+                  <option value={0}>不跳过</option>
+                  <option value={1}>1日内不再采集</option>
+                  <option value={2}>2日内不再采集</option>
+                  <option value={3}>3日内不再采集</option>
+                  <option value={7}>7日内不再采集</option>
+                </select>
+              </div>
+              {skipDays > 0 && (
+                <p className="text-xs text-slate-500 mt-2">
+                  💡 设置后，该股票在 {skipDays} 天内不会被采集，即使重新添加关注也需等待到期
+                </p>
+              )}
+            </div>
+            
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => {
+                  setShowRemoveModal(false)
+                  setRemoveTarget(null)
+                  setSkipDays(0)
+                }}
+                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleConfirmRemove}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+              >
+                确认取消关注
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }

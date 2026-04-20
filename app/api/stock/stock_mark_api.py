@@ -124,6 +124,7 @@ def get_stock_list(
                 "stock_type": s.stock_type,
                 "stock_risk": s.stock_risk,
                 "stock_imp": s.stock_imp,
+                "skip_until": s.skip_until.isoformat() if s.skip_until else None,
                 "pdate_time": s.pdate_time.isoformat() if s.pdate_time else None
             }
             for s in stocks
@@ -196,9 +197,15 @@ def add_mark(
 @router.post("/remove", summary="移除关注股票")
 def remove_mark(
     code: str = Body(..., embed=True, description="股票代码"),
+    skip_days: int = Body(0, embed=True, description="跳过采集天数（0=不跳过）"),
     db: Session = Depends(get_db)
 ):
-    """移除单只股票的关注标记"""
+    """
+    移除单只股票的关注标记
+    
+    - code: 股票代码
+    - skip_days: 跳过采集天数（如 3 表示三日内不再采集）
+    """
     stock = db.query(BaseStock).filter(BaseStock.stock_code == code).first()
     if not stock:
         raise HTTPException(status_code=404, detail=f"股票 {code} 不存在")
@@ -207,11 +214,21 @@ def remove_mark(
         return {"success": True, "message": f"股票 {code} 未在关注列表中", "already_unmarked": True}
     
     stock.stock_imp = 0
+    
+    # 设置跳过采集时间
+    if skip_days > 0:
+        from datetime import timedelta
+        stock.skip_until = datetime.now(timezone.utc) + timedelta(days=skip_days)
+    else:
+        stock.skip_until = None
+    
     db.commit()
     
+    skip_msg = f"，{skip_days}日内不再采集" if skip_days > 0 else ""
     return {
         "success": True,
-        "message": f"股票 {code} ({stock.stock_name}) 已移除关注"
+        "message": f"股票 {code} ({stock.stock_name}) 已移除关注{skip_msg}",
+        "skip_until": stock.skip_until.isoformat() if stock.skip_until else None
     }
 
 
@@ -423,6 +440,7 @@ def search_stocks(
                 "name": s.stock_name,
                 "secid": s.secid,
                 "stock_imp": s.stock_imp,
+                "skip_until": s.skip_until.isoformat() if s.skip_until else None,
                 "label": f"{s.stock_code} {s.stock_name}"
             }
             for s in stocks
