@@ -8,7 +8,6 @@ import {
   disableAllTasks,
   runTaskOnce,
   getTaskSchedule,
-  updateTaskSchedule,
   removeTaskSchedule,
   addTaskSchedule,
   startScheduler,
@@ -69,7 +68,7 @@ function StatusBadge({ status, enabled }: { status: string; enabled: boolean }) 
 // 添加调度弹窗
 function AddScheduleModal({ 
   show, 
-  taskName,
+  taskName: _taskName,
   onClose, 
   onAdd 
 }: { 
@@ -201,7 +200,6 @@ export default function TaskManagement() {
   const [selectedTask, setSelectedTask] = useState('raw')
   const [schedules, setSchedules] = useState<Schedule[]>([])
   const [showAddModal, setShowAddModal] = useState(false)
-  const [editingIndex, setEditingIndex] = useState<number | null>(null)
 
   useEffect(() => {
     loadData()

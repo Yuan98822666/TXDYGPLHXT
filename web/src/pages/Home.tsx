@@ -206,12 +206,12 @@ export default function Home() {
             tags={['股票列表', '板块热点', '资金流向']}
           />
           <NavCard
-            to="/tasks"
-            icon="⚙️"
-            title="任务管理"
-            subtitle="采集任务控制"
-            color="from-emerald-500 to-emerald-600"
-            tags={['任务开关', '调度配置', '手动执行']}
+            to="/stocks"
+            icon="⭐"
+            title="股票标记"
+            subtitle="关注股票管理"
+            color="from-amber-500 to-amber-600"
+            tags={['添加关注', '批量操作', '筛选查询']}
           />
           <NavCard
             to="/analysis"
