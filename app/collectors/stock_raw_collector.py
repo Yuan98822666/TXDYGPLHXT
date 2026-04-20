@@ -255,11 +255,23 @@ class StockRawCollector:
 
         # 获取需要采集的股票列表
         # 查询数据库里总共有多少只关注股，同时获取列表
+        # 过滤掉 skip_until 未过期的股票
+        now_utc = datetime.utcnow()
         with get_db_context() as db:
             imp_stocks = db.query(BaseStock).filter(
-                BaseStock.stock_imp == 1
+                BaseStock.stock_imp == 1,
+                (BaseStock.skip_until.is_(None)) | (BaseStock.skip_until <= now_utc)
             ).all()
-            total_imp_count = len(imp_stocks)
+            # 统计被跳过的股票数量
+            skipped_count = db.query(BaseStock).filter(
+                BaseStock.stock_imp == 1,
+                BaseStock.skip_until.isnot(None),
+                BaseStock.skip_until > now_utc
+            ).count()
+            total_imp_count = len(imp_stocks) + skipped_count
+
+        if skipped_count > 0:
+            logger.info(f"跳过采集: {skipped_count} 只股票（在 skip_until 期内）")
 
         pool_stocks = cls._get_pool_stocks()
 

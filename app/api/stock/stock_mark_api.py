@@ -243,11 +243,16 @@ def toggle_mark(
     stock = db.query(BaseStock).filter(BaseStock.stock_code == code).first()
     if not stock:
         raise HTTPException(status_code=404, detail=f"股票 {code} 不存在")
-    
+
     new_imp = 1 - stock.stock_imp  # 切换
     stock.stock_imp = new_imp
+
+    # 重新关注时清空 skip_until
+    if new_imp == 1:
+        stock.skip_until = None
+
     db.commit()
-    
+
     return {
         "success": True,
         "code": stock.stock_code,
@@ -264,20 +269,21 @@ def batch_add_mark(
 ):
     """
     批量添加关注
-    
+
     - codes: 股票代码列表
     """
     stocks = db.query(BaseStock).filter(BaseStock.stock_code.in_(request.codes)).all()
-    
+
     if not stocks:
         raise HTTPException(status_code=404, detail="未找到任何匹配的股票")
-    
+
     updated = 0
     for stock in stocks:
         if stock.stock_imp == 0:
             stock.stock_imp = 1
+            stock.skip_until = None  # 重新关注时清空跳过标记
             updated += 1
-    
+
     db.commit()
     
     return {
