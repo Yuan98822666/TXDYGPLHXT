@@ -181,7 +181,7 @@ class DayCollector:
 
             # 获取 GN+HY 的板块代码集合（含股票数量）
             from app.models.base.base_block import BaseBlock
-            gn_hy_blocks = db.query(BaseBlock.block_code, BaseBlock.stock_count).filter(
+            gn_hy_blocks = db.query(BaseBlock.block_code, BaseBlock.block_stock_count).filter(
                 BaseBlock.block_type.in_(["GN", "HY"])
             ).all()
             gn_hy_codes = {row[0] for row in gn_hy_blocks}

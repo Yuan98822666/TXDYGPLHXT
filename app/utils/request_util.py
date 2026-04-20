@@ -443,7 +443,38 @@ class EastMoneyRequest:
                 # 重置 session 强制重建连接
                 cls._session = None
         
-        logger.error(f"获取股票快照失败: {secid} - 所有域名均失败")
+        # 重试逻辑：所有域名失败后，等待并重试（最多3次）
+        for retry_round in range(1, 4):
+            wait_time = retry_round  # 递增等待：1s, 2s, 3s
+            logger.warning(f"股票 {secid} 所有域名失败，{wait_time}秒后重试 ({retry_round}/3)")
+            time_module.sleep(wait_time)
+            
+            for domain in domains:
+                session = cls._get_session()
+                url = f"https://{domain}/api/qt/stock/get"
+                
+                try:
+                    logger.debug(f"重试尝试域名: {domain}")
+                    resp = session.get(url, params=params, cookies=cookies, timeout=3)
+                    resp.raise_for_status()
+                    
+                    text = resp.text.strip()
+                    if f"{cb}(" in text:
+                        json_str = text.split(f"{cb}(", 1)[1].rsplit(")", 1)[0]
+                        data = json.loads(json_str)
+                    else:
+                        data = json.loads(text)
+                    
+                    if data and data.get("rc") == 0 and data.get("data"):
+                        logger.info(f"股票 {secid} 重试成功 (第{retry_round}轮)")
+                        return data["data"]
+                        
+                except Exception as e:
+                    last_error = e
+                    logger.debug(f"重试域名 {domain} 失败: {str(e)[:60]}")
+                    cls._session = None
+        
+        logger.error(f"获取股票快照失败: {secid} - 所有域名重试均失败")
         return None
 
     @classmethod

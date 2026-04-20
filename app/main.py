@@ -87,6 +87,7 @@ from app.api.collector.schedule_api import router as schedule_router
 from app.api.collector.scheduler_api import router as scheduler_router
 from app.api.collector.task_api import router as task_router
 from app.api.cookiemanager.eastmoney_cookie_router import router as cookie_router
+from app.api.stock.stock_mark_api import router as stock_mark_router
 
 app.include_router(base_collector_router, prefix="/api/collector/base", tags=["基础数据采集"])
 app.include_router(raw_collector_router, prefix="/api/collector/raw", tags=["快照数据采集"])
@@ -95,6 +96,7 @@ app.include_router(schedule_router, prefix="/api/collector/schedule", tags=["采
 app.include_router(scheduler_router, tags=["采集调度器（旧）"])
 app.include_router(task_router, tags=["任务管理"])
 app.include_router(cookie_router, prefix="/api/cookie", tags=["Cookie 管理"])
+app.include_router(stock_mark_router, tags=["股票标记管理"])
 
 
 @app.get("/")

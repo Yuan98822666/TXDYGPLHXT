@@ -277,11 +277,13 @@ class StockRawCollector:
 
         logger.info(f"关注股票总数: {total_imp_count} 只（数据库），本次采集 {len(all_stocks)} 只（去重后）")
 
-        # 多线程采集（10并发，每请求间隔0.5秒）
+        # 多线程采集（10并发，每批间隔2秒，避免触发限流）
         results = []
+        failed_stocks = []  # 记录失败的股票，用于重试
         BATCH_SIZE = 50  # 每批50只
         
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            
             for i in range(0, len(all_stocks), BATCH_SIZE):
                 batch = all_stocks[i:i + BATCH_SIZE]
                 futures = {
@@ -292,10 +294,28 @@ class StockRawCollector:
                     result = future.result()
                     if result:
                         results.append(result)
-                # 批次间隔0.5秒
+                    else:
+                        failed_stocks.append(futures[future])
+                
+                # 批次间隔1秒（平衡速度与限流）
                 if i + BATCH_SIZE < len(all_stocks):
-                    time.sleep(0.5)
-                    logger.info(f"已采集 {min(i + BATCH_SIZE, len(all_stocks))}/{len(all_stocks)} 只")
+                    time.sleep(1)
+                    fail_count = len([s for s in batch if s in failed_stocks])
+                    success_count = len(batch) - fail_count
+                    logger.info(f"已采集 {min(i + BATCH_SIZE, len(all_stocks))}/{len(all_stocks)} 只 (成功 {success_count}, 失败 {fail_count})")
+
+        # 重试失败的股票
+        if failed_stocks:
+            logger.warning(f"第一轮失败 {len(failed_stocks)} 只，开始重试...")
+            retry_results = []
+            for stock in failed_stocks:
+                result = cls._fetch_one_stock(stock, ztzt_map)
+                if result:
+                    retry_results.append(result)
+                time.sleep(0.3)  # 重试间隔
+            
+            results.extend(retry_results)
+            logger.info(f"重试完成：成功 {len(retry_results)}/{len(failed_stocks)} 只")
 
         # 批量入库
         with get_db_context() as db:
