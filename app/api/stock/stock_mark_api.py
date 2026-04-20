@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 from typing import List, Optional
 from pydantic import BaseModel, Field
+from datetime import datetime, timezone, timedelta
 
 from app.db.session import get_db
 from app.models.base.base_stock import BaseStock
