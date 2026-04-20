@@ -25,13 +25,13 @@
 from typing import Optional
 
 
-def get_stock_type(stock_code: str, exchange: Optional[str] = None) -> str:
+def get_stock_type(stock_code: str, exchange: Optional[int | str] = None) -> str:
     """
     根据股票代码判断A股所属板块
 
     参数:
         stock_code: 股票代码（6位数字字符串，如 "600519"）
-        exchange:   交易所标识（"0"=深市，"1"=沪市），可选
+        exchange:   交易所标识（0/1 或 "0"/"1"，0=深市，1=沪市），可选
 
     返回:
         str: 板块标识代码
@@ -43,11 +43,11 @@ def get_stock_type(stock_code: str, exchange: Optional[str] = None) -> str:
             ""     → 未能识别的代码（可能是B股、债券、基金等）
 
     示例:
-        get_stock_type("600519", "1")  → "SH_ZB"（沪市主板，贵州茅台）
-        get_stock_type("688041", "1")  → "KCB"（科创板，海光信息）
-        get_stock_type("000001", "0")  → "SZ_ZB"（深市主板，平安银行）
-        get_stock_type("300750", "0")  → "CYB"（创业板，宁德时代）
-        get_stock_type("830946", "0")  → "BJS"（北交所）
+        get_stock_type("600519", 1)  → "SH_ZB"（沪市主板，贵州茅台）
+        get_stock_type("688041", 1)  → "KCB"（科创板，海光信息）
+        get_stock_type("000001", 0)  → "SZ_ZB"（深市主板，平安银行）
+        get_stock_type("300750", 0)  → "CYB"（创业板，宁德时代）
+        get_stock_type("830946", 0)  → "BJS"（北交所）
     """
     if not stock_code:
         return ""
@@ -66,9 +66,10 @@ def get_stock_type(stock_code: str, exchange: Optional[str] = None) -> str:
         return ""
 
     # ─── 沪市股票（exchange=1）───────────────────────────────────
-    if exchange == "1":
-        # 科创板：688000~688999
-        if 688000 <= code_num <= 688999:
+    # 兼容字符串 "1"/"0" 和整数 1/0
+    if exchange == 1 or exchange == "1":
+        # 科创板：688000~689999（含688xxx和689xxx）
+        if 688000 <= code_num <= 689999:
             return "KCB"
         # 沪市主板：600000~603999（包含早期的 605xxx、604xxx）
         if 600000 <= code_num <= 609999:
@@ -78,14 +79,15 @@ def get_stock_type(stock_code: str, exchange: Optional[str] = None) -> str:
             return ""
 
     # ─── 深市股票（exchange=0）───────────────────────────────────
-    if exchange == "0":
-        # 创业板：300000~301999
-        if 300000 <= code_num <= 301999:
+    # 兼容字符串 "0" 和整数 0
+    if exchange == 0 or exchange == "0":
+        # 创业板：300000~302999（300xxx/301xxx/302xxx）
+        if 300000 <= code_num <= 302999:
             return "CYB"
         # 深市主板：000000~002999（000xxx为老股，001xxx极少）
-        if 0 <= code_num <= 299999:
+        if code_num <= 299999:
             return "SZ_ZB"
-        # 北交所：830000~839999（83/832/833/835/836/837/838/839 开头）
+        # 北交所：830000~839999
         if 830000 <= code_num <= 839999:
             return "BJS"
         # 深市B股：200000~200xxx（不采集，跳过）
