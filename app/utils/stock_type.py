@@ -87,8 +87,8 @@ def get_stock_type(stock_code: str, exchange: Optional[int | str] = None) -> str
         # 深市主板：000000~002999（000xxx为老股，001xxx极少）
         if code_num <= 299999:
             return "SZ_ZB"
-        # 北交所：830000~839999
-        if 830000 <= code_num <= 839999:
+        # 北交所：830xxx/873xxx（老代码，新三板转板）+ 920xxx（新代码，2021年北交所成立）
+        if 830000 <= code_num <= 839999 or 920000 <= code_num <= 929999:
             return "BJS"
         # 深市B股：200000~200xxx（不采集，跳过）
         if 200000 <= code_num <= 209999:
