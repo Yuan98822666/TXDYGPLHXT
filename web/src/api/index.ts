@@ -194,10 +194,10 @@ export async function batchAddStockMark(codes: string[]) {
 }
 
 // 批量移除关注
-export async function batchRemoveStockMark(codes: string[]) {
+export async function batchRemoveStockMark(codes: string[], skipDays: number = 0) {
   return fetchAPI<any>('/stock/mark/batch/remove', {
     method: 'POST',
-    body: JSON.stringify({ codes, imp: 0 })
+    body: JSON.stringify({ codes, imp: 0, skip_days: skipDays })
   })
 }
 

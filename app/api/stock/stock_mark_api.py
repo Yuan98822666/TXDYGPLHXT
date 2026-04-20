@@ -50,6 +50,7 @@ class BatchMarkRequest(BaseModel):
     """批量标记请求"""
     codes: List[str] = Field(..., description="股票代码列表", min_length=1)
     imp: int = Field(1, description="标记值：1=关注, 0=取消")
+    skip_days: Optional[int] = Field(None, description="跳过采集天数")
 
 
 class SearchParams(BaseModel):
@@ -295,24 +296,27 @@ def batch_remove_mark(
 ):
     """批量移除关注"""
     stocks = db.query(BaseStock).filter(BaseStock.stock_code.in_(request.codes)).all()
-    
+
     if not stocks:
         raise HTTPException(status_code=404, detail="未找到任何匹配的股票")
-    
+
     updated = 0
     for stock in stocks:
         if stock.stock_imp == 1:
             stock.stock_imp = 0
+            # 处理跳过采集
+            if request.skip_days and request.skip_days > 0:
+                stock.skip_until = datetime.now(timezone.utc) + timedelta(days=request.skip_days)
             updated += 1
-    
+
     db.commit()
-    
+
     return {
         "success": True,
         "requested": len(request.codes),
         "found": len(stocks),
         "updated": updated,
-        "message": f"成功移除 {updated} 只股票的关注标记"
+        "message": f"成功移除 {updated} 只股票的关注标记" + (f"，跳过采集 {request.skip_days} 天" if request.skip_days else "")
     }
 
 

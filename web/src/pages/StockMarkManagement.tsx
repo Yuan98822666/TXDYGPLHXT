@@ -217,8 +217,18 @@ export default function StockMarkManagement() {
   
   const handleBatchRemove = async () => {
     if (selectedCodes.size === 0) return
+    // 弹窗让用户选择跳过时长
+    const input = prompt('批量取消关注\n\n请输入跳过采集天数（0表示不跳过）：', '0')
+    if (input === null) return // 用户取消
+
+    const skipDays = parseInt(input, 10)
+    if (isNaN(skipDays) || skipDays < 0) {
+      alert('请输入有效的天数（≥0）')
+      return
+    }
+
     try {
-      await batchRemoveStockMark(Array.from(selectedCodes))
+      await batchRemoveStockMark(Array.from(selectedCodes), skipDays)
       setSelectedCodes(new Set())
       loadStocks()
       loadStats()
@@ -474,8 +484,12 @@ export default function StockMarkManagement() {
                     : 0
                   
                   return (
-                    <tr key={stock.code} className={`hover:bg-gray-50 ${isSkipping ? 'bg-slate-50' : ''}`}>
-                      <td className="px-4 py-3">
+                    <tr
+                      key={stock.code}
+                      className={`hover:bg-gray-50 cursor-pointer ${isSkipping ? 'bg-slate-50' : ''}`}
+                      onClick={() => handleSelect(stock.code)}
+                    >
+                      <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                         <input
                           type="checkbox"
                           checked={selectedCodes.has(stock.code)}
@@ -507,7 +521,7 @@ export default function StockMarkManagement() {
                           <span className="px-2 py-1 bg-green-50 text-green-600 rounded text-xs">正常</span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-4 py-3 text-center" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => handleToggle(stock.code)}
                           className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
@@ -519,7 +533,7 @@ export default function StockMarkManagement() {
                           {stock.stock_imp === 1 ? '⭐' : '☆'}
                         </button>
                       </td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-4 py-3 text-center" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => handleToggle(stock.code)}
                           className={`px-3 py-1 rounded text-sm ${
