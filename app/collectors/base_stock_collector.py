@@ -43,13 +43,11 @@ def _fetch_stocks_data() -> Dict[str, Dict]:
         for item in stocks:
             stock_code = item.get("f12")
             stock_name = item.get("f14")
-            stock_short = item.get("f152", "")
             exchange = str(item.get("f13", ""))
 
             if stock_code and stock_name:
-                # 判断风险状态
-                short_str = str(stock_short) if stock_short else ""
-                is_st = short_str.startswith("*ST") or short_str.startswith("ST")
+                # 判断风险状态：根据股票名称是否含 ST/*ST
+                is_st = "ST" in stock_name
                 risk = 0 if is_st else 1
 
                 # 判断板块类型

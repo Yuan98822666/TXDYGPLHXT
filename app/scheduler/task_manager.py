@@ -58,7 +58,7 @@ class Schedule:
     time: Optional[str] = None
     start_time: Optional[str] = None
     end_time: Optional[str] = None
-    interval_seconds: int = 30
+    interval_seconds: int = 60
     action: Optional[str] = None
     
     def to_dict(self) -> Dict:
