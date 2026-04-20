@@ -69,10 +69,10 @@ def get_stock_type(stock_code: str, exchange: Optional[str] = None) -> str:
     if exchange == "1":
         # 科创板：688000~688999
         if 688000 <= code_num <= 688999:
-            return "科创板"
+            return "KCB"
         # 沪市主板：600000~603999（包含早期的 605xxx、604xxx）
         if 600000 <= code_num <= 609999:
-            return "深圳主板"
+            return "SH_ZB"
         # 沪市B股：900000~905xxx（不采集，跳过）
         if 900000 <= code_num <= 905999:
             return ""
@@ -81,13 +81,13 @@ def get_stock_type(stock_code: str, exchange: Optional[str] = None) -> str:
     if exchange == "0":
         # 创业板：300000~301999
         if 300000 <= code_num <= 301999:
-            return "创业板"
+            return "CYB"
         # 深市主板：000000~002999（000xxx为老股，001xxx极少）
         if 0 <= code_num <= 299999:
-            return "上证主板"
+            return "SZ_ZB"
         # 北交所：830000~839999（83/832/833/835/836/837/838/839 开头）
         if 830000 <= code_num <= 839999:
-            return "北交所"
+            return "BJS"
         # 深市B股：200000~200xxx（不采集，跳过）
         if 200000 <= code_num <= 209999:
             return ""
