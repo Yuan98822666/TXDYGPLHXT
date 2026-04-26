@@ -10,9 +10,11 @@ Base 基础数据模型
 from app.models.base.base_block import BaseBlock
 from app.models.base.base_stock import BaseStock
 from app.models.base.base_block_stock_lnk import BaseBlockStockLnk
+from app.models.base.base_industry import BaseIndustry
 
 __all__ = [
     "BaseBlock",
     "BaseStock",
     "BaseBlockStockLnk",
+    "BaseIndustry",
 ]

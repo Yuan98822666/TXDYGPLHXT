@@ -14,7 +14,7 @@
 - skip_until    : 跳过采集截止时间（可选，设置后在此时间前不采集）
 - pdate_time    : 数据更新时间
 """
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, Integer, DateTime, Index
 from datetime import datetime, timezone
 from app.db.base import Base
 
@@ -52,6 +52,11 @@ class BaseStock(Base):
     stock_type = Column(String(20), nullable=False, index=True, comment="股票上市板块类型")
     stock_risk = Column(Integer, nullable=False, default=1, index=True, comment="风险状态：0=有风险, 1=正常")
     stock_imp = Column(Integer, nullable=False, default=0, index=True, comment="自选标记：0=未添加, 1=已添加")
+
+    # 申万行业分类
+    sw_industry_l1 = Column(String(20), nullable=True, index=True, comment="申万一级行业编码，如 L1_0，关联 base_industry.industry_code")
+    sw_industry_l2 = Column(String(20), nullable=True, index=True, comment="申万二级行业编码，如 L2_12，关联 base_industry.industry_code")
+    sw_industry_l3 = Column(String(20), nullable=True, index=True, comment="申万三级行业编码，如 L3_39，关联 base_industry.industry_code")
 
     # 跳过采集
     skip_until = Column(DateTime, nullable=True, index=True, comment="跳过采集截止时间（UTC时区），设置后在此时间前不采集")
