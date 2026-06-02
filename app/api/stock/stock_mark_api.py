@@ -165,6 +165,34 @@ def get_marked_stocks(
     }
 
 
+# 禁止加入采集名单的股票类型和风险状态
+BLOCKED_STOCK_TYPES = {"KCB", "CYB", "BJS"}  # 科创板、创业板、北交所
+BLOCKED_STOCK_RISK = 0  # 风险股(ST/*ST/退市)
+SKIP_YEARS = 7  # 跳过采集年限
+
+
+def _is_stock_blocked(stock: BaseStock) -> tuple[bool, str]:
+    """
+    检查股票是否被禁止加入采集名单
+    
+    返回: (是否被禁止, 原因)
+    """
+    # 检查风险状态 (ST/*ST/退市)
+    if stock.stock_risk == BLOCKED_STOCK_RISK:
+        return True, "风险警示股票(ST/*ST/退市)禁止加入采集名单"
+    
+    # 检查板块类型 (科创板、创业板、北交所)
+    if stock.stock_type in BLOCKED_STOCK_TYPES:
+        type_name = {
+            "KCB": "科创板",
+            "CYB": "创业板", 
+            "BJS": "北交所"
+        }.get(stock.stock_type, stock.stock_type)
+        return True, f"{type_name}股票禁止加入采集名单"
+    
+    return False, ""
+
+
 @router.post("/add", summary="添加关注股票")
 def add_mark(
     code: str = Body(..., embed=True, description="股票代码"),
@@ -174,10 +202,22 @@ def add_mark(
     添加单只股票到关注列表
     
     - code: 股票代码（6位数字，如 000001）
+    
+    **限制规则**:
+    - ST/*ST/退市股票 (stock_risk=0) 禁止加入
+    - 科创板 (KCB)、创业板 (CYB)、北交所 (BJS) 禁止加入
     """
     stock = db.query(BaseStock).filter(BaseStock.stock_code == code).first()
     if not stock:
         raise HTTPException(status_code=404, detail=f"股票 {code} 不存在")
+    
+    # 检查是否被禁止
+    is_blocked, block_reason = _is_stock_blocked(stock)
+    if is_blocked:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"股票 {code} ({stock.stock_name}) 无法添加关注：{block_reason}"
+        )
     
     if stock.stock_imp == 1:
         return {"success": True, "message": f"股票 {code} 已在关注列表中", "already_marked": True}
@@ -271,6 +311,10 @@ def batch_add_mark(
     批量添加关注
 
     - codes: 股票代码列表
+    
+    **限制规则**:
+    - ST/*ST/退市股票 (stock_risk=0) 会被自动跳过
+    - 科创板 (KCB)、创业板 (CYB)、北交所 (BJS) 会被自动跳过
     """
     stocks = db.query(BaseStock).filter(BaseStock.stock_code.in_(request.codes)).all()
 
@@ -278,7 +322,18 @@ def batch_add_mark(
         raise HTTPException(status_code=404, detail="未找到任何匹配的股票")
 
     updated = 0
+    skipped = []
     for stock in stocks:
+        # 检查是否被禁止
+        is_blocked, block_reason = _is_stock_blocked(stock)
+        if is_blocked:
+            skipped.append({
+                "code": stock.stock_code,
+                "name": stock.stock_name,
+                "reason": block_reason
+            })
+            continue
+            
         if stock.stock_imp == 0:
             stock.stock_imp = 1
             stock.skip_until = None  # 重新关注时清空跳过标记
@@ -291,7 +346,8 @@ def batch_add_mark(
         "requested": len(request.codes),
         "found": len(stocks),
         "updated": updated,
-        "message": f"成功添加 {updated} 只股票到关注列表"
+        "skipped": skipped,
+        "message": f"成功添加 {updated} 只股票到关注列表" + (f"，跳过 {len(skipped)} 只受限股票" if skipped else "")
     }
 
 

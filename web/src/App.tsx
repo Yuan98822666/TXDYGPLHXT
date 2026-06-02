@@ -5,6 +5,7 @@ import StockDetail from './pages/StockDetail'
 import Home from './pages/Home'
 import TaskManagement from './pages/TaskManagement'
 import StockMarkManagement from './pages/StockMarkManagement'
+import BlockFlow from './pages/BlockFlow'
 
 // 简单导航栏组件
 function NavBar() {
@@ -13,6 +14,7 @@ function NavBar() {
   const navItems = [
     { path: '/', label: '🏠 首页', exact: true },
     { path: '/dashboard', label: '📊 数据看板', exact: false },
+    { path: '/block-flow', label: '💰 板块资金', exact: true },
     { path: '/stocks', label: '⭐ 股票标记', exact: true },
     { path: '/tasks', label: '⚙️ 任务管理', exact: true },
     { path: '/analysis', label: '🧠 分析决策', exact: true },
@@ -58,6 +60,7 @@ function App() {
           <Route path="/stock/:code" element={<StockDetail />} />
           <Route path="/stocks" element={<StockMarkManagement />} />
           <Route path="/tasks" element={<TaskManagement />} />
+          <Route path="/block-flow" element={<BlockFlow />} />
           <Route path="/analysis" element={<div className="p-8 text-center text-gray-500">分析决策页面开发中...</div>} />
         </Routes>
       </div>

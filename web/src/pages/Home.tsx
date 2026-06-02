@@ -196,7 +196,7 @@ export default function Home() {
       {/* 快捷入口 */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">🚀 快捷入口</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <NavCard
             to="/dashboard"
             icon="📊"
@@ -204,6 +204,14 @@ export default function Home() {
             subtitle="实时数据概览"
             color="from-blue-500 to-blue-600"
             tags={['股票列表', '板块热点', '资金流向']}
+          />
+          <NavCard
+            to="/block-flow"
+            icon="💰"
+            title="板块资金"
+            subtitle="资金流向监控"
+            color="from-emerald-500 to-emerald-600"
+            tags={['概念板块', '行业板块', '个股列表']}
           />
           <NavCard
             to="/stocks"
