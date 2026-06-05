@@ -462,7 +462,11 @@ export default function TaskManagement() {
       const data = await getTaskStatus()
       if (data.status === 'success') {
         setSchedulerRunning(data.data.scheduler_running)
-        setTasks(Object.values(data.data.tasks))
+        // 后端返回的是数组，直接使用
+        const taskList = Array.isArray(data.data.tasks) 
+          ? data.data.tasks 
+          : Object.values(data.data.tasks)
+        setTasks(taskList)
       }
     } catch (err) {
       console.error('加载任务状态失败:', err)

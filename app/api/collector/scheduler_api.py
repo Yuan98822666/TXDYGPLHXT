@@ -1,86 +1,84 @@
 # -*- coding: utf-8 -*-
 """
-采集调度器 API 接口
+【已废弃】采集调度器 API 接口
 
-接口列表：
-  POST /api/collector/scheduler/start  → 启动调度器
-  POST /api/collector/scheduler/stop   → 停止调度器
-  GET  /api/collector/scheduler/status → 获取调度器状态
-  POST /api/collector/scheduler/run-now → 立即执行采集
+⚠️ 警告：此API已废弃，请使用 TaskManager API (/api/collector/tasks/*)
+
+废弃原因：
+- TaskManager 提供更灵活的内存化配置
+- TaskManager 支持动态修改配置无需重启
+- TaskManager 有更好的任务隔离和错误处理
+
+迁移指南：
+- 启动/停止任务：POST /api/collector/tasks/{task_id}/start, POST /api/collector/tasks/{task_id}/stop
+- 查看任务状态：GET /api/collector/tasks/status
+- 立即执行：POST /api/collector/tasks/{task_id}/run-now
+
+保留此文件仅用于向后兼容，所有接口返回迁移提示。
 """
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from datetime import datetime
 
-router = APIRouter(prefix="/api/collector/scheduler", tags=["采集调度器"])
+router = APIRouter(prefix="/api/collector/scheduler", tags=["采集调度器(已废弃)"])
+
+DEPRECATED_MESSAGE = {
+    "status": "deprecated",
+    "message": "此API已废弃，请使用 TaskManager API",
+    "migration": {
+        "启动任务": "POST /api/collector/tasks/{task_id}/start",
+        "停止任务": "POST /api/collector/tasks/{task_id}/stop",
+        "任务状态": "GET /api/collector/tasks/status",
+        "立即执行": "POST /api/collector/tasks/{task_id}/run-now",
+    },
+    "available_tasks": ["raw", "special_pool", "day_k", "cls_telegram"],
+}
 
 
-@router.post("/start", summary="启动采集调度器")
+@router.post("/start", summary="【已废弃】启动采集调度器")
 async def start_scheduler():
     """
-    启动采集调度器
-
-    说明：
-        - 读取配置文件，按策略自动执行采集
-        - 快照采集：交易时间内按配置的时间段执行
-        - 特殊股票池：按配置的时间段执行
-        - 日K采集：收盘后执行一次
+    【已废弃】启动采集调度器
+    
+    请使用 TaskManager API:
+    - POST /api/collector/tasks/raw/start
+    - POST /api/collector/tasks/special_pool/start
+    - POST /api/collector/tasks/day_k/start
     """
-    try:
-        from app.scheduler.collector_scheduler import get_scheduler
-
-        scheduler = get_scheduler()
-        scheduler.start()
-
-        return {
-            "status": "success",
-            "message": "采集调度器已启动",
-            "timestamp": datetime.utcnow().isoformat() + "Z",
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"启动失败: {str(e)}")
+    raise HTTPException(
+        status_code=410,  # Gone
+        detail=DEPRECATED_MESSAGE
+    )
 
 
-@router.post("/stop", summary="停止采集调度器")
+@router.post("/stop", summary="【已废弃】停止采集调度器")
 async def stop_scheduler():
     """
-    停止采集调度器
+    【已废弃】停止采集调度器
+    
+    请使用 TaskManager API:
+    - POST /api/collector/tasks/raw/stop
+    - POST /api/collector/tasks/special_pool/stop
+    - POST /api/collector/tasks/day_k/stop
     """
-    try:
-        from app.scheduler.collector_scheduler import get_scheduler
-
-        scheduler = get_scheduler()
-        scheduler.stop()
-
-        return {
-            "status": "success",
-            "message": "采集调度器已停止",
-            "timestamp": datetime.utcnow().isoformat() + "Z",
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"停止失败: {str(e)}")
+    raise HTTPException(
+        status_code=410,  # Gone
+        detail=DEPRECATED_MESSAGE
+    )
 
 
-@router.get("/status", summary="获取调度器状态")
+@router.get("/status", summary="【已废弃】获取调度器状态")
 async def get_scheduler_status():
     """
-    获取采集调度器状态
+    【已废弃】获取调度器状态
+    
+    请使用 TaskManager API:
+    - GET /api/collector/tasks/status
     """
-    try:
-        from app.scheduler.collector_scheduler import get_scheduler
-
-        scheduler = get_scheduler()
-
-        return {
-            "status": "success",
-            "data": {
-                "running": scheduler._running,
-                "config_loaded": bool(scheduler.config),
-                "last_run_times": scheduler.last_run_times,
-            }
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    raise HTTPException(
+        status_code=410,  # Gone
+        detail=DEPRECATED_MESSAGE
+    )
 
 
 @router.post("/run-now", summary="立即执行采集")
@@ -114,6 +112,7 @@ async def run_collection_now():
             "message": "采集任务已执行",
             "raw_no": raw_no,
             "timestamp": datetime.utcnow().isoformat() + "Z",
+            "note": "此API保留向后兼容，建议使用 POST /api/collector/tasks/raw/run-now",
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"执行失败: {str(e)}")
