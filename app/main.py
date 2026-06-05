@@ -66,6 +66,7 @@ async def lifespan(app: FastAPI):
     应用生命周期管理
     
     启动时：
+        - 初始化数据库（自动建表）
         - 加载任务配置到内存
         - 启动任务调度器
     
@@ -75,16 +76,22 @@ async def lifespan(app: FastAPI):
     """
     # 启动
     try:
+        # 1. 初始化数据库（自动创建缺失的表）
+        from app.db.init_db import init_db
+        init_db()
+        logger.info("数据库初始化完成")
+        
+        # 2. 初始化任务管理器（加载配置）
         from app.scheduler.task_manager import get_task_manager, start_scheduler
-        # 初始化任务管理器（加载配置）
         manager = get_task_manager()
         logger.info(f"任务配置加载完成，共 {len(manager.tasks)} 个任务")
         
-        # 启动调度器
+        # 3. 启动调度器
         start_scheduler()
         logger.info("任务调度器已自动启动")
     except Exception as e:
-        logger.error(f"启动调度器失败: {e}")
+        logger.error(f"启动失败: {e}")
+        raise  # 启动失败应阻止服务启动
     
     yield  # 运行中
     

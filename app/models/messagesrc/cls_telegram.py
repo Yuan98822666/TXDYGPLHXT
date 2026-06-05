@@ -7,7 +7,7 @@
 from datetime import datetime
 from typing import Optional, List
 
-from sqlalchemy import Column, BigInteger, String, Text, Boolean, DateTime, Index, JSON
+from sqlalchemy import Column, Integer, BigInteger, String, Text, Boolean, DateTime, Index, JSON
 from sqlalchemy.sql import func
 
 from app.db.base import Base
@@ -18,7 +18,7 @@ class MessageSrcCLSTelegram(Base):
     
     __tablename__ = 'messagesrc_cls_telegram'
     
-    id = Column(BigInteger, primary_key=True, autoincrement=True, comment='自增主键')
+    id = Column(Integer, primary_key=True, autoincrement=True, comment='自增主键')
     msg_id = Column(String(50), nullable=False, unique=True, comment='财联社消息唯一ID')
     publish_time = Column(DateTime, nullable=False, comment='发布时间')
     content = Column(Text, nullable=False, comment='正文内容')
@@ -36,12 +36,11 @@ class MessageSrcCLSTelegram(Base):
     create_time = Column(DateTime, default=func.now(), comment='入库时间')
     update_time = Column(DateTime, default=func.now(), onupdate=func.now(), comment='更新时间')
     
-    # 索引
+    # 索引（msg_id 已有 unique 约束，无需再建索引）
     __table_args__ = (
-        Index('idx_publish_time', 'publish_time'),
-        Index('idx_category', 'category'),
-        Index('idx_is_important', 'is_important'),
-        Index('idx_msg_id', 'msg_id'),
+        Index('idx_cls_telegram_publish_time', 'publish_time'),
+        Index('idx_cls_telegram_category', 'category'),
+        Index('idx_cls_telegram_is_important', 'is_important'),
     )
     
     def __repr__(self):
