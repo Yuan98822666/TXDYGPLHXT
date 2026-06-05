@@ -466,7 +466,7 @@ export default function TaskManagement() {
       }
     } catch (err) {
       console.error('加载任务状态失败:', err)
-      // Mock 数据
+      // Mock 数据（包含所有4个任务）
       setTasks([
         { 
           name: 'raw', 
@@ -492,6 +492,15 @@ export default function TaskManagement() {
           enabled: false, 
           status: 'disabled', 
           last_run_time: '2026-04-19T15:05:00',
+          last_run_status: 'success',
+          schedules: []
+        },
+        { 
+          name: 'cls_telegram', 
+          display_name: '财联社电报采集', 
+          enabled: true, 
+          status: 'idle', 
+          last_run_time: '2026-06-05T22:00:00',
           last_run_status: 'success',
           schedules: []
         },

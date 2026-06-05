@@ -14,7 +14,6 @@ from sqlalchemy.orm import Session
 from app.db.session import SessionLocal
 from app.models.messagesrc import MessageSrcCLSTelegram
 from .cls_telegram_collector import CLSTelegramCollector, TelegramMessage
-from .image_ocr import ImageOCR
 
 
 class CLSTelegramTask:
@@ -30,7 +29,8 @@ class CLSTelegramTask:
         """
         self.collector = CLSTelegramCollector()
         self.enable_ocr = enable_ocr
-        self.ocr = ImageOCR(engine=ocr_engine) if enable_ocr else None
+        self.ocr_engine = ocr_engine
+        self.ocr = None  # 延迟初始化
     
     def _save_messages(self, db: Session, messages: List[TelegramMessage]) -> int:
         """
@@ -54,10 +54,13 @@ class CLSTelegramTask:
             if existing:
                 continue
             
-            # OCR识别图片
+            # OCR识别图片（延迟导入避免依赖问题）
             image_ocr_text = None
             if self.enable_ocr and msg.has_image and msg.image_urls:
                 try:
+                    if self.ocr is None:
+                        from .image_ocr import ImageOCR
+                        self.ocr = ImageOCR(engine=self.ocr_engine)
                     image_urls = msg.image_urls.split(';')
                     image_ocr_text = self.ocr.recognize_multiple(image_urls)
                 except Exception as e:
