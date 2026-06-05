@@ -61,7 +61,7 @@ class CLSTelegramCollector:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.0 Edg/120.0.0.0',
             'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Encoding': 'gzip, deflate',
             'Referer': 'https://www.cls.cn/telegraph',
             'Origin': 'https://www.cls.cn',
             'Connection': 'keep-alive',
@@ -72,9 +72,10 @@ class CLSTelegramCollector:
     def _init_session(self):
         """初始化session，获取cookies"""
         try:
-            self.session.get(f'{self.BASE_URL}/telegraph', timeout=10)
-        except:
-            pass
+            resp = self.session.get(f'{self.BASE_URL}/telegraph', timeout=10)
+            print(f"Session init: status={resp.status_code}")
+        except Exception as e:
+            print(f"Session init warning: {e}")
     
     def _detect_category(self, subjects: List[str], content: str) -> Optional[str]:
         """
@@ -172,11 +173,16 @@ class CLSTelegramCollector:
         params = {'name': 'telegraph'}
         
         try:
+            print(f"Fetching from {self.API_URL} with params {params}")
             response = self.session.get(self.API_URL, params=params, timeout=10)
+            print(f"Response status: {response.status_code}")
+            
             data = response.json()
+            print(f"Response errno: {data.get('errno')}")
             
             if data.get('errno') == 0:
                 items = data.get('data', {}).get('roll_data', [])
+                print(f"Got {len(items)} items from API")
                 messages = [self._parse_message(item) for item in items]
                 
                 # 按分类过滤
@@ -189,6 +195,8 @@ class CLSTelegramCollector:
                 
         except Exception as e:
             print(f"Request failed: {e}")
+            import traceback
+            traceback.print_exc()
         
         return []
     
