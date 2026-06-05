@@ -3,16 +3,17 @@
 """
 财联社电报采集器
 支持分类: zc政策/gs公司/hy行业/sc市场
+
+API端点: https://www.cls.cn/api/cache?name=telegraph
 """
 
 import requests
 import json
 import re
-import hashlib
 import time
 from datetime import datetime
 from typing import List, Dict, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 
 @dataclass
@@ -22,26 +23,36 @@ class TelegramMessage:
     publish_time: datetime
     content: str
     title: Optional[str] = None
-    category: Optional[str] = None
+    category: Optional[str] = None  # zc/gs/hy/sc
+    subjects: Optional[List[str]] = None  # 原始分类列表
     is_important: bool = False
     has_image: bool = False
     image_urls: Optional[str] = None  # 分号隔开
     image_ocr_text: Optional[str] = None  # 分号隔开
+    audio_urls: Optional[str] = None  # 分号隔开
     source_url: Optional[str] = None
+    reading_num: int = 0
+    share_num: int = 0
+    
+    def to_dict(self) -> Dict:
+        """转换为字典"""
+        data = asdict(self)
+        data['publish_time'] = self.publish_time.strftime('%Y-%m-%d %H:%M:%S')
+        return data
 
 
 class CLSTelegramCollector:
     """财联社电报采集器"""
     
     BASE_URL = "https://www.cls.cn"
-    API_URL = "https://www.cls.cn/v3/telegraph"
+    API_URL = "https://www.cls.cn/api/cache"
     
-    # 分类映射
+    # 分类映射（用于识别）
     CATEGORIES = {
-        'zc': '政策',
-        'gs': '公司', 
-        'hy': '行业',
-        'sc': '市场'
+        'zc': ['政策', '宏观', '监管', '央行', '国务院', '证监会'],
+        'gs': ['公司', '公告', '业绩', 'A股公告速递'],
+        'hy': ['行业', '产业', '汽车', '科技', '医药', '房地产'],
+        'sc': ['市场', '环球市场', '期货', '美股', '港股'],
     }
     
     def __init__(self):
@@ -65,52 +76,86 @@ class CLSTelegramCollector:
         except:
             pass
     
-    def _generate_sign(self, params: Dict) -> str:
+    def _detect_category(self, subjects: List[str], content: str) -> Optional[str]:
         """
-        生成API签名
-        财联社的sign算法需要从页面JS中提取
-        目前使用固定值（需要定期从浏览器更新）
+        根据分类标签和内容自动识别分类
+        
+        Args:
+            subjects: 原始分类列表
+            content: 内容文本
+        
+        Returns:
+            分类代码 zc/gs/hy/sc 或 None
         """
-        # TODO: 实现真实的sign算法
-        # 临时返回空，让API返回错误提示
-        return ''
+        text_to_check = ' '.join(subjects) + ' ' + content[:100]
+        
+        for cat_code, keywords in self.CATEGORIES.items():
+            for keyword in keywords:
+                if keyword in text_to_check:
+                    return cat_code
+        
+        return None
     
     def _parse_message(self, item: Dict) -> TelegramMessage:
         """解析单条电报消息"""
-        # 提取时间
-        pub_time_str = item.get('time', '')
-        if pub_time_str:
-            # 格式: "20:30:17" -> 补充日期
-            today = datetime.now().strftime('%Y-%m-%d')
-            try:
-                pub_time = datetime.strptime(f"{today} {pub_time_str}", '%Y-%m-%d %H:%M:%S')
-            except:
-                pub_time = datetime.now()
+        # 提取时间戳
+        ctime = item.get('ctime')
+        if ctime:
+            pub_time = datetime.fromtimestamp(ctime)
         else:
             pub_time = datetime.now()
         
-        # 提取内容，解析标题
+        # 提取内容
         content = item.get('content', '')
-        title = None
+        title = item.get('title', '')
         
-        # 匹配【标题】格式
-        title_match = re.search(r'【([^】]+)】', content)
-        if title_match:
-            title = title_match.group(1)
+        # 如果title为空，尝试从content中提取【标题】
+        if not title:
+            title_match = re.search(r'【([^】]+)】', content)
+            if title_match:
+                title = title_match.group(1)
         
         # 提取图片
-        images = item.get('images', [])
-        image_urls = ';'.join(images) if images else None
+        images = item.get('images')
+        image_urls = None
+        has_image = False
+        if images and isinstance(images, list) and len(images) > 0:
+            image_urls = ';'.join(images)
+            has_image = True
+        
+        # 提取音频
+        audio_urls_list = item.get('audio_url', [])
+        audio_urls = ';'.join(audio_urls_list) if audio_urls_list else None
+        
+        # 提取分类
+        subjects_data = item.get('subjects', [])
+        subjects = [s.get('subject_name', '') for s in subjects_data] if subjects_data else []
+        
+        # 自动识别分类
+        category = self._detect_category(subjects, content)
+        
+        # 判断是否重要（根据level或is_top）
+        level = item.get('level', 'C')
+        is_important = item.get('is_top', 0) == 1 or level in ['A', 'S']
+        
+        # 构建source_url
+        msg_id = str(item.get('id', ''))
+        source_url = f"https://www.cls.cn/detail/{msg_id}" if msg_id else None
         
         return TelegramMessage(
-            msg_id=str(item.get('id', int(time.time() * 1000))),
+            msg_id=msg_id,
             publish_time=pub_time,
             content=content,
-            title=title,
-            is_important=item.get('is_important', False) or item.get('is_red', False),
-            has_image=len(images) > 0,
+            title=title if title else None,
+            category=category,
+            subjects=subjects if subjects else None,
+            is_important=is_important,
+            has_image=has_image,
             image_urls=image_urls,
-            source_url=item.get('share_url', item.get('url'))
+            audio_urls=audio_urls,
+            source_url=source_url,
+            reading_num=item.get('reading_num', 0),
+            share_num=item.get('share_num', 0),
         )
     
     def fetch_telegrams(self, category: str = None, limit: int = 50) -> List[TelegramMessage]:
@@ -124,15 +169,7 @@ class CLSTelegramCollector:
         Returns:
             电报消息列表
         """
-        params = {
-            'app': 'CailianpressWeb',
-            'os': 'web',
-            'sv': '8.4.6',
-        }
-        
-        # 添加分类参数
-        if category and category in self.CATEGORIES:
-            params['category'] = self.CATEGORIES[category]
+        params = {'name': 'telegraph'}
         
         try:
             response = self.session.get(self.API_URL, params=params, timeout=10)
@@ -140,90 +177,20 @@ class CLSTelegramCollector:
             
             if data.get('errno') == 0:
                 items = data.get('data', {}).get('roll_data', [])
-                return [self._parse_message(item) for item in items[:limit]]
+                messages = [self._parse_message(item) for item in items]
+                
+                # 按分类过滤
+                if category:
+                    messages = [m for m in messages if m.category == category]
+                
+                return messages[:limit]
             else:
-                # API返回错误，可能需要更新sign
                 print(f"API Error: {data.get('msg', 'Unknown error')}")
                 
         except Exception as e:
             print(f"Request failed: {e}")
         
         return []
-    
-    def fetch_with_browser(self, category: str = None, limit: int = 50) -> List[TelegramMessage]:
-        """
-        使用浏览器渲染获取数据（当API不可用时）
-        需要安装playwright: pip install playwright && playwright install
-        """
-        try:
-            from playwright.sync_api import sync_playwright
-            
-            with sync_playwright() as p:
-                browser = p.chromium.launch(headless=True)
-                page = browser.new_page()
-                
-                # 访问电报页面
-                url = f'{self.BASE_URL}/telegraph'
-                if category:
-                    url += f'?category={self.CATEGORIES.get(category, "")}'
-                
-                page.goto(url, wait_until='networkidle')
-                
-                # 等待数据加载
-                page.wait_for_selector('.telegraph-list, .roll-item, [class*="telegraph"]', timeout=10000)
-                
-                # 提取数据
-                items = page.evaluate('''() => {
-                    const items = [];
-                    // 尝试多种可能的选择器
-                    const selectors = [
-                        '.telegraph-list .item',
-                        '.roll-item',
-                        '[class*="telegraph"] [class*="item"]',
-                        '.content-item'
-                    ];
-                    
-                    for (const selector of selectors) {
-                        const elements = document.querySelectorAll(selector);
-                        if (elements.length > 0) {
-                            elements.forEach(el => {
-                                const timeEl = el.querySelector('.time, [class*="time"]');
-                                const contentEl = el.querySelector('.content, [class*="content"]');
-                                
-                                if (contentEl) {
-                                    items.push({
-                                        time: timeEl ? timeEl.textContent.trim() : '',
-                                        content: contentEl.textContent.trim(),
-                                        html: contentEl.innerHTML
-                                    });
-                                }
-                            });
-                            break;
-                        }
-                    }
-                    return items;
-                }''')
-                
-                browser.close()
-                
-                # 解析提取的数据
-                messages = []
-                for item in items[:limit]:
-                    msg = self._parse_message({
-                        'id': int(time.time() * 1000),
-                        'time': item.get('time'),
-                        'content': item.get('content'),
-                    })
-                    messages.append(msg)
-                
-                return messages
-                
-        except ImportError:
-            print("Playwright not installed. Run: pip install playwright && playwright install")
-            return []
-        except Exception as e:
-            print(f"Browser fetch failed: {e}")
-            return []
     
     def discover_new(self, since: datetime, category: str = None) -> List[TelegramMessage]:
         """
@@ -236,11 +203,20 @@ class CLSTelegramCollector:
         Returns:
             新消息列表
         """
-        all_msgs = self.fetch_telegrams(category, limit=100)
-        if not all_msgs:
-            # 尝试浏览器方式
-            all_msgs = self.fetch_with_browser(category, limit=100)
+        all_msgs = self.fetch_telegrams(category, limit=200)
         return [m for m in all_msgs if m.publish_time > since]
+    
+    def save_to_db(self, messages: List[TelegramMessage], db_connection=None):
+        """
+        保存消息到数据库
+        
+        Args:
+            messages: 消息列表
+            db_connection: 数据库连接（可选）
+        """
+        # TODO: 实现数据库保存逻辑
+        # 需要导入SQLAlchemy或其他ORM
+        pass
 
 
 def main():
@@ -248,20 +224,22 @@ def main():
     collector = CLSTelegramCollector()
     
     # 测试获取电报
-    print("正在获取财联社电报...")
+    print("正在获取财联社电报...\n")
     messages = collector.fetch_telegrams(limit=10)
     
-    if not messages:
-        print("API方式失败，尝试浏览器方式...")
-        messages = collector.fetch_with_browser(limit=10)
-    
     for msg in messages:
-        print(f"\n[{msg.publish_time.strftime('%H:%M:%S')}] {'【重要】' if msg.is_important else ''}")
+        print(f"[{msg.publish_time.strftime('%H:%M:%S')}] {'【重要】' if msg.is_important else ''}")
         if msg.title:
             print(f"标题: {msg.title}")
         print(f"内容: {msg.content[:100]}...")
+        if msg.category:
+            print(f"分类: {msg.category}")
+        if msg.subjects:
+            print(f"标签: {msg.subjects}")
         if msg.has_image:
             print(f"图片: {msg.image_urls}")
+        print(f"阅读: {msg.reading_num}  分享: {msg.share_num}")
+        print('-' * 50)
 
 
 if __name__ == '__main__':
