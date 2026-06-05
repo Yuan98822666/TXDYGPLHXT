@@ -88,3 +88,16 @@ special_pool:
     zb: true
     zrzt: true
     zt: true
+cls_telegram:
+  enabled: true
+  schedules:
+  - end_time: '22:00:00'
+    interval_seconds: 60
+    name: 电报持续采集
+    start_time: '09:00:00'
+    type: interval
+  scope:
+    gs: true
+    hy: true
+    sc: true
+    zc: true

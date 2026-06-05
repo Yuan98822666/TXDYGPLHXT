@@ -231,6 +231,16 @@ class TaskManager:
             scope=day_k_config.get("scope", {"stock": True, "block": True}),
         )
         
+        # 财联社电报采集任务
+        cls_telegram_config = self.config.get("cls_telegram", {})
+        self.tasks["cls_telegram"] = TaskInfo(
+            name="cls_telegram",
+            display_name="财联社电报采集",
+            enabled=cls_telegram_config.get("enabled", True),
+            schedules=self._parse_schedules(cls_telegram_config.get("schedules", [])),
+            scope=cls_telegram_config.get("scope", {"zc": True, "gs": True, "hy": True, "sc": True}),
+        )
+        
         # 注册执行函数
         self._register_execute_funcs()
     
@@ -255,6 +265,7 @@ class TaskManager:
             "raw": self._execute_raw,
             "special_pool": self._execute_special_pool,
             "day_k": self._execute_day_k,
+            "cls_telegram": self._execute_cls_telegram,
         }
     
     def save_config(self) -> bool:
@@ -342,6 +353,27 @@ class TaskManager:
             return "success"
         except Exception as e:
             logger.error(f"日K采集失败: {e}")
+            return f"failed: {str(e)}"
+    
+    def _execute_cls_telegram(self):
+        """
+        执行财联社电报采集
+        
+        策略：
+            - 每次采集最近2分钟的电报（避免遗漏）
+            - 数据库会自动去重（按msg_id）
+            - 每分钟执行一次，确保不遗漏新电报
+        """
+        try:
+            from app.collectors.messagesrc.cls_telegram_task import CLSTelegramTask
+            
+            logger.info("执行财联社电报采集...")
+            task = CLSTelegramTask(enable_ocr=False)
+            saved_count = task.run_incremental_collection(minutes=2)
+            logger.info(f"财联社电报采集完成，新增 {saved_count} 条")
+            return f"success: saved {saved_count} messages"
+        except Exception as e:
+            logger.error(f"财联社电报采集失败: {e}")
             return f"failed: {str(e)}"
     
     # ==================== 任务控制 ====================

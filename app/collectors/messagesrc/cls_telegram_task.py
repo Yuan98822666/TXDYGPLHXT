@@ -11,7 +11,7 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
-from app.database import SessionLocal
+from app.db.session import SessionLocal
 from app.models.messagesrc import MessageSrcCLSTelegram
 from .cls_telegram_collector import CLSTelegramCollector, TelegramMessage
 from .image_ocr import ImageOCR
