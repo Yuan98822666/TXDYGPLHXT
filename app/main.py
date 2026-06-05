@@ -128,6 +128,7 @@ from app.api.cookiemanager.eastmoney_cookie_router import router as cookie_route
 from app.api.stock.stock_mark_api import router as stock_mark_router
 from app.api.block.block_flow_api import router as block_flow_router
 from app.api.analysis.zt_potential_api import router as zt_potential_router
+from app.api.messagesrc import cls_telegram_router
 
 app.include_router(base_collector_router, prefix="/api/collector/base", tags=["基础数据采集"])
 app.include_router(raw_collector_router, prefix="/api/collector/raw", tags=["快照数据采集"])
@@ -139,6 +140,7 @@ app.include_router(cookie_router, prefix="/api/cookie", tags=["Cookie 管理"])
 app.include_router(stock_mark_router, tags=["股票标记管理"])
 app.include_router(block_flow_router, prefix="/api/block-flow", tags=["板块资金流向"])
 app.include_router(zt_potential_router, prefix="/api", tags=["涨停潜力分析"])
+app.include_router(cls_telegram_router, tags=["财联社电报"])
 
 
 @app.get("/")
