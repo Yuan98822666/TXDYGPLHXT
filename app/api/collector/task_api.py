@@ -11,6 +11,11 @@
     GET    /api/task/status              → 获取所有任务状态
     POST   /api/task/start-all           → 开启所有任务
     POST   /api/task/stop-all            → 关闭所有任务
+    
+    GET    /api/task/runtime-config      → 获取运行时配置
+    PUT    /api/task/runtime-config      → 更新运行时配置
+    POST   /api/task/runtime-config/reset → 重置运行时配置
+    
     POST   /api/task/{task_name}/enable  → 开启单个任务
     POST   /api/task/{task_name}/disable → 关闭单个任务
     POST   /api/task/{task_name}/run     → 手动执行单个任务
@@ -28,11 +33,11 @@
     POST   /api/task/config/reload      → 重新加载配置
 """
 from fastapi import APIRouter, HTTPException, Path, Body
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 
-router = APIRouter(prefix="/api/task", tags=["任务管理"])
+router = APIRouter(tags=["任务管理"])
 
 
 # ==================== 请求模型 ====================
@@ -52,6 +57,24 @@ class ScheduleAddRequest(BaseModel):
     end_time: Optional[str] = None
     interval_seconds: int = 30
     action: Optional[str] = None
+
+
+class RuntimeConfigResponse(BaseModel):
+    """运行时配置响应"""
+    status: str
+    data: Dict[str, Any]
+    timestamp: str
+
+
+class RuntimeConfigUpdateRequest(BaseModel):
+    """运行时配置更新请求"""
+    db_pool_size: Optional[int] = Field(None, ge=5, le=100, description="数据库连接池大小")
+    db_max_overflow: Optional[int] = Field(None, ge=0, le=100, description="数据库最大溢出连接")
+    stock_max_workers: Optional[int] = Field(None, ge=1, le=50, description="股票采集器最大并发数")
+    stock_batch_size: Optional[int] = Field(None, ge=10, le=500, description="批次大小")
+    stock_batch_delay: Optional[float] = Field(None, ge=0.1, le=10.0, description="批次间隔(秒)")
+    http_timeout_default: Optional[int] = Field(None, ge=5, le=60, description="HTTP默认超时(秒)")
+    http_timeout_fast: Optional[int] = Field(None, ge=1, le=30, description="HTTP快速超时(秒)")
 
 
 # ==================== 任务状态接口 ====================
@@ -127,6 +150,70 @@ async def disable_all_tasks():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"操作失败: {str(e)}")
 
+
+# ==================== 运行时配置接口（必须在动态路由之前）====================
+
+@router.get("/runtime-config", summary="获取运行时配置", response_model=RuntimeConfigResponse)
+async def get_runtime_config_api():
+    """获取当前运行时配置"""
+    try:
+        from app.config.runtime_config import runtime_config
+        
+        return {
+            "status": "success",
+            "data": runtime_config.to_dict(),
+            "timestamp": datetime.now().isoformat(),
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取配置失败: {str(e)}")
+
+
+@router.put("/runtime-config", summary="更新运行时配置")
+async def update_runtime_config_api(request: RuntimeConfigUpdateRequest):
+    """更新运行时配置（仅内存）"""
+    try:
+        from app.config.runtime_config import runtime_config
+        
+        updates = request.dict(exclude_unset=True)
+        if not updates:
+            raise HTTPException(status_code=400, detail="没有提供要更新的配置项")
+        
+        success = runtime_config.update(**updates)
+        
+        if success:
+            return {
+                "status": "success",
+                "message": "配置已更新（仅内存）",
+                "data": runtime_config.to_dict(),
+                "timestamp": datetime.now().isoformat(),
+            }
+        else:
+            raise HTTPException(status_code=500, detail="配置更新失败")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"更新失败: {str(e)}")
+
+
+@router.post("/runtime-config/reset", summary="重置运行时配置")
+async def reset_runtime_config_api():
+    """重置运行时配置为默认值"""
+    try:
+        from app.config.runtime_config import runtime_config
+        
+        runtime_config.reset_to_defaults()
+        
+        return {
+            "status": "success",
+            "message": "配置已重置为默认值",
+            "data": runtime_config.to_dict(),
+            "timestamp": datetime.now().isoformat(),
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"重置失败: {str(e)}")
+
+
+# ==================== 单个任务控制接口（动态路由）====================
 
 @router.post("/{task_name}/enable", summary="开启单个任务")
 async def enable_task(task_name: str = Path(..., description="任务名称（raw/special_pool/day_k）")):

@@ -31,17 +31,23 @@ async def run_raw(background_tasks: BackgroundTasks):
         - 股票快照：采集 stock_imp=1 的股票
         - 板块快照：采集所有板块（GN+HY+FG）
         - 后台执行，立即返回
+        - 使用统一批次号确保数据一致性
     """
     try:
         from app.collectors.stock_raw_collector import StockRawCollector
         from app.collectors.block_raw_collector import BlockRawCollector
+        from app.utils.batch_no import generate_batch_no
 
-        background_tasks.add_task(StockRawCollector.collect)
-        background_tasks.add_task(BlockRawCollector.collect)
+        # 统一生成批次号，确保股票和板块数据使用相同的批次号
+        raw_no, trade_date, snapshot_time = generate_batch_no()
+
+        background_tasks.add_task(StockRawCollector.collect, raw_no, trade_date, snapshot_time)
+        background_tasks.add_task(BlockRawCollector.collect, raw_no, trade_date, snapshot_time)
 
         return {
             "status": "success",
             "message": "快照采集任务已启动（股票+板块），后台执行中",
+            "raw_no": raw_no,
             "timestamp": datetime.utcnow().isoformat() + "Z",
         }
     except Exception as e:

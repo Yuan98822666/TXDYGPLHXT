@@ -14,6 +14,10 @@ import {
   stopScheduler,
   saveConfig,
   reloadConfig,
+  getRuntimeConfig,
+  updateRuntimeConfig,
+  resetRuntimeConfig,
+  type RuntimeConfig,
 } from '../api'
 
 // 任务信息
@@ -36,6 +40,248 @@ interface Schedule {
   end_time?: string
   interval_seconds?: number
   action?: string
+}
+
+// 运行时配置面板组件
+function RuntimeConfigPanel() {
+  const [config, setConfig] = useState<RuntimeConfig | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    loadConfig()
+  }, [])
+
+  async function loadConfig() {
+    try {
+      setLoading(true)
+      const res = await getRuntimeConfig()
+      if (res.status === 'success') {
+        setConfig(res.data)
+      }
+    } catch (err) {
+      console.error('加载配置失败:', err)
+      setMessage('加载配置失败')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleSave() {
+    if (!config) return
+    try {
+      setSaving(true)
+      const res = await updateRuntimeConfig(config)
+      if (res.status === 'success') {
+        setMessage('配置已保存')
+        setTimeout(() => setMessage(''), 2000)
+      }
+    } catch (err: any) {
+      console.error('保存配置失败:', err)
+      setMessage(err.message || '保存失败')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleReset() {
+    if (!confirm('确定要重置为默认配置吗？')) return
+    try {
+      setSaving(true)
+      const res = await resetRuntimeConfig()
+      if (res.status === 'success') {
+        setConfig(res.data)
+        setMessage('已重置为默认配置')
+        setTimeout(() => setMessage(''), 2000)
+      }
+    } catch (err) {
+      console.error('重置配置失败:', err)
+      setMessage('重置失败')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  function updateField<K extends keyof RuntimeConfig>(field: K, value: RuntimeConfig[K]) {
+    if (!config) return
+    setConfig({ ...config, [field]: value })
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
+          <span className="text-2xl">⚙️</span> 采集器配置
+        </h2>
+        <div className="text-center py-8 text-gray-500">加载中...</div>
+      </div>
+    )
+  }
+
+  if (!config) {
+    return (
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
+          <span className="text-2xl">⚙️</span> 采集器配置
+        </h2>
+        <div className="text-center py-8 text-gray-500">加载失败</div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-white rounded-lg shadow p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold flex items-center gap-2">
+          <span className="text-2xl">⚙️</span> 采集器配置
+        </h2>
+        {message && (
+          <span className={`text-sm ${message.includes('失败') ? 'text-red-500' : 'text-green-500'}`}>
+            {message}
+          </span>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* 股票采集器配置 */}
+        <div className="border rounded-lg p-4 bg-gray-50">
+          <h3 className="font-medium mb-3 text-gray-700">📈 股票采集器</h3>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">线程数</label>
+              <input
+                type="number"
+                min={1}
+                max={20}
+                value={config.stock_max_workers}
+                onChange={e => updateField('stock_max_workers', parseInt(e.target.value) || 1)}
+                className="w-full px-3 py-2 border rounded text-sm"
+              />
+              <p className="text-xs text-gray-500 mt-1">建议: 连接池大小的25%-50%</p>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">每批数量</label>
+              <input
+                type="number"
+                min={10}
+                max={500}
+                step={10}
+                value={config.stock_batch_size}
+                onChange={e => updateField('stock_batch_size', parseInt(e.target.value) || 100)}
+                className="w-full px-3 py-2 border rounded text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">批次间隔(秒)</label>
+              <input
+                type="number"
+                min={0.1}
+                max={10}
+                step={0.1}
+                value={config.stock_batch_delay}
+                onChange={e => updateField('stock_batch_delay', parseFloat(e.target.value) || 2)}
+                className="w-full px-3 py-2 border rounded text-sm"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* 数据库连接池配置 */}
+        <div className="border rounded-lg p-4 bg-gray-50">
+          <h3 className="font-medium mb-3 text-gray-700">🗄️ 数据库连接池</h3>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">连接池大小</label>
+              <input
+                type="number"
+                min={5}
+                max={100}
+                value={config.db_pool_size}
+                onChange={e => updateField('db_pool_size', parseInt(e.target.value) || 20)}
+                className="w-full px-3 py-2 border rounded text-sm"
+              />
+              <p className="text-xs text-gray-500 mt-1">服务重启后生效</p>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">溢出连接数</label>
+              <input
+                type="number"
+                min={0}
+                max={100}
+                value={config.db_max_overflow}
+                onChange={e => updateField('db_max_overflow', parseInt(e.target.value) || 40)}
+                className="w-full px-3 py-2 border rounded text-sm"
+              />
+              <p className="text-xs text-gray-500 mt-1">服务重启后生效</p>
+            </div>
+          </div>
+        </div>
+
+        {/* HTTP超时配置 */}
+        <div className="border rounded-lg p-4 bg-gray-50">
+          <h3 className="font-medium mb-3 text-gray-700">🌐 HTTP超时</h3>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">默认超时(秒)</label>
+              <input
+                type="number"
+                min={5}
+                max={60}
+                value={config.http_timeout_default}
+                onChange={e => updateField('http_timeout_default', parseInt(e.target.value) || 15)}
+                className="w-full px-3 py-2 border rounded text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">快速超时(秒)</label>
+              <input
+                type="number"
+                min={1}
+                max={30}
+                value={config.http_timeout_fast}
+                onChange={e => updateField('http_timeout_fast', parseInt(e.target.value) || 3)}
+                className="w-full px-3 py-2 border rounded text-sm"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 配置比例提示 */}
+      <div className="mt-4 p-3 bg-blue-50 rounded text-sm text-blue-700">
+        <strong>配置检查：</strong>
+        线程数({config.stock_max_workers}) / 连接池({config.db_pool_size}) = {' '}
+        <span className={config.stock_max_workers > config.db_pool_size / 2 ? 'text-red-500 font-medium' : 'text-green-600'}>
+          {Math.round((config.stock_max_workers / config.db_pool_size) * 100)}%
+        </span>
+        {config.stock_max_workers > config.db_pool_size / 2 && (
+          <span className="text-red-500"> ⚠️ 建议线程数不超过连接池的50%</span>
+        )}
+      </div>
+
+      {/* 操作按钮 */}
+      <div className="mt-4 flex gap-3">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 text-sm"
+        >
+          {saving ? '保存中...' : '💾 保存配置'}
+        </button>
+        <button
+          onClick={handleReset}
+          disabled={saving}
+          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50 text-sm"
+        >
+          🔄 重置默认
+        </button>
+        <span className="text-xs text-gray-500 self-center">
+          * 股票采集器配置下次采集时生效，数据库配置需重启服务
+        </span>
+      </div>
+    </div>
+  )
 }
 
 // Toast 提示组件
@@ -648,6 +894,9 @@ export default function TaskManagement() {
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddSchedule}
       />
+
+      {/* 运行时配置面板 */}
+      <RuntimeConfigPanel />
 
       {/* Toast */}
       <Toast message={toast.message} show={toast.show} />

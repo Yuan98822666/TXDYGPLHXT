@@ -15,7 +15,45 @@ from fastapi.middleware.cors import CORSMiddleware
 import logging
 
 # 配置日志
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+import os
+import sys
+from pathlib import Path
+from logging.handlers import TimedRotatingFileHandler
+
+# 创建日志目录
+log_dir = Path(__file__).parent.parent / "logs"
+log_dir.mkdir(exist_ok=True)
+
+# 配置日志格式
+log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+formatter = logging.Formatter(log_format)
+
+# 控制台处理器（使用 UTF-8 编码）
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setLevel(logging.INFO)
+console_handler.setFormatter(formatter)
+# 强制控制台使用 UTF-8
+if hasattr(console_handler.stream, 'reconfigure'):
+    console_handler.stream.reconfigure(encoding='utf-8')
+
+# 文件处理器（按日期滚动）
+file_handler = TimedRotatingFileHandler(
+    filename=log_dir / "app.log",
+    when="midnight",
+    interval=1,
+    backupCount=30,
+    encoding="utf-8"
+)
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(formatter)
+
+# 配置根日志器
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+root_logger.handlers = []  # 清除已有处理器
+root_logger.addHandler(console_handler)
+root_logger.addHandler(file_handler)
+
 logger = logging.getLogger(__name__)
 
 
@@ -89,16 +127,18 @@ from app.api.collector.task_api import router as task_router
 from app.api.cookiemanager.eastmoney_cookie_router import router as cookie_router
 from app.api.stock.stock_mark_api import router as stock_mark_router
 from app.api.block.block_flow_api import router as block_flow_router
+from app.api.analysis.zt_potential_api import router as zt_potential_router
 
 app.include_router(base_collector_router, prefix="/api/collector/base", tags=["基础数据采集"])
 app.include_router(raw_collector_router, prefix="/api/collector/raw", tags=["快照数据采集"])
 app.include_router(special_pool_router, prefix="/api/collector/special", tags=["特殊股票池采集"])
 app.include_router(schedule_router, prefix="/api/collector/schedule", tags=["采集频率配置"])
 app.include_router(scheduler_router, tags=["采集调度器（旧）"])
-app.include_router(task_router, tags=["任务管理"])
+app.include_router(task_router, prefix="/api/task", tags=["任务管理"])
 app.include_router(cookie_router, prefix="/api/cookie", tags=["Cookie 管理"])
 app.include_router(stock_mark_router, tags=["股票标记管理"])
 app.include_router(block_flow_router, prefix="/api/block-flow", tags=["板块资金流向"])
+app.include_router(zt_potential_router, prefix="/api", tags=["涨停潜力分析"])
 
 
 @app.get("/")

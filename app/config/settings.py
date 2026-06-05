@@ -107,6 +107,19 @@ class Settings(BaseSettings):
     DB_POOL_SIZE: int = Field(default=10, description="连接池大小")
     DB_MAX_OVERFLOW: int = Field(default=20, description="连接池溢出")
 
+    # ---------- 采集器并发配置 ----------
+    # 股票采集器线程数（建议：DB_POOL_SIZE / 2 ~ DB_POOL_SIZE / 4）
+    STOCK_COLLECTOR_MAX_WORKERS: int = Field(default=5, description="股票采集器线程并发数")
+    STOCK_COLLECTOR_BATCH_SIZE: int = Field(default=100, description="股票采集器每批数量")
+    STOCK_COLLECTOR_BATCH_DELAY: float = Field(default=2.0, description="股票采集器批次间隔(秒)")
+
+    # 板块采集器（单线程，无需配置）
+    # BLOCK_COLLECTOR 使用顺序执行，无需线程配置
+
+    # ---------- HTTP请求配置 ----------
+    HTTP_TIMEOUT_DEFAULT: int = Field(default=15, description="HTTP默认超时(秒)")
+    HTTP_TIMEOUT_FAST: int = Field(default=3, description="HTTP快速超时(秒)")
+
     # ---------- 东方财富API（备用，默认值来自YAML） ----------
     # 用途：如果YAML加载失败，使用这些默认值
     EASTMONEY_UT: str = Field(default="8dec03ba335b81bf4ebdf7b29ec27d15", description="UT认证令牌")

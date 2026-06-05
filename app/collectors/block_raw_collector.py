@@ -82,12 +82,19 @@ class BlockRawCollector:
         }
 
     @classmethod
-    def collect(cls) -> Dict:
-        """采集板块快照数据（仅 GN+HY）"""
+    def collect(cls, raw_no: str = None, trade_date: str = None, snapshot_time: datetime = None) -> Dict:
+        """采集板块快照数据（仅 GN+HY）
+        
+        参数:
+            raw_no: 批次号，如果为None则自动生成
+            trade_date: 交易日期，如果为None则根据raw_no或自动生成
+            snapshot_time: 采集时间戳，如果为None则根据raw_no或自动生成
+        """
         start_time = time.time()
 
-        # 生成批次号
-        raw_no, trade_date, snapshot_time = generate_batch_no()
+        # 如果未提供批次号，则生成新的
+        if raw_no is None:
+            raw_no, trade_date, snapshot_time = generate_batch_no()
 
         # 分页获取 GN+HY 板块数据（已在 API 层过滤）
         all_data = EastMoneyRequest.get_block_snapshot_all()
@@ -130,6 +137,9 @@ class BlockRawCollector:
 
         # 从板块快照中提取领涨股和资金流入最多股，标记为关注（仅限主板）
         new_imp_count = cls._mark_block_stocks_as_imp(results)
+
+        # 检查并插入板块日K数据
+        cls._ensure_day_records(results, trade_date)
 
         elapsed = time.time() - start_time
         logger.info(f"板块快照采集完成: GN+HY共{len(results)}条, 耗时{elapsed:.2f}s, 新增关注股票 {new_imp_count} 只")
@@ -219,11 +229,11 @@ class BlockRawCollector:
                 ).all()
             }
 
-            # 插入不存在的（从 base_block 获取 stock_count）
+            # 插入不存在的（从 base_block 获取 block_stock_count）
             from app.models.base.base_block import BaseBlock
             block_info = {
-                row.block_code: row.stock_count 
-                for row in db.query(BaseBlock.block_code, BaseBlock.stock_count).all()
+                row.block_code: row.block_stock_count 
+                for row in db.query(BaseBlock.block_code, BaseBlock.block_stock_count).all()
             }
             to_insert = [b for b in block_results if b.get("block_code") and b.get("block_code") not in existing]
             for data in to_insert:

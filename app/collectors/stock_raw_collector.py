@@ -24,10 +24,19 @@ from app.models.raw.raw_min_stock import RawMinStock
 from app.models.raw.raw_day_stock import RawDayStock
 from app.models.base.base_stock import BaseStock
 from app.db.session import get_db_context
+from app.config.runtime_config import get_runtime_config
 
 logger = logging.getLogger(__name__)
 
-MAX_WORKERS = 10  # 线程并发数
+
+def get_collector_config():
+    """获取运行时配置"""
+    runtime = get_runtime_config()
+    return {
+        "max_workers": runtime.get_stock_max_workers(),
+        "batch_size": runtime.get_stock_batch_size(),
+        "batch_delay": runtime.get_stock_batch_delay(),
+    }
 
 
 class StockRawCollector:
@@ -239,12 +248,19 @@ class StockRawCollector:
             logger.info(f"日K表新增: {len(new_records)} 只股票（{trade_date}）")
 
     @classmethod
-    def collect(cls) -> Dict:
-        """采集股票快照"""
+    def collect(cls, raw_no: str = None, trade_date: str = None, snapshot_time: datetime = None) -> Dict:
+        """采集股票快照
+        
+        参数:
+            raw_no: 批次号，如果为None则自动生成
+            trade_date: 交易日期，如果为None则根据raw_no或自动生成
+            snapshot_time: 采集时间戳，如果为None则根据raw_no或自动生成
+        """
         start_time = time.time()
 
-        # 生成批次号
-        raw_no, trade_date, snapshot_time = generate_batch_no()
+        # 如果未提供批次号，则生成新的
+        if raw_no is None:
+            raw_no, trade_date, snapshot_time = generate_batch_no()
 
         # 获取涨停/炸板/跌停状态
         ztzt_map = cls._get_ztzt_status()
@@ -289,15 +305,22 @@ class StockRawCollector:
 
         logger.info(f"关注股票总数: {total_imp_count} 只（数据库），本次采集 {len(all_stocks)} 只（去重后）")
 
-        # 多线程采集（10并发，每批间隔2秒，避免触发限流）
+        # 多线程采集（并发数由运行时配置控制，每批间隔避免触发限流）
         results = []
         failed_stocks = []  # 记录失败的股票，用于重试
-        BATCH_SIZE = 50  # 每批50只
         
-        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        # 获取运行时配置
+        config = get_collector_config()
+        max_workers = config["max_workers"]
+        batch_size = config["batch_size"]
+        batch_delay = config["batch_delay"]
+        
+        logger.info(f"开始采集，配置: 线程={max_workers}, 批次={batch_size}, 间隔={batch_delay}s")
+        
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
             
-            for i in range(0, len(all_stocks), BATCH_SIZE):
-                batch = all_stocks[i:i + BATCH_SIZE]
+            for i in range(0, len(all_stocks), batch_size):
+                batch = all_stocks[i:i + batch_size]
                 futures = {
                     executor.submit(cls._fetch_one_stock, stock, ztzt_map): stock
                     for stock in batch
@@ -309,12 +332,12 @@ class StockRawCollector:
                     else:
                         failed_stocks.append(futures[future])
                 
-                # 批次间隔1秒（平衡速度与限流）
-                if i + BATCH_SIZE < len(all_stocks):
-                    time.sleep(1)
+                # 批次间隔（平衡速度与限流）
+                if i + batch_size < len(all_stocks):
+                    time.sleep(batch_delay)
                     fail_count = len([s for s in batch if s in failed_stocks])
                     success_count = len(batch) - fail_count
-                    logger.info(f"已采集 {min(i + BATCH_SIZE, len(all_stocks))}/{len(all_stocks)} 只 (成功 {success_count}, 失败 {fail_count})")
+                    logger.info(f"已采集 {min(i + batch_size, len(all_stocks))}/{len(all_stocks)} 只 (成功 {success_count}, 失败 {fail_count})")
 
         # 重试失败的股票
         if failed_stocks:

@@ -259,6 +259,76 @@ export default function StockMarkManagement() {
     }
   }
 
+  // 导出已关注股票
+  const handleExportMarked = async () => {
+    try {
+      // 获取所有已关注的股票（不分页）
+      const allMarked: Stock[] = []
+      let page = 1
+      const pageSize = 500
+      
+      while (true) {
+        const data = await getStockMarkList({ 
+          page, 
+          page_size: pageSize,
+          stock_imp: 1  // 只获取已关注的
+        })
+        
+        if (!data.data || data.data.length === 0) break
+        
+        allMarked.push(...data.data)
+        
+        if (data.data.length < pageSize) break
+        page++
+      }
+
+      if (allMarked.length === 0) {
+        alert('没有已关注的股票可导出')
+        return
+      }
+
+      // 转换股票代码格式：code + .SH/.SZ/.BJ
+      const formatCode = (stock: Stock): string => {
+        const code = stock.code
+        const exchange = stock.exchange
+        
+        if (exchange === '1') {
+          // 沪市
+          return `${code}.SH`
+        } else if (exchange === '0') {
+          // 深市/北交所
+          // 北交所股票代码以8或4开头
+          if (code.startsWith('8') || code.startsWith('4')) {
+            return `${code}.BJ`
+          }
+          return `${code}.SZ`
+        }
+        return `${code}.SZ`  // 默认
+      }
+
+      // 生成CSV内容（一列，无表头，与模板一致）
+      const csvContent = allMarked
+        .map(formatCode)
+        .join('\n')
+
+      // 创建并下载文件
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+      const link = document.createElement('a')
+      const url = URL.createObjectURL(blob)
+      link.setAttribute('href', url)
+      link.setAttribute('download', `已关注股票_${new Date().toISOString().split('T')[0]}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+
+      alert(`成功导出 ${allMarked.length} 只已关注股票`)
+    } catch (err) {
+      console.error('导出失败:', err)
+      alert('导出失败，请查看控制台')
+    }
+  }
+
   return (
     <main className="max-w-7xl mx-auto px-4 py-6">
       {/* 页面标题 */}
@@ -268,6 +338,13 @@ export default function StockMarkManagement() {
           <p className="text-gray-500 text-sm mt-1">管理关注股票，采集时仅采集标记为关注的股票</p>
         </div>
         <div className="flex gap-3">
+          <button
+            onClick={handleExportMarked}
+            className="px-4 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 flex items-center gap-2"
+          >
+            <span>📥</span>
+            <span>导出关注</span>
+          </button>
           <button
             onClick={() => setShowBatchPanel(!showBatchPanel)}
             className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 flex items-center gap-2"

@@ -123,6 +123,37 @@ export async function reloadConfig() {
   return fetchAPI<any>('/api/task/config/reload', { method: 'POST' })
 }
 
+// ============ 运行时配置管理接口 ============
+
+// 运行时配置类型
+export interface RuntimeConfig {
+  stock_max_workers: number
+  stock_batch_size: number
+  stock_batch_delay: number
+  db_pool_size: number
+  db_max_overflow: number
+  http_timeout_default: number
+  http_timeout_fast: number
+}
+
+// 获取运行时配置
+export async function getRuntimeConfig() {
+  return fetchAPI<{ status: string; data: RuntimeConfig }>('/api/task/runtime-config')
+}
+
+// 更新运行时配置
+export async function updateRuntimeConfig(updates: Partial<RuntimeConfig>) {
+  return fetchAPI<{ status: string; message: string; data: RuntimeConfig }>('/api/task/runtime-config', {
+    method: 'PUT',
+    body: JSON.stringify(updates)
+  })
+}
+
+// 重置运行时配置
+export async function resetRuntimeConfig() {
+  return fetchAPI<{ status: string; message: string; data: RuntimeConfig }>('/api/task/runtime-config/reset', { method: 'POST' })
+}
+
 // ============ 股票标记管理接口 ============
 
 // 获取股票列表（分页、筛选）

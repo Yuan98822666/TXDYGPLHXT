@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import TaskManagement from './pages/TaskManagement'
 import StockMarkManagement from './pages/StockMarkManagement'
 import BlockFlow from './pages/BlockFlow'
+import ZTPotential from './pages/ZTPotential'
 
 // 简单导航栏组件
 function NavBar() {
@@ -17,7 +18,7 @@ function NavBar() {
     { path: '/block-flow', label: '💰 板块资金', exact: true },
     { path: '/stocks', label: '⭐ 股票标记', exact: true },
     { path: '/tasks', label: '⚙️ 任务管理', exact: true },
-    { path: '/analysis', label: '🧠 分析决策', exact: true },
+    { path: '/zt-potential', label: '🚀 涨停潜力', exact: true },
   ]
   
   return (
@@ -61,7 +62,7 @@ function App() {
           <Route path="/stocks" element={<StockMarkManagement />} />
           <Route path="/tasks" element={<TaskManagement />} />
           <Route path="/block-flow" element={<BlockFlow />} />
-          <Route path="/analysis" element={<div className="p-8 text-center text-gray-500">分析决策页面开发中...</div>} />
+          <Route path="/zt-potential" element={<ZTPotential />} />
         </Routes>
       </div>
     </BrowserRouter>

@@ -129,11 +129,19 @@ class CollectorScheduler:
         try:
             from app.collectors.stock_raw_collector import StockRawCollector
             from app.collectors.block_raw_collector import BlockRawCollector
+            from app.utils.batch_no import generate_batch_no
+            from datetime import datetime
 
             logger.info("执行快照采集...")
+            
+            # 统一生成批次号，确保股票和板块数据使用相同的批次号
+            raw_no, trade_date, snapshot_time = generate_batch_no()
+            logger.info(f"统一批次号: {raw_no}, 交易日期: {trade_date}")
+            
             # 先跑板块（标记新增关注股），再跑股票（采集所有关注股）
-            BlockRawCollector.collect()
-            StockRawCollector.collect()
+            # 使用统一的批次号
+            BlockRawCollector.collect(raw_no=raw_no, trade_date=trade_date, snapshot_time=snapshot_time)
+            StockRawCollector.collect(raw_no=raw_no, trade_date=trade_date, snapshot_time=snapshot_time)
             logger.info("快照采集完成")
         except Exception as e:
             logger.error(f"快照采集失败: {e}")
