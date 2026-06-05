@@ -1,0 +1,565 @@
+2026-06-04 20:08:56,628 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:08:56,628 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:08:56,629 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:08:56,629 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:08:56,629 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:09:40,744 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:09:40,745 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:09:40,745 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:09:40,745 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:09:40,746 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:18:49,628 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 20:18:51,158 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 20:18:51,158 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 20:18:53,478 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:18:53,478 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:19:00,923 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 20:19:03,489 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 20:27:16,312 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:27:16,313 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:27:16,313 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:27:16,313 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:27:16,313 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:31:26,052 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 20:31:26,053 - app.main - INFO - 任务调度器已停止
+2026-06-04 20:31:27,404 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:31:27,404 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:31:27,405 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:31:27,405 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:31:27,405 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:31:45,926 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:31:45,926 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:31:45,928 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:31:45,928 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:31:45,928 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:32:32,121 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:32:32,121 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:33:46,575 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:33:46,575 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:33:46,576 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:33:46,576 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:33:46,576 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:39:41,228 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:39:41,228 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:39:41,229 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:39:41,229 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:39:41,229 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:41:46,412 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 20:41:46,412 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 20:41:46,413 - app.main - INFO - 任务调度器已停止
+2026-06-04 20:41:47,792 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:41:47,793 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:41:47,793 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:41:47,793 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:41:47,793 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:43:38,830 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:43:38,831 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:43:38,832 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:43:38,832 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:43:38,832 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:44:37,051 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 20:44:37,051 - app.main - INFO - 任务调度器已停止
+2026-06-04 20:44:38,527 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:44:38,527 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:44:38,528 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:44:38,528 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:44:38,528 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:45:13,043 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:45:13,043 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:45:13,044 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:45:13,044 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:45:13,044 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:48:10,325 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:48:10,325 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:48:10,325 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:48:10,325 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:48:10,326 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:49:38,782 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 20:49:38,782 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 20:49:38,782 - app.main - INFO - 任务调度器已停止
+2026-06-04 20:50:03,194 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:50:03,194 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:50:03,195 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:50:03,195 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:50:03,195 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:50:03,435 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:50:03,435 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:50:03,436 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:50:03,436 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:50:03,436 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:50:22,221 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:50:22,221 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:50:22,222 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:50:22,222 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:50:22,222 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:51:50,329 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:51:50,329 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:51:50,330 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:51:50,330 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:51:50,330 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 20:53:08,559 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 20:53:08,559 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 20:53:08,560 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 20:53:08,560 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 20:53:08,560 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:07:03,338 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:07:03,339 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:07:05,032 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:07:05,032 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:07:05,033 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:07:05,033 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:07:05,033 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:07:50,792 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:07:50,792 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:07:50,793 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:07:50,793 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:07:50,793 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:09:48,759 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:09:48,759 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:09:48,760 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:09:48,760 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:09:48,760 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:12:05,258 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 21:12:05,258 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:12:05,258 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:12:06,484 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:12:06,484 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:12:06,484 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:12:06,486 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:12:06,486 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:12:40,643 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:12:40,643 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:12:40,644 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:12:40,644 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:12:40,644 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:14:20,016 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:14:20,017 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:14:20,017 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:14:20,018 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:14:20,018 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:15:32,152 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:15:32,152 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:15:32,152 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:15:32,153 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:15:32,153 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:16:51,136 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:16:51,136 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:16:51,138 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:16:51,138 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:16:51,138 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:17:06,728 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 21:17:06,728 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:17:06,728 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:17:07,955 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:17:07,956 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:17:07,956 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:17:07,957 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:17:07,957 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:18:06,224 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:18:06,225 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:18:06,226 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:18:06,226 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:18:06,226 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:19:27,546 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:19:27,547 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:19:27,547 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:19:27,547 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:19:27,547 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:20:38,092 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:20:38,092 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:20:38,093 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:20:38,093 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:20:38,093 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:22:07,440 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:22:07,440 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:22:07,441 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:22:07,442 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:22:07,442 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:22:08,220 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 21:22:08,221 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:22:08,221 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:22:09,596 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:22:09,597 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:22:09,597 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:22:09,597 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:22:09,598 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:23:12,393 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:23:12,393 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:23:12,394 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:23:12,394 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:23:12,396 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:26:01,146 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:26:01,147 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:26:01,148 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:26:01,148 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:26:01,148 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:26:04,807 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:26:04,807 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:26:04,808 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:26:04,808 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:26:04,808 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:27:09,841 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 21:27:09,841 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:27:09,841 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:27:11,503 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:27:11,503 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:27:11,504 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:27:11,504 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:27:11,504 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:27:14,990 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:27:14,991 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:27:14,992 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:27:14,992 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:27:14,992 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:31:14,387 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:31:14,387 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:31:14,388 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:31:14,388 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:31:14,388 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:36:21,945 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 21:36:21,946 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:36:21,947 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:36:24,155 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:36:24,155 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:36:24,156 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:36:24,156 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:36:24,156 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:41:24,385 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 21:41:24,385 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:41:24,385 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:41:25,592 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:41:25,592 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:41:25,594 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:41:25,594 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:41:25,594 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:42:43,785 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:42:43,785 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:42:43,786 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:42:43,786 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:42:43,786 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:45:47,365 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:45:47,366 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:45:47,366 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:45:47,366 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:45:47,367 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:45:51,405 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:45:51,405 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:45:51,406 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:45:51,406 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:45:51,406 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:45:55,458 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:45:55,458 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:45:55,459 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:45:55,459 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:45:55,459 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:46:25,804 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 21:46:25,804 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:46:25,805 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:46:27,022 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:46:27,022 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:46:27,023 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:46:27,023 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:46:27,023 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:49:35,985 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:49:35,985 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:49:35,986 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:49:35,986 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:49:35,986 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:50:14,832 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:50:14,832 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:50:14,834 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:50:14,834 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:50:14,834 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:51:27,217 - app.scheduler.task_manager - INFO - 调度器主循环退出
+2026-06-04 21:51:27,217 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:51:27,217 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:51:28,353 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:51:28,353 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:51:28,353 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:51:28,353 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:51:28,354 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:51:28,489 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:51:28,489 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:51:28,489 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:51:28,490 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:51:28,490 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:51:33,516 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:51:33,517 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:51:52,855 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:51:52,855 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:51:52,856 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:51:52,856 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:51:52,856 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:51:57,865 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:51:57,866 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:52:13,522 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:52:13,522 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:52:13,524 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:52:13,524 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:52:13,524 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:52:18,530 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 21:52:18,530 - app.main - INFO - 任务调度器已停止
+2026-06-04 21:52:33,737 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:52:33,737 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:52:33,738 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:52:33,738 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:52:33,738 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:55:21,700 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 21:55:21,700 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 21:55:21,701 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 21:55:21,702 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 21:55:21,702 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 21:57:27,985 - app.scheduler.task_manager - ERROR - 快照采集失败: cannot import name 'get_runtime_config' from 'app.config.runtime_config' (E:\Python Project\TXDYGPLHXT\app\config\runtime_config.py)
+2026-06-04 22:18:12,796 - app.scheduler.task_manager - ERROR - 快照采集失败: cannot import name 'get_runtime_config' from 'app.config.runtime_config' (E:\Python Project\TXDYGPLHXT\app\config\runtime_config.py)
+2026-06-04 22:28:08,768 - app.scheduler.task_manager - INFO - 执行特殊股票池采集...
+2026-06-04 22:28:08,768 - app.collectors.special_pool_collector - INFO - 采集 zt 股票池，日期: 20260604
+2026-06-04 22:28:08,931 - app.utils.cookie_manager - INFO - 从缓存加载 Cookie
+2026-06-04 22:28:09,328 - app.utils.request_util - INFO - 获取zt股票池: 共80条, 1页
+2026-06-04 22:28:09,430 - app.collectors.special_pool_collector - INFO - zt 股票池无变化，跳过入库（80 只）
+2026-06-04 22:28:09,431 - app.collectors.special_pool_collector - INFO - 采集 zb 股票池，日期: 20260604
+2026-06-04 22:28:09,757 - app.utils.request_util - INFO - 获取zb股票池: 共19条, 1页
+2026-06-04 22:28:09,769 - app.collectors.special_pool_collector - INFO - zb 股票池无变化，跳过入库（19 只）
+2026-06-04 22:28:09,770 - app.collectors.special_pool_collector - INFO - 采集 dt 股票池，日期: 20260604
+2026-06-04 22:28:10,111 - app.utils.request_util - INFO - 获取dt股票池: 共7条, 1页
+2026-06-04 22:28:10,122 - app.collectors.special_pool_collector - INFO - dt 股票池无变化，跳过入库（7 只）
+2026-06-04 22:28:10,123 - app.collectors.special_pool_collector - INFO - 采集 zrzt 股票池，日期: 20260604
+2026-06-04 22:28:10,423 - app.utils.request_util - INFO - 获取zrzt股票池: 共66条, 1页
+2026-06-04 22:28:10,431 - app.collectors.special_pool_collector - INFO - zrzt 股票池无变化，跳过入库（66 只）
+2026-06-04 22:31:06,563 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 22:31:06,563 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 22:31:06,564 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 22:31:06,564 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 22:31:06,564 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 22:31:52,922 - app.scheduler.task_manager - ERROR - 快照采集失败: cannot import name 'get_runtime_config' from 'app.config.runtime_config' (E:\Python Project\TXDYGPLHXT\app\config\runtime_config.py)
+2026-06-04 22:34:53,207 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 22:34:53,207 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 22:34:53,208 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 22:34:53,208 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 22:34:53,208 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 22:36:04,079 - app.scheduler.task_manager - INFO - 执行快照采集...
+2026-06-04 22:36:04,079 - app.scheduler.task_manager - INFO - 统一批次号: 20260604223604, 交易日期: 2026-06-04
+2026-06-04 22:36:04,210 - app.utils.cookie_manager - INFO - 从缓存加载 Cookie
+2026-06-04 22:36:06,648 - app.utils.request_util - INFO - 分页获取板块快照: GN+HY共614条
+2026-06-04 22:36:06,648 - app.collectors.block_raw_collector - INFO - 板块快照：GN+HY 共 614 条
+2026-06-04 22:36:08,030 - app.collectors.block_raw_collector - INFO - 标记领涨/资金股为关注: 0 只（414 只非主板）
+2026-06-04 22:36:08,037 - app.scheduler.task_manager - ERROR - 快照采集失败: type object 'BaseBlock' has no attribute 'stock_count'
+2026-06-04 22:41:48,751 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 22:41:48,751 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 22:41:48,751 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 22:41:48,751 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 22:41:48,752 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 22:41:53,479 - app.scheduler.task_manager - INFO - 执行快照采集...
+2026-06-04 22:41:53,479 - app.scheduler.task_manager - INFO - 统一批次号: 20260604224153, 交易日期: 2026-06-04
+2026-06-04 22:41:53,742 - app.utils.cookie_manager - INFO - 从缓存加载 Cookie
+2026-06-04 22:41:55,538 - app.utils.request_util - INFO - 分页获取板块快照: GN+HY共614条
+2026-06-04 22:41:55,538 - app.collectors.block_raw_collector - INFO - 板块快照：GN+HY 共 614 条
+2026-06-04 22:41:56,827 - app.collectors.block_raw_collector - INFO - 标记领涨/资金股为关注: 0 只（414 只非主板）
+2026-06-04 22:41:56,835 - app.scheduler.task_manager - ERROR - 快照采集失败: type object 'BaseBlock' has no attribute 'stock_count'
+2026-06-04 22:43:33,892 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 22:43:33,892 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 22:43:33,893 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 22:43:33,893 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 22:43:33,893 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 22:44:04,581 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 22:44:04,582 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 22:44:04,582 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 22:44:04,582 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 22:44:04,582 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 22:44:07,899 - app.scheduler.task_manager - INFO - 执行快照采集...
+2026-06-04 22:44:07,899 - app.scheduler.task_manager - INFO - 统一批次号: 20260604224407, 交易日期: 2026-06-04
+2026-06-04 22:44:08,155 - app.utils.cookie_manager - INFO - 从缓存加载 Cookie
+2026-06-04 22:44:17,295 - app.utils.request_util - INFO - 分页获取板块快照: GN+HY共614条
+2026-06-04 22:44:17,296 - app.collectors.block_raw_collector - INFO - 板块快照：GN+HY 共 614 条
+2026-06-04 22:44:18,556 - app.collectors.block_raw_collector - INFO - 标记领涨/资金股为关注: 0 只（414 只非主板）
+2026-06-04 22:44:18,596 - app.collectors.block_raw_collector - INFO - 板块日K新增: 88 条
+2026-06-04 22:44:18,596 - app.collectors.block_raw_collector - INFO - 板块快照采集完成: GN+HY共614条, 耗时10.70s, 新增关注股票 0 只
+2026-06-04 22:44:19,235 - app.utils.request_util - INFO - 获取zt股票池: 共80条, 1页
+2026-06-04 22:44:19,573 - app.utils.request_util - INFO - 获取zb股票池: 共19条, 1页
+2026-06-04 22:44:19,808 - app.utils.request_util - INFO - 获取dt股票池: 共7条, 1页
+2026-06-04 22:44:19,832 - app.collectors.stock_raw_collector - INFO - 标记涨停/炸板/跌停股为关注: 24 只
+2026-06-04 22:44:19,848 - app.collectors.stock_raw_collector - INFO - 跳过采集: 52 只股票（在 skip_until 期内）
+2026-06-04 22:44:20,045 - app.utils.request_util - INFO - 获取zt股票池: 共80条, 1页
+2026-06-04 22:44:20,380 - app.utils.request_util - INFO - 获取zb股票池: 共19条, 1页
+2026-06-04 22:44:20,592 - app.utils.request_util - INFO - 获取dt股票池: 共7条, 1页
+2026-06-04 22:44:20,598 - app.collectors.stock_raw_collector - INFO - 关注股票总数: 417 只（数据库），本次采集 402 只（去重后）
+2026-06-04 22:44:20,598 - app.collectors.stock_raw_collector - INFO - 开始采集，配置: 线程=5, 批次=100, 间隔=2.0s
+2026-06-04 22:44:30,303 - app.utils.request_util - WARNING - 股票 0.002796 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:44:32,103 - app.utils.request_util - INFO - 股票 0.002796 重试成功 (第1轮)
+2026-06-04 22:44:40,915 - app.utils.request_util - WARNING - 股票 0.002787 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:44:42,791 - app.utils.request_util - INFO - 股票 0.002787 重试成功 (第1轮)
+2026-06-04 22:44:57,854 - app.utils.request_util - WARNING - 股票 0.002896 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:45:01,930 - app.utils.request_util - INFO - 股票 0.002896 重试成功 (第1轮)
+2026-06-04 22:45:02,634 - app.utils.request_util - WARNING - 股票 0.002965 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:45:02,718 - app.utils.request_util - WARNING - 股票 0.002951 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:45:04,577 - app.utils.request_util - INFO - 股票 0.002965 重试成功 (第1轮)
+2026-06-04 22:45:09,207 - app.utils.request_util - INFO - 股票 0.002951 重试成功 (第1轮)
+2026-06-04 22:45:34,391 - app.collectors.stock_raw_collector - INFO - 已采集 100/402 只 (成功 100, 失败 0)
+2026-06-04 22:45:40,157 - app.collectors.stock_raw_collector - INFO - 已采集 200/402 只 (成功 100, 失败 0)
+2026-06-04 22:45:44,545 - app.utils.request_util - WARNING - 股票 1.603306 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:45:46,347 - app.utils.request_util - INFO - 股票 1.603306 重试成功 (第1轮)
+2026-06-04 22:46:27,165 - app.collectors.stock_raw_collector - INFO - 已采集 300/402 只 (成功 100, 失败 0)
+2026-06-04 22:46:34,249 - app.utils.request_util - WARNING - 股票 1.603859 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:46:41,073 - app.utils.request_util - WARNING - 股票 1.603859 所有域名失败，2秒后重试 (2/3)
+2026-06-04 22:46:48,402 - app.utils.request_util - INFO - 股票 1.603859 重试成功 (第2轮)
+2026-06-04 22:46:55,759 - app.utils.request_util - WARNING - 股票 1.605006 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:47:01,643 - app.utils.request_util - INFO - 股票 1.605006 重试成功 (第1轮)
+2026-06-04 22:47:24,037 - app.utils.request_util - WARNING - 股票 1.688146 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:47:25,837 - app.utils.request_util - INFO - 股票 1.688146 重试成功 (第1轮)
+2026-06-04 22:47:26,133 - app.utils.request_util - WARNING - 股票 0.001309 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:47:27,902 - app.utils.request_util - INFO - 股票 0.001309 重试成功 (第1轮)
+2026-06-04 22:47:32,294 - app.utils.request_util - WARNING - 股票 0.300726 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:47:36,195 - app.utils.request_util - INFO - 股票 0.300726 重试成功 (第1轮)
+2026-06-04 22:47:52,520 - app.utils.request_util - WARNING - 股票 0.002463 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:47:54,464 - app.utils.request_util - INFO - 股票 0.002463 重试成功 (第1轮)
+2026-06-04 22:47:56,470 - app.collectors.stock_raw_collector - INFO - 已采集 400/402 只 (成功 100, 失败 0)
+2026-06-04 22:47:59,664 - app.collectors.stock_raw_collector - INFO - 日K表新增: 402 只股票（2026-06-04）
+2026-06-04 22:47:59,664 - app.collectors.stock_raw_collector - INFO - 股票快照采集完成: 402/417 只（入库/关注总数）, 402 只（本次去重）, 耗时 221.07s
+2026-06-04 22:48:12,773 - app.scheduler.task_manager - INFO - 执行特殊股票池采集...
+2026-06-04 22:48:12,774 - app.collectors.special_pool_collector - INFO - 采集 zt 股票池，日期: 20260604
+2026-06-04 22:48:13,240 - app.utils.request_util - INFO - 获取zt股票池: 共80条, 1页
+2026-06-04 22:48:13,261 - app.collectors.special_pool_collector - INFO - zt 股票池无变化，跳过入库（80 只）
+2026-06-04 22:48:13,262 - app.collectors.special_pool_collector - INFO - 采集 zb 股票池，日期: 20260604
+2026-06-04 22:48:13,398 - app.utils.request_util - INFO - 获取zb股票池: 共19条, 1页
+2026-06-04 22:48:13,409 - app.collectors.special_pool_collector - INFO - zb 股票池无变化，跳过入库（19 只）
+2026-06-04 22:48:13,410 - app.collectors.special_pool_collector - INFO - 采集 dt 股票池，日期: 20260604
+2026-06-04 22:48:13,630 - app.utils.request_util - INFO - 获取dt股票池: 共7条, 1页
+2026-06-04 22:48:13,636 - app.collectors.special_pool_collector - INFO - dt 股票池无变化，跳过入库（7 只）
+2026-06-04 22:48:13,637 - app.collectors.special_pool_collector - INFO - 采集 zrzt 股票池，日期: 20260604
+2026-06-04 22:48:13,931 - app.utils.request_util - INFO - 获取zrzt股票池: 共66条, 1页
+2026-06-04 22:48:13,941 - app.collectors.special_pool_collector - INFO - zrzt 股票池无变化，跳过入库（66 只）
+2026-06-04 22:48:16,134 - app.scheduler.task_manager - INFO - 执行日K采集... (action=replace)
+2026-06-04 22:48:16,188 - app.collectors.day_collector - INFO - [replace] 已删除当日旧数据
+2026-06-04 22:48:16,685 - app.collectors.day_collector - INFO - 股票日K采集完成: 402 条, 耗时 0.55s, action=replace
+2026-06-04 22:48:17,552 - app.collectors.day_collector - INFO - 板块日K：快照 614 条，过滤后 GN+HY 共 526 条
+2026-06-04 22:48:17,573 - app.collectors.day_collector - INFO - [replace] 已删除当日 GN+HY 旧数据
+2026-06-04 22:48:18,008 - app.collectors.day_collector - INFO - 板块日K采集完成: 526 条, 耗时 1.32s, action=replace
+2026-06-04 22:52:41,057 - app.scheduler.task_manager - INFO - 执行快照采集...
+2026-06-04 22:52:41,057 - app.scheduler.task_manager - INFO - 统一批次号: 20260604225241, 交易日期: 2026-06-04
+2026-06-04 22:52:43,556 - app.utils.request_util - INFO - 分页获取板块快照: GN+HY共614条
+2026-06-04 22:52:43,556 - app.collectors.block_raw_collector - INFO - 板块快照：GN+HY 共 614 条
+2026-06-04 22:52:45,001 - app.collectors.block_raw_collector - INFO - 标记领涨/资金股为关注: 0 只（414 只非主板）
+2026-06-04 22:52:45,010 - app.collectors.block_raw_collector - INFO - 板块快照采集完成: GN+HY共614条, 耗时3.95s, 新增关注股票 0 只
+2026-06-04 22:52:45,568 - app.utils.request_util - INFO - 获取zt股票池: 共80条, 1页
+2026-06-04 22:52:45,846 - app.utils.request_util - INFO - 获取zb股票池: 共19条, 1页
+2026-06-04 22:52:46,093 - app.utils.request_util - INFO - 获取dt股票池: 共7条, 1页
+2026-06-04 22:52:46,102 - app.collectors.stock_raw_collector - INFO - 标记涨停/炸板/跌停股为关注: 0 只
+2026-06-04 22:52:46,110 - app.collectors.stock_raw_collector - INFO - 跳过采集: 52 只股票（在 skip_until 期内）
+2026-06-04 22:52:46,407 - app.utils.request_util - INFO - 获取zt股票池: 共80条, 1页
+2026-06-04 22:52:46,575 - app.utils.request_util - INFO - 获取zb股票池: 共19条, 1页
+2026-06-04 22:52:46,852 - app.utils.request_util - INFO - 获取dt股票池: 共7条, 1页
+2026-06-04 22:52:46,861 - app.collectors.stock_raw_collector - INFO - 关注股票总数: 417 只（数据库），本次采集 402 只（去重后）
+2026-06-04 22:52:46,861 - app.collectors.stock_raw_collector - INFO - 开始采集，配置: 线程=8, 批次=100, 间隔=1.0s
+2026-06-04 22:53:01,622 - app.utils.request_util - WARNING - 股票 0.002980 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:53:05,460 - app.utils.request_util - INFO - 股票 0.002980 重试成功 (第1轮)
+2026-06-04 22:53:14,879 - app.utils.request_util - WARNING - 股票 1.600081 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:53:17,282 - app.utils.request_util - WARNING - 股票 1.600133 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:53:18,716 - app.utils.request_util - INFO - 股票 1.600081 重试成功 (第1轮)
+2026-06-04 22:53:22,635 - app.utils.request_util - WARNING - 股票 1.600172 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:53:22,790 - app.utils.request_util - WARNING - 股票 1.600191 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:53:23,100 - app.utils.request_util - INFO - 股票 1.600133 重试成功 (第1轮)
+2026-06-04 22:53:28,502 - app.utils.request_util - INFO - 股票 1.600172 重试成功 (第1轮)
+2026-06-04 22:53:28,570 - app.utils.request_util - INFO - 股票 1.600191 重试成功 (第1轮)
+2026-06-04 22:53:34,394 - app.collectors.stock_raw_collector - INFO - 已采集 100/402 只 (成功 100, 失败 0)
+2026-06-04 22:53:40,681 - app.utils.request_util - WARNING - 股票 1.600416 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:53:41,324 - app.utils.request_util - WARNING - 股票 1.600497 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:53:44,572 - app.utils.request_util - INFO - 股票 1.600416 重试成功 (第1轮)
+2026-06-04 22:53:47,184 - app.utils.request_util - INFO - 股票 1.600497 重试成功 (第1轮)
+2026-06-04 22:53:52,389 - app.utils.request_util - WARNING - 股票 1.600362 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:53:58,873 - app.utils.request_util - INFO - 股票 1.600362 重试成功 (第1轮)
+2026-06-04 22:54:05,278 - app.utils.request_util - WARNING - 股票 0.002878 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:54:11,034 - app.utils.request_util - INFO - 股票 0.002878 重试成功 (第1轮)
+2026-06-04 22:54:19,240 - app.utils.request_util - WARNING - 股票 1.601137 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:54:19,331 - app.utils.request_util - WARNING - 股票 1.601177 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:54:25,071 - app.utils.request_util - INFO - 股票 1.601137 重试成功 (第1轮)
+2026-06-04 22:54:25,185 - app.utils.request_util - INFO - 股票 1.601177 重试成功 (第1轮)
+2026-06-04 22:54:29,212 - app.utils.request_util - WARNING - 股票 1.603001 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:54:31,108 - app.utils.request_util - INFO - 股票 1.603001 重试成功 (第1轮)
+2026-06-04 22:54:34,164 - app.collectors.stock_raw_collector - INFO - 已采集 200/402 只 (成功 100, 失败 0)
+2026-06-04 22:54:51,897 - app.utils.request_util - WARNING - 股票 1.603228 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:54:57,746 - app.utils.request_util - INFO - 股票 1.603228 重试成功 (第1轮)
+2026-06-04 22:55:01,487 - app.utils.request_util - WARNING - 股票 1.603333 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:55:04,298 - app.utils.request_util - WARNING - 股票 1.603379 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:55:04,508 - app.utils.request_util - WARNING - 股票 1.603360 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:55:04,741 - app.utils.request_util - WARNING - 股票 1.603373 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:55:05,678 - app.utils.request_util - INFO - 股票 1.603333 重试成功 (第1轮)
+2026-06-04 22:55:08,378 - app.utils.request_util - INFO - 股票 1.603360 重试成功 (第1轮)
+2026-06-04 22:55:09,569 - app.utils.request_util - WARNING - 股票 1.603379 所有域名失败，2秒后重试 (2/3)
+2026-06-04 22:55:10,701 - app.utils.request_util - INFO - 股票 1.603373 重试成功 (第1轮)
+2026-06-04 22:55:16,527 - app.utils.request_util - INFO - 股票 1.603379 重试成功 (第2轮)
+2026-06-04 22:55:32,116 - app.collectors.stock_raw_collector - INFO - 已采集 300/402 只 (成功 100, 失败 0)
+2026-06-04 22:55:38,276 - app.utils.request_util - WARNING - 股票 1.603867 所有域名失败，1秒后重试 (1/3)
+2026-06-04 22:55:44,054 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 22:55:44,054 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 22:55:44,054 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 22:55:44,054 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 22:55:44,055 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 22:55:44,804 - app.scheduler.task_manager - INFO - 执行快照采集...
+2026-06-04 22:55:44,804 - app.scheduler.task_manager - INFO - 统一批次号: 20260604225544, 交易日期: 2026-06-04
+2026-06-04 22:55:44,964 - app.utils.cookie_manager - INFO - 从缓存加载 Cookie
+2026-06-04 22:55:46,973 - app.utils.request_util - INFO - 分页获取板块快照: GN+HY共614条
+2026-06-04 22:55:46,973 - app.collectors.block_raw_collector - INFO - 板块快照：GN+HY 共 614 条
+2026-06-04 22:55:48,381 - app.collectors.block_raw_collector - INFO - 标记领涨/资金股为关注: 0 只（414 只非主板）
+2026-06-04 22:55:48,393 - app.collectors.block_raw_collector - INFO - 板块快照采集完成: GN+HY共614条, 耗时3.59s, 新增关注股票 0 只
+2026-06-04 22:55:49,023 - app.utils.request_util - INFO - 获取zt股票池: 共80条, 1页
+2026-06-04 22:55:49,281 - app.utils.request_util - INFO - 获取zb股票池: 共19条, 1页
+2026-06-04 22:55:49,505 - app.utils.request_util - INFO - 获取dt股票池: 共7条, 1页
+2026-06-04 22:55:49,514 - app.collectors.stock_raw_collector - INFO - 标记涨停/炸板/跌停股为关注: 0 只
+2026-06-04 22:55:49,552 - app.collectors.stock_raw_collector - INFO - 跳过采集: 52 只股票（在 skip_until 期内）
+2026-06-04 22:55:49,886 - app.utils.request_util - INFO - 获取zt股票池: 共80条, 1页
+2026-06-04 22:55:50,119 - app.utils.request_util - INFO - 获取zb股票池: 共19条, 1页
+2026-06-04 22:55:50,426 - app.utils.request_util - INFO - 获取dt股票池: 共7条, 1页
+2026-06-04 22:55:50,439 - app.collectors.stock_raw_collector - INFO - 关注股票总数: 417 只（数据库），本次采集 402 只（去重后）
+2026-06-04 22:55:50,439 - app.collectors.stock_raw_collector - INFO - 开始采集，配置: 线程=5, 批次=100, 间隔=2.0s
+2026-06-04 22:56:54,156 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 22:56:54,156 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 22:56:54,157 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 22:56:54,157 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 22:56:54,157 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 23:03:14,071 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 23:03:14,071 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 23:03:14,072 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 23:03:14,072 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 23:03:14,072 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 23:03:18,242 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 23:03:18,242 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 23:03:18,243 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 23:03:18,243 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 23:03:18,243 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 23:03:22,254 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 23:03:22,254 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 23:03:22,255 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 23:03:22,255 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 23:03:22,255 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 23:03:23,257 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 23:03:23,257 - app.main - INFO - 任务调度器已停止
+2026-06-04 23:03:27,271 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 23:03:27,271 - app.main - INFO - 任务调度器已停止
+2026-06-04 23:03:48,807 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 23:03:48,807 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 23:03:48,808 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 23:03:48,808 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 23:03:48,808 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 23:03:55,209 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 23:03:55,210 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 23:03:55,210 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 23:03:55,210 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 23:03:55,211 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 23:03:58,792 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 23:03:58,792 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 23:03:58,793 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 23:03:58,793 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 23:03:58,793 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 23:04:00,220 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 23:04:00,221 - app.main - INFO - 任务调度器已停止
+2026-06-04 23:04:03,810 - app.scheduler.task_manager - INFO - 任务调度器已停止
+2026-06-04 23:04:03,811 - app.main - INFO - 任务调度器已停止
+2026-06-04 23:04:13,515 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 23:04:13,515 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 23:04:13,516 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 23:04:13,517 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 23:04:13,517 - app.main - INFO - 任务调度器已自动启动
+2026-06-04 23:06:44,316 - app.scheduler.task_manager - INFO - 任务配置加载成功
+2026-06-04 23:06:44,316 - app.main - INFO - 任务配置加载完成，共 3 个任务
+2026-06-04 23:06:44,317 - app.scheduler.task_manager - INFO - 调度器主循环启动
+2026-06-04 23:06:44,317 - app.scheduler.task_manager - INFO - 任务调度器已启动
+2026-06-04 23:06:44,317 - app.main - INFO - 任务调度器已自动启动
