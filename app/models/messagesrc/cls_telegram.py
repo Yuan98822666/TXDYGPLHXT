@@ -10,7 +10,7 @@ from typing import Optional, List
 from sqlalchemy import Column, BigInteger, String, Text, Boolean, DateTime, Index, JSON
 from sqlalchemy.sql import func
 
-from app.models.base import Base
+from app.db.base import Base
 
 
 class MessageSrcCLSTelegram(Base):

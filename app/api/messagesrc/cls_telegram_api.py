@@ -11,7 +11,7 @@ from fastapi import APIRouter, Depends, Query, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from app.database import get_db
+from app.db.session import get_db
 from app.models.messagesrc import MessageSrcCLSTelegram
 
 
