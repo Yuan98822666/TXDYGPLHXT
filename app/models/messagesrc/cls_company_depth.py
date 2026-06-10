@@ -25,3 +25,17 @@ class MessageSrcCLSCompanyDepth(Base):
     
     def __repr__(self):
         return f"<CLSCompanyDepth({self.article_id}: {self.title[:30]}...)>"
+    
+    def to_dict(self):
+        """转换为字典"""
+        return {
+            "id": getattr(self, 'id', None),
+            "article_id": self.article_id,
+            "title": self.title,
+            "content": self.content,
+            "publish_time": self.publish_time.strftime('%Y-%m-%d %H:%M:%S') if self.publish_time else None,
+            "stock_codes": self.stock_codes,
+            "stock_names": self.stock_names,
+            "created_time": self.created_time.strftime('%Y-%m-%d %H:%M:%S') if self.created_time else None,
+            "updated_time": self.updated_time.strftime('%Y-%m-%d %H:%M:%S') if self.updated_time else None,
+        }

@@ -154,7 +154,13 @@ from app.api.cookiemanager.eastmoney_cookie_router import router as cookie_route
 from app.api.stock.stock_mark_api import router as stock_mark_router
 from app.api.block.block_flow_api import router as block_flow_router
 from app.api.analysis.zt_potential_api import router as zt_potential_router
-from app.api.messagesrc import cls_telegram_router
+from app.api.messagesrc import (
+    cls_telegram_router,
+    cls_a_share_router,
+    cls_headline_router,
+    cls_global_router,
+    cls_company_depth_router,
+)
 from app.api.dashboard.dashboard_api import router as dashboard_router
 
 app.include_router(base_collector_router, prefix="/api/collector/base", tags=["基础数据采集"])
@@ -168,6 +174,10 @@ app.include_router(stock_mark_router, prefix="/api", tags=["股票标记管理"]
 app.include_router(block_flow_router, prefix="/api/block-flow", tags=["板块资金流向"])
 app.include_router(zt_potential_router, prefix="/api", tags=["涨停潜力分析"])
 app.include_router(cls_telegram_router, tags=["财联社电报"])
+app.include_router(cls_a_share_router, tags=["财联社A股消息"])
+app.include_router(cls_headline_router, tags=["财联社头条消息"])
+app.include_router(cls_global_router, tags=["财联社环球消息"])
+app.include_router(cls_company_depth_router, tags=["财联社公司深度"])
 app.include_router(dashboard_router, prefix="/api/dashboard", tags=["首页数据看板"])
 
 

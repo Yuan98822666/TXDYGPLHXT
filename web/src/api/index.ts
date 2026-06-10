@@ -1,5 +1,5 @@
 // src/api/index.ts - API 统一入口
-const API_BASE = ''
+export const API_BASE = ''
 
 // 通用请求方法
 async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
