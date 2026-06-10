@@ -108,7 +108,7 @@ cls_a_share:
   enabled: true
   schedules:
   - end_time: '23:59:59'
-    interval_seconds: 300  # 每5分钟采集一次（比电报频率低）
+    interval_seconds: 60  # 每1分钟采集一次（比电报频率低）
     name: A股消息持续采集
     start_time: '00:00:00'
     type: interval
@@ -119,7 +119,7 @@ cls_company_depth:
   enabled: true
   schedules:
   - end_time: '23:59:59'
-    interval_seconds: 300  # 每5分钟采集一次
+    interval_seconds: 60  # 每1分钟采集一次
     name: 公司深度持续采集
     start_time: '00:00:00'
     type: interval
@@ -130,7 +130,7 @@ cls_headline:
   enabled: true
   schedules:
   - end_time: '23:59:59'
-    interval_seconds: 300  # 每5分钟采集一次
+    interval_seconds: 60  # 每1分钟采集一次
     name: 头条消息持续采集
     start_time: '00:00:00'
     type: interval
@@ -141,7 +141,7 @@ cls_global:
   enabled: true
   schedules:
   - end_time: '23:59:59'
-    interval_seconds: 300  # 每5分钟采集一次
+    interval_seconds: 60  # 每1分钟采集一次
     name: 环球消息持续采集
     start_time: '00:00:00'
     type: interval

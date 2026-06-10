@@ -161,6 +161,7 @@ from app.api.messagesrc import (
     cls_global_router,
     cls_company_depth_router,
 )
+from app.api.messagesrc.task_config_api import router as messagesrc_config_router
 from app.api.dashboard.dashboard_api import router as dashboard_router
 
 app.include_router(base_collector_router, prefix="/api/collector/base", tags=["基础数据采集"])
@@ -178,6 +179,7 @@ app.include_router(cls_a_share_router, tags=["财联社A股消息"])
 app.include_router(cls_headline_router, tags=["财联社头条消息"])
 app.include_router(cls_global_router, tags=["财联社环球消息"])
 app.include_router(cls_company_depth_router, tags=["财联社公司深度"])
+app.include_router(messagesrc_config_router, tags=["消息采集配置"])
 app.include_router(dashboard_router, prefix="/api/dashboard", tags=["首页数据看板"])
 
 

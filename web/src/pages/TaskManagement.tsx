@@ -851,8 +851,8 @@ export default function TaskManagement() {
                       {formatTime(task.last_run_time)}
                     </td>
                     <td className="py-3 px-4">
-                      <span className={task.last_run_status === 'success' ? 'text-green-600' : 'text-red-600'}>
-                        {task.last_run_status === 'success' ? '✓ 成功' : '✗ 失败'}
+                      <span className={task.last_run_status?.startsWith('success') ? 'text-green-600' : 'text-red-600'}>
+                        {task.last_run_status?.startsWith('success') ? '✓ 成功' : '✗ 失败'}
                       </span>
                     </td>
                     <td className="py-3 px-4 text-center">

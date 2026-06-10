@@ -8,6 +8,7 @@ import StockMarkManagement from './pages/StockMarkManagement'
 import BlockFlow from './pages/BlockFlow'
 import ZTPotential from './pages/ZTPotential'
 import Messages from './pages/Messages'
+import MessageTaskConfig from './pages/MessageTaskConfig'
 
 // 简单导航栏组件
 function NavBar() {
@@ -21,6 +22,7 @@ function NavBar() {
     { path: '/tasks', label: '⚙️ 任务管理', exact: true },
     { path: '/zt-potential', label: '🚀 涨停潜力', exact: true },
     { path: '/messages', label: '📰 消息中心', exact: true },
+    { path: '/message-config', label: '⚙️ 消息配置', exact: true },
   ]
   
   return (
@@ -66,6 +68,7 @@ function App() {
           <Route path="/block-flow" element={<BlockFlow />} />
           <Route path="/zt-potential" element={<ZTPotential />} />
           <Route path="/messages" element={<Messages />} />
+          <Route path="/message-config" element={<MessageTaskConfig />} />
         </Routes>
       </div>
     </BrowserRouter>

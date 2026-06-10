@@ -262,6 +262,46 @@ export async function getMarketOverview() {
   return fetchAPI<any>('/api/dashboard/market-overview')
 }
 
+// ============ 消息采集配置接口 ============
+
+// 消息采集任务配置
+export interface MessageTaskConfig {
+  name: string
+  display_name: string
+  enabled: boolean
+  interval_minutes: number
+  last_run_time?: string
+  last_run_status?: string
+}
+
+// 获取消息采集任务列表
+export async function getMessageTasks() {
+  return fetchAPI<{ status: string; data: MessageTaskConfig[] }>('/api/messagesrc/config/tasks')
+}
+
+// 更新采集间隔
+export async function updateMessageTaskInterval(taskName: string, intervalMinutes: number) {
+  return fetchAPI<{ status: string; message: string }>(`/api/messagesrc/config/tasks/${taskName}/interval`, {
+    method: 'PUT',
+    body: JSON.stringify({ interval_minutes: intervalMinutes })
+  })
+}
+
+// 启用消息采集任务
+export async function enableMessageTask(taskName: string) {
+  return fetchAPI<{ status: string; message: string }>(`/api/messagesrc/config/tasks/${taskName}/enable`, { method: 'POST' })
+}
+
+// 禁用消息采集任务
+export async function disableMessageTask(taskName: string) {
+  return fetchAPI<{ status: string; message: string }>(`/api/messagesrc/config/tasks/${taskName}/disable`, { method: 'POST' })
+}
+
+// 手动执行消息采集任务
+export async function runMessageTask(taskName: string) {
+  return fetchAPI<{ status: string; message: string }>(`/api/messagesrc/config/tasks/${taskName}/run`, { method: 'POST' })
+}
+
 // ============ 类型定义 ============
 
 export interface Stock {
