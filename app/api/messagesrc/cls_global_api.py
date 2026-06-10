@@ -20,15 +20,14 @@ router = APIRouter(prefix="/api/messagesrc/cls/global", tags=["财联社环球�
 
 class GlobalMessageResponse(BaseModel):
     """环球消息响应模型"""
-    id: int
     article_id: str
     title: str
-    content: str
+    content: Optional[str]
     publish_time: str
     stock_codes: Optional[list]
     stock_names: Optional[list]
-    created_time: str
-    updated_time: str
+    created_time: Optional[str]
+    updated_time: Optional[str]
     
     class Config:
         from_attributes = True

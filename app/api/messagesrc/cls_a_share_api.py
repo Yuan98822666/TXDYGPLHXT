@@ -23,12 +23,12 @@ class AShareMessageResponse(BaseModel):
     id: int
     article_id: str
     title: str
-    content: str
+    content: Optional[str]
     publish_time: str
     stock_codes: Optional[list]
     stock_names: Optional[list]
-    created_time: str
-    updated_time: str
+    created_time: Optional[str]
+    updated_time: Optional[str]
     
     class Config:
         from_attributes = True
@@ -43,8 +43,8 @@ async def list_a_share_messages(
     """
     获取A股消息列表
     """
-    query = db.query(MessageSrcCLSAshare)
-    query = query.order_by(MessageSrcCLSAshare.publish_time.desc())
+    query = db.query(MessageSrcCLSAShare)
+    query = query.order_by(MessageSrcCLSAShare.publish_time.desc())
     messages = query.offset(offset).limit(limit).all()
     return [msg.to_dict() for msg in messages]
 

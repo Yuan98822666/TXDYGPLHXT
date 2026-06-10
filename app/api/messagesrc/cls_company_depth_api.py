@@ -20,15 +20,14 @@ router = APIRouter(prefix="/api/messagesrc/cls/company-depth", tags=["财联社�
 
 class CompanyDepthResponse(BaseModel):
     """公司深度响应模型"""
-    id: int
     article_id: str
     title: str
-    content: str
+    content: Optional[str]
     publish_time: str
     stock_codes: Optional[list]
     stock_names: Optional[list]
-    created_time: str
-    updated_time: str
+    created_time: Optional[str]
+    updated_time: Optional[str]
     
     class Config:
         from_attributes = True

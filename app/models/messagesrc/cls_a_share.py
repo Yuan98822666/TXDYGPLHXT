@@ -60,5 +60,6 @@ class MessageSrcCLSAShare(Base):
             'reading_num': self.reading_num,
             'share_num': self.share_num,
             'image_url': self.image_url,
-            'create_time': self.create_time.strftime('%Y-%m-%d %H:%M:%S') if self.create_time else None,
+            'created_time': self.create_time.strftime('%Y-%m-%d %H:%M:%S') if self.create_time else None,
+            'updated_time': self.update_time.strftime('%Y-%m-%d %H:%M:%S') if self.update_time else None,
         }
