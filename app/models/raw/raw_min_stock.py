@@ -49,8 +49,8 @@ class RawMinStock(Base):
     stock_sjhsl = Column(Numeric(8, 4), comment="实际换手率（%），计算：成交量/自由流通股*100")
 
     # 估值相关
-    stock_syl = Column(Numeric(10, 4), comment="市盈率TTM")
-    stock_sjl = Column(Numeric(10, 4), comment="市净率")
+    stock_syl = Column(Numeric(12, 4), comment="市盈率TTM")
+    stock_sjl = Column(Numeric(12, 4), comment="市净率")
     stock_zsz = Column(Numeric(20, 2), comment="总市值（元）")
     stock_ltsz = Column(Numeric(20, 2), comment="流通市值（元）")
     stock_ltg = Column(BigInteger, comment="流通股（股）")
