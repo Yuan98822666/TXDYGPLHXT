@@ -1,5 +1,5 @@
 // src/api/index.ts - API 统一入口
-const API_BASE = 'http://localhost:8084'
+const API_BASE = ''
 
 // 通用请求方法
 async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
@@ -174,27 +174,27 @@ export async function getStockMarkList(params: {
   if (params.stock_risk !== undefined) query.set('stock_risk', String(params.stock_risk))
   if (params.stock_imp !== undefined) query.set('stock_imp', String(params.stock_imp))
   if (params.exchange) query.set('exchange', params.exchange)
-  return fetchAPI<any>(`/stock/mark/list?${query}`)
+  return fetchAPI<any>(`/api/stock/mark/list?${query}`)
 }
 
 // 获取已关注股票列表
 export async function getMarkedStocks(page = 1, pageSize = 100) {
-  return fetchAPI<any>(`/stock/mark/marked?page=${page}&page_size=${pageSize}`)
+  return fetchAPI<any>(`/api/stock/mark/marked?page=${page}&page_size=${pageSize}`)
 }
 
 // 获取标记统计
 export async function getMarkStats() {
-  return fetchAPI<any>('/stock/mark/stats')
+  return fetchAPI<any>('/api/stock/mark/stats')
 }
 
 // 搜索股票（自动补全）
 export async function searchStocks(keyword: string, limit = 20) {
-  return fetchAPI<any>(`/stock/mark/search?q=${encodeURIComponent(keyword)}&limit=${limit}`)
+  return fetchAPI<any>(`/api/stock/mark/search?q=${encodeURIComponent(keyword)}&limit=${limit}`)
 }
 
 // 添加关注（单个）
 export async function addStockMark(code: string) {
-  return fetchAPI<any>('/stock/mark/add', {
+  return fetchAPI<any>('/api/stock/mark/add', {
     method: 'POST',
     body: JSON.stringify({ code })
   })
@@ -202,7 +202,7 @@ export async function addStockMark(code: string) {
 
 // 移除关注（单个）
 export async function removeStockMark(code: string, skipDays = 0) {
-  return fetchAPI<any>('/stock/mark/remove', {
+  return fetchAPI<any>('/api/stock/mark/remove', {
     method: 'POST',
     body: JSON.stringify({ code, skip_days: skipDays })
   })
@@ -210,7 +210,7 @@ export async function removeStockMark(code: string, skipDays = 0) {
 
 // 切换关注状态
 export async function toggleStockMark(code: string) {
-  return fetchAPI<any>('/stock/mark/toggle', {
+  return fetchAPI<any>('/api/stock/mark/toggle', {
     method: 'POST',
     body: JSON.stringify({ code })
   })
@@ -218,7 +218,7 @@ export async function toggleStockMark(code: string) {
 
 // 批量添加关注
 export async function batchAddStockMark(codes: string[]) {
-  return fetchAPI<any>('/stock/mark/batch/add', {
+  return fetchAPI<any>('/api/stock/mark/batch/add', {
     method: 'POST',
     body: JSON.stringify({ codes, imp: 1 })
   })
@@ -226,7 +226,7 @@ export async function batchAddStockMark(codes: string[]) {
 
 // 批量移除关注
 export async function batchRemoveStockMark(codes: string[], skipDays: number = 0) {
-  return fetchAPI<any>('/stock/mark/batch/remove', {
+  return fetchAPI<any>('/api/stock/mark/batch/remove', {
     method: 'POST',
     body: JSON.stringify({ codes, imp: 0, skip_days: skipDays })
   })
@@ -234,7 +234,7 @@ export async function batchRemoveStockMark(codes: string[], skipDays: number = 0
 
 // 清空所有关注
 export async function clearAllMarks() {
-  return fetchAPI<any>('/stock/mark/batch/clear', { method: 'POST' })
+  return fetchAPI<any>('/api/stock/mark/batch/clear', { method: 'POST' })
 }
 
 // 按条件批量标记
@@ -244,10 +244,22 @@ export async function batchMarkByCondition(params: {
   exchange?: string
   imp: number
 }) {
-  return fetchAPI<any>('/stock/mark/batch/by-condition', {
+  return fetchAPI<any>('/api/stock/mark/batch/by-condition', {
     method: 'POST',
     body: JSON.stringify(params)
   })
+}
+
+// ============ 首页数据看板接口 ============
+
+// 获取首页统计数据
+export async function getDashboardStats() {
+  return fetchAPI<any>('/api/dashboard/stats')
+}
+
+// 获取市场概览（用于数据看板页面）
+export async function getMarketOverview() {
+  return fetchAPI<any>('/api/dashboard/market-overview')
 }
 
 // ============ 类型定义 ============

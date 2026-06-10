@@ -2,8 +2,8 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import ReactECharts from 'echarts-for-react'
 
-// API 基础配置
-const API_BASE = 'http://localhost:8084/api/block-flow'
+// API 基础配置（使用相对路径，走 Vite 代理）
+const API_BASE = '/api/block-flow'
 
 // 数据接口
 interface BlockTop5Item {

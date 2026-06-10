@@ -91,13 +91,57 @@ special_pool:
 cls_telegram:
   enabled: true
   schedules:
-  - end_time: '22:00:00'
+  - end_time: '23:59:59'
     interval_seconds: 60
     name: 电报持续采集
-    start_time: '09:00:00'
+    start_time: '00:00:00'
     type: interval
   scope:
     gs: true
     hy: true
     sc: true
     zc: true
+
+# 财联社 A股消息采集
+# 注意：token/uid/sign 需要定期从浏览器获取并更新到 request_conf.yaml
+cls_a_share:
+  enabled: true
+  schedules:
+  - end_time: '23:59:59'
+    interval_seconds: 300  # 每5分钟采集一次（比电报频率低）
+    name: A股消息持续采集
+    start_time: '00:00:00'
+    type: interval
+
+# 财联社公司深度资讯采集
+# 注意：token/uid/sign 需要定期从浏览器获取并更新到 request_conf.yaml
+cls_company_depth:
+  enabled: true
+  schedules:
+  - end_time: '23:59:59'
+    interval_seconds: 300  # 每5分钟采集一次
+    name: 公司深度持续采集
+    start_time: '00:00:00'
+    type: interval
+
+# 财联社头条消息采集
+# 注意：token/uid/sign 需要定期从浏览器获取并更新到 request_conf.yaml
+cls_headline:
+  enabled: true
+  schedules:
+  - end_time: '23:59:59'
+    interval_seconds: 300  # 每5分钟采集一次
+    name: 头条消息持续采集
+    start_time: '00:00:00'
+    type: interval
+
+# 财联社环球消息采集
+# 注意：token/uid/sign 需要定期从浏览器获取并更新到 request_conf.yaml
+cls_global:
+  enabled: true
+  schedules:
+  - end_time: '23:59:59'
+    interval_seconds: 300  # 每5分钟采集一次
+    name: 环球消息持续采集
+    start_time: '00:00:00'
+    type: interval

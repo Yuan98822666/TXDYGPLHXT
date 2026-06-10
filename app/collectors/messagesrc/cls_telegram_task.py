@@ -1,188 +1,97 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-财联社电报采集任务
-支持定时采集和增量发现
+财联社电报采集任务 V2
+
+集成到 TaskManager 调度系统
+支持：全量采集 / 增量采集 / 定时调度
 """
 
 import time
-from datetime import datetime, timedelta
-from typing import List, Optional
+import logging
+from datetime import datetime
+from typing import Dict, Any
 
-from sqlalchemy.orm import Session
+from app.collectors.messagesrc.cls_telegram_collector_v2 import CLSTelegramCollectorV2
 
-from app.db.session import SessionLocal
-from app.models.messagesrc import MessageSrcCLSTelegram
-from .cls_telegram_collector import CLSTelegramCollector, TelegramMessage
+logger = logging.getLogger(__name__)
 
 
 class CLSTelegramTask:
-    """财联社电报采集任务"""
+    """财联社电报采集任务（V2）"""
     
-    def __init__(self, enable_ocr: bool = False, ocr_engine: str = 'paddle'):
-        """
-        初始化任务
-        
-        Args:
-            enable_ocr: 是否启用图片OCR
-            ocr_engine: OCR引擎类型
-        """
-        self.collector = CLSTelegramCollector()
-        self.enable_ocr = enable_ocr
-        self.ocr_engine = ocr_engine
-        self.ocr = None  # 延迟初始化
+    def __init__(self):
+        self.collector = CLSTelegramCollectorV2()
+        self.name = "财联社电报采集"
     
-    def _save_messages(self, db: Session, messages: List[TelegramMessage]) -> int:
+    def run(self) -> Dict[str, Any]:
         """
-        保存消息到数据库
-        
-        Args:
-            db: 数据库会话
-            messages: 消息列表
+        执行采集任务（主入口）
         
         Returns:
-            保存数量
+            采集结果统计
         """
-        saved_count = 0
+        logger.info(f"[{datetime.now()}] {self.name} 开始执行")
         
-        for msg in messages:
-            # 检查是否已存在
-            existing = db.query(MessageSrcCLSTelegram).filter(
-                MessageSrcCLSTelegram.msg_id == msg.msg_id
-            ).first()
-            
-            if existing:
-                continue
-            
-            # OCR识别图片（延迟导入避免依赖问题）
-            image_ocr_text = None
-            if self.enable_ocr and msg.has_image and msg.image_urls:
-                try:
-                    if self.ocr is None:
-                        from .image_ocr import ImageOCR
-                        self.ocr = ImageOCR(engine=self.ocr_engine)
-                    image_urls = msg.image_urls.split(';')
-                    image_ocr_text = self.ocr.recognize_multiple(image_urls)
-                except Exception as e:
-                    print(f"OCR failed for msg {msg.msg_id}: {e}")
-            
-            # 创建数据库记录
-            db_msg = MessageSrcCLSTelegram(
-                msg_id=msg.msg_id,
-                publish_time=msg.publish_time,
-                content=msg.content,
-                title=msg.title,
-                category=msg.category,
-                subjects=msg.subjects,
-                is_important=msg.is_important,
-                has_image=msg.has_image,
-                image_urls=msg.image_urls,
-                image_ocr_text=image_ocr_text,
-                audio_urls=msg.audio_urls,
-                source_url=msg.source_url,
-                reading_num=msg.reading_num,
-                share_num=msg.share_num,
-            )
-            
-            db.add(db_msg)
-            saved_count += 1
-        
-        db.commit()
-        return saved_count
-    
-    def run_full_collection(self, category: str = None) -> int:
-        """
-        全量采集
-        
-        Args:
-            category: 分类过滤
-        
-        Returns:
-            采集数量
-        """
-        print(f"[{datetime.now()}] 开始全量采集...")
-        
-        # 获取电报
-        messages = self.collector.fetch_telegrams(category=category, limit=100)
-        print(f"获取到 {len(messages)} 条电报")
-        
-        if not messages:
-            return 0
-        
-        # 保存到数据库
-        db = SessionLocal()
         try:
-            saved = self._save_messages(db, messages)
-            print(f"保存了 {saved} 条新电报")
-            return saved
-        finally:
-            db.close()
+            result = self.collector.collect()
+            logger.info(f"[{datetime.now()}] {self.name} 完成: {result}")
+            return result
+        except Exception as e:
+            logger.error(f"[{datetime.now()}] {self.name} 失败: {e}")
+            raise
     
-    def run_incremental_collection(self, minutes: int = 5, category: str = None) -> int:
-        """
-        增量采集
+    def run_full(self) -> Dict[str, Any]:
+        """强制全量采集（24小时）"""
+        logger.info(f"[{datetime.now()}] {self.name} 强制全量采集")
         
-        Args:
-            minutes: 采集最近多少分钟的消息
-            category: 分类过滤
+        # 临时修改采集逻辑为全量
+        # 通过删除数据库最新记录来触发首次采集模式
+        # 或者直接在 collector 中提供 force_full 参数
         
-        Returns:
-            采集数量
-        """
-        since = datetime.now() - timedelta(minutes=minutes)
-        print(f"[{datetime.now()}] 开始增量采集（最近{minutes}分钟）...")
+        # 这里使用简单方式：直接采集并保存（不检查时间）
+        messages = self.collector.fetch_telegrams(limit=200)
+        result = self.collector.save_to_db(messages)
         
-        # 发现新消息
-        messages = self.collector.discover_new(since=since, category=category)
-        print(f"发现 {len(messages)} 条新电报")
+        summary = {
+            'mode': 'forced_full',
+            'fetched': len(messages),
+            'inserted': result['inserted'],
+            'skipped': result['skipped'],
+        }
         
-        if not messages:
-            return 0
-        
-        # 保存到数据库
-        db = SessionLocal()
-        try:
-            saved = self._save_messages(db, messages)
-            print(f"保存了 {saved} 条新电报")
-            return saved
-        finally:
-            db.close()
-    
-    def run_continuous(self, interval: int = 60, category: str = None):
-        """
-        持续运行采集
-        
-        Args:
-            interval: 采集间隔（秒）
-            category: 分类过滤
-        """
-        print(f"[{datetime.now()}] 启动持续采集，间隔{interval}秒")
-        
-        while True:
-            try:
-                self.run_incremental_collection(minutes=2, category=category)
-            except Exception as e:
-                print(f"采集失败: {e}")
-            
-            time.sleep(interval)
+        logger.info(f"[{datetime.now()}] 全量采集完成: {summary}")
+        return summary
+
+
+# 兼容旧版入口
+def run_cls_telegram_collection():
+    """运行财联社电报采集（供 TaskManager 调用）"""
+    task = CLSTelegramTask()
+    return task.run()
 
 
 def main():
     """测试任务"""
     import sys
     
-    task = CLSTelegramTask(enable_ocr=False)
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    
+    task = CLSTelegramTask()
     
     if len(sys.argv) > 1 and sys.argv[1] == 'full':
         # 全量采集
-        task.run_full_collection()
-    elif len(sys.argv) > 1 and sys.argv[1] == 'continuous':
-        # 持续采集
-        interval = int(sys.argv[2]) if len(sys.argv) > 2 else 60
-        task.run_continuous(interval=interval)
+        result = task.run_full()
     else:
         # 增量采集（默认）
-        task.run_incremental_collection(minutes=5)
+        result = task.run()
+    
+    print("\n采集结果:")
+    import json
+    print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
 if __name__ == '__main__':

@@ -60,7 +60,11 @@ from app.models.system import MarketStateDate
 # ==========================================
 # 消息源模型 (messagesrc_*)
 # ==========================================
-from app.models.messagesrc import MessageSrcCLSTelegram
+from app.models.messagesrc import (
+    MessageSrcCLSTelegram,
+    MessageSrcCLSAShare,
+    MessageSrcCLSCompanyDepth,
+)
 
 # 统一导出
 __all__ = [
@@ -86,4 +90,6 @@ __all__ = [
     "MarketStateDate",
     # MessageSrc
     "MessageSrcCLSTelegram",
+    "MessageSrcCLSAShare",
+    "MessageSrcCLSCompanyDepth",
 ]

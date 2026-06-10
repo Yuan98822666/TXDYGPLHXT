@@ -6,7 +6,7 @@
 # 通用参数（所有接口共用）
 common:
   ut: "fa5fd1943c7b386f172d6893dbfba10b"
-  cb: "jQuery35107075750694859027_1774838235545"
+  cb: "jQuery37101475822155393881_1781003167185"
   timeout: 10
   max_pages: 100
 
@@ -134,3 +134,48 @@ endpoints:
     wbp2u: "3951356261349626|0|1|0|web"
     fs: "m:90+t:3,m:90+s:4,m:90+t:2"
     fields: "f2,f3,f5,f8,f10,f12,f13,f14,f39,f104,f105,f106,f62,f66,f72,f78,f84,f184,f69,f75,f81,f87,f140,f128,f136,f205,f204"
+
+# =========================================================
+# 财联社 API 配置
+# =========================================================
+
+# 通用参数（所有财联社接口共用）
+# 注意：token/uid/sign 会定期过期，需要从浏览器开发者工具获取最新值
+# 获取方法：
+#   1. 打开 https://www.cls.cn/depth?id=1003
+#   2. 按 F12 打开开发者工具
+#   3. 刷新页面，找到 assembled/1003 请求
+#   4. 复制请求中的 token, uid, sign 参数
+#   5. 修改下方配置后重启系统
+cls_common:
+  app: "CailianpressWeb"
+  os: "web"
+  sv: "8.7.9"
+  token: "aSZW9FGR8AjW80k2yR2P019eZzxLaLzL4577095"
+  uid: "4577095"
+  # sign 参数用于深度资讯接口（assembled/*），电报接口不需要
+  # 每次 sign 过期后需要手动更新
+  sign: "7d298664e04d14384e5457799129dbf3"
+
+# 财联社接口端点
+cls_endpoints:
+  # 电报-全部电报
+  telegram_all:
+    url: "https://www.cls.cn/api/cache"
+    name: "telegraph"
+    
+  # 首页-头条消息
+  depth_headline:
+    url: "https://www.cls.cn/v3/depth/home/assembled/1000"
+    
+  # 首页-A股消息
+  depth_a_share:
+    url: "https://www.cls.cn/v3/depth/home/assembled/1003"
+    
+  # 首页-公司消息
+  depth_company:
+    url: "https://www.cls.cn/v3/depth/home/assembled/1005"
+    
+  # 首页-环球消息
+  depth_global:
+    url: "https://www.cls.cn/v3/depth/home/assembled/1007"

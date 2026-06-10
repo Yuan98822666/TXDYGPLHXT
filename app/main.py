@@ -18,7 +18,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from logging.handlers import TimedRotatingFileHandler
+from concurrent_log_handler import ConcurrentRotatingFileHandler
 
 # 创建日志目录
 log_dir = Path(__file__).parent.parent / "logs"
@@ -36,13 +36,13 @@ console_handler.setFormatter(formatter)
 if hasattr(console_handler.stream, 'reconfigure'):
     console_handler.stream.reconfigure(encoding='utf-8')
 
-# 文件处理器（按日期滚动）
-file_handler = TimedRotatingFileHandler(
+# 文件处理器（多进程安全，按大小滚动）
+file_handler = ConcurrentRotatingFileHandler(
     filename=log_dir / "app.log",
-    when="midnight",
-    interval=1,
+    maxBytes=10*1024*1024,  # 10MB
     backupCount=30,
-    encoding="utf-8"
+    encoding="utf-8",
+    use_gzip=False
 )
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
@@ -112,10 +112,29 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# 配置 CORS
+# 配置 CORS（支持所有前端开发端口）
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175",
+        "http://localhost:5176",
+        "http://localhost:5177",
+        "http://localhost:5178",
+        "http://localhost:5179",
+        "http://localhost:5180",
+        "http://localhost:5181",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
+        "http://127.0.0.1:5175",
+        "http://127.0.0.1:5176",
+        "http://127.0.0.1:5177",
+        "http://127.0.0.1:5178",
+        "http://127.0.0.1:5179",
+        "http://127.0.0.1:5180",
+        "http://127.0.0.1:5181",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -136,6 +155,7 @@ from app.api.stock.stock_mark_api import router as stock_mark_router
 from app.api.block.block_flow_api import router as block_flow_router
 from app.api.analysis.zt_potential_api import router as zt_potential_router
 from app.api.messagesrc import cls_telegram_router
+from app.api.dashboard.dashboard_api import router as dashboard_router
 
 app.include_router(base_collector_router, prefix="/api/collector/base", tags=["基础数据采集"])
 app.include_router(raw_collector_router, prefix="/api/collector/raw", tags=["快照数据采集"])
@@ -144,10 +164,11 @@ app.include_router(schedule_router, prefix="/api/collector/schedule", tags=["采
 app.include_router(scheduler_router, tags=["采集调度器（旧）"])
 app.include_router(task_router, prefix="/api/task", tags=["任务管理"])
 app.include_router(cookie_router, prefix="/api/cookie", tags=["Cookie 管理"])
-app.include_router(stock_mark_router, tags=["股票标记管理"])
+app.include_router(stock_mark_router, prefix="/api", tags=["股票标记管理"])
 app.include_router(block_flow_router, prefix="/api/block-flow", tags=["板块资金流向"])
 app.include_router(zt_potential_router, prefix="/api", tags=["涨停潜力分析"])
 app.include_router(cls_telegram_router, tags=["财联社电报"])
+app.include_router(dashboard_router, prefix="/api/dashboard", tags=["首页数据看板"])
 
 
 @app.get("/")

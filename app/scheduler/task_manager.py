@@ -241,6 +241,42 @@ class TaskManager:
             scope=cls_telegram_config.get("scope", {"zc": True, "gs": True, "hy": True, "sc": True}),
         )
         
+        # 财联社 A股消息采集任务
+        cls_a_share_config = self.config.get("cls_a_share", {})
+        self.tasks["cls_a_share"] = TaskInfo(
+            name="cls_a_share",
+            display_name="财联社A股消息采集",
+            enabled=cls_a_share_config.get("enabled", True),
+            schedules=self._parse_schedules(cls_a_share_config.get("schedules", [])),
+        )
+        
+        # 财联社公司深度采集任务
+        cls_company_depth_config = self.config.get("cls_company_depth", {})
+        self.tasks["cls_company_depth"] = TaskInfo(
+            name="cls_company_depth",
+            display_name="财联社公司深度采集",
+            enabled=cls_company_depth_config.get("enabled", True),
+            schedules=self._parse_schedules(cls_company_depth_config.get("schedules", [])),
+        )
+        
+        # 财联社头条消息采集任务
+        cls_headline_config = self.config.get("cls_headline", {})
+        self.tasks["cls_headline"] = TaskInfo(
+            name="cls_headline",
+            display_name="财联社头条采集",
+            enabled=cls_headline_config.get("enabled", True),
+            schedules=self._parse_schedules(cls_headline_config.get("schedules", [])),
+        )
+        
+        # 财联社环球消息采集任务
+        cls_global_config = self.config.get("cls_global", {})
+        self.tasks["cls_global"] = TaskInfo(
+            name="cls_global",
+            display_name="财联社环球采集",
+            enabled=cls_global_config.get("enabled", True),
+            schedules=self._parse_schedules(cls_global_config.get("schedules", [])),
+        )
+        
         # 注册执行函数
         self._register_execute_funcs()
     
@@ -266,6 +302,10 @@ class TaskManager:
             "special_pool": self._execute_special_pool,
             "day_k": self._execute_day_k,
             "cls_telegram": self._execute_cls_telegram,
+            "cls_a_share": self._execute_cls_a_share,
+            "cls_company_depth": self._execute_cls_company_depth,
+            "cls_headline": self._execute_cls_headline,
+            "cls_global": self._execute_cls_global,
         }
     
     def save_config(self) -> bool:
@@ -357,23 +397,105 @@ class TaskManager:
     
     def _execute_cls_telegram(self):
         """
-        执行财联社电报采集
+        执行财联社电报采集（V2）
         
         策略：
-            - 每次采集最近2分钟的电报（避免遗漏）
-            - 数据库会自动去重（按msg_id）
+            - 首次运行：采集最近24小时数据
+            - 后续运行：采集前1分钟的数据（增量）
+            - 数据库自动去重（按msg_id）
             - 每分钟执行一次，确保不遗漏新电报
         """
         try:
             from app.collectors.messagesrc.cls_telegram_task import CLSTelegramTask
             
             logger.info("执行财联社电报采集...")
-            task = CLSTelegramTask(enable_ocr=False)
-            saved_count = task.run_incremental_collection(minutes=2)
-            logger.info(f"财联社电报采集完成，新增 {saved_count} 条")
-            return f"success: saved {saved_count} messages"
+            task = CLSTelegramTask()
+            result = task.run()
+            logger.info(f"财联社电报采集完成: {result}")
+            return f"success: fetched={result.get('fetched', 0)}, inserted={result.get('inserted', 0)}"
         except Exception as e:
             logger.error(f"财联社电报采集失败: {e}")
+            return f"failed: {str(e)}"
+    
+    def _execute_cls_a_share(self):
+        """
+        执行财联社 A股消息采集
+        
+        策略：
+            - 首次运行：采集最近24小时数据
+            - 后续运行：采集新增数据（增量）
+            - 数据库自动去重（按article_id）
+        """
+        try:
+            from app.collectors.messagesrc.cls_a_share_task import cls_a_share_task
+            
+            logger.info("执行财联社A股消息采集...")
+            result = cls_a_share_task.run()
+            logger.info(f"财联社A股消息采集完成: {result}")
+            return f"success: fetched={result.get('fetched', 0)}, inserted={result.get('inserted', 0)}"
+        except Exception as e:
+            logger.error(f"财联社A股消息采集失败: {e}")
+            return f"failed: {str(e)}"
+    
+    def _execute_cls_company_depth(self):
+        """
+        执行财联社公司深度采集
+        
+        策略：
+            - 首次运行：全量采集
+            - 后续运行：增量采集
+            - 数据库自动去重（按article_id）
+        """
+        try:
+            from app.collectors.messagesrc.cls_company_depth_task import CLSCompanyDepthTask
+            
+            logger.info("执行财联社公司深度采集...")
+            task = CLSCompanyDepthTask()
+            result = task.run()
+            logger.info(f"财联社公司深度采集完成: {result}")
+            return f"success: fetched={result.get('fetched', 0)}, inserted={result.get('inserted', 0)}"
+        except Exception as e:
+            logger.error(f"财联社公司深度采集失败: {e}")
+            return f"failed: {str(e)}"
+    
+    def _execute_cls_headline(self):
+        """
+        执行财联社头条消息采集
+        
+        策略：
+            - 首次运行：全量采集
+            - 后续运行：增量采集
+            - 数据库自动去重（按article_id）
+        """
+        try:
+            from app.collectors.messagesrc.cls_headline_task import cls_headline_task
+            
+            logger.info("执行财联社头条采集...")
+            result = cls_headline_task.run()
+            logger.info(f"财联社头条采集完成: {result}")
+            return f"success: fetched={result.get('fetched', 0)}, inserted={result.get('inserted', 0)}"
+        except Exception as e:
+            logger.error(f"财联社头条采集失败: {e}")
+            return f"failed: {str(e)}"
+    
+    def _execute_cls_global(self):
+        """
+        执行财联社环球消息采集
+        
+        策略：
+            - 首次运行：全量采集
+            - 后续运行：增量采集
+            - 数据库自动去重（按article_id）
+        """
+        try:
+            from app.collectors.messagesrc.cls_global_task import cls_global_task
+            
+            logger.info("执行财联社环球采集...")
+            result = cls_global_task.run()
+            logger.info(f"财联社环球采集完成: {result}")
+            return f"success: fetched={result.get('fetched', 0)}, inserted={result.get('inserted', 0)}"
+        except Exception as e:
+            logger.error(f"财联社环球采集失败: {e}")
             return f"failed: {str(e)}"
     
     # ==================== 任务控制 ====================
@@ -443,38 +565,48 @@ class TaskManager:
     
     def run_task_once(self, task_name: str) -> str:
         """
-        手动执行单个任务（立即执行，不受调度控制）
+        手动执行单个任务（异步执行，避免HTTP超时）
         
         参数：
             task_name: 任务名称
         
         返回：
-            执行结果（success/failed:xxx）
+            启动结果（started/failed:xxx）
         """
         if task_name not in self.tasks:
             return f"failed: task not found"
         
         task = self.tasks[task_name]
-        task.status = TaskStatus.RUNNING
         
-        try:
-            # 执行任务
-            if task_name == "day_k":
-                # 日K默认用replace模式
-                result = self._execute_funcs[task_name](action="replace")
-            else:
-                result = self._execute_funcs[task_name]()
-            
-            # 更新状态
-            task.last_run_time = datetime.now()
-            task.last_run_status = result
-            task.status = TaskStatus.IDLE
-            
-            return result
-        except Exception as e:
-            task.status = TaskStatus.IDLE
-            task.last_run_status = f"failed: {str(e)}"
-            return f"failed: {str(e)}"
+        # 检查任务是否已在运行
+        if task.status == TaskStatus.RUNNING:
+            return f"failed: task already running"
+        
+        # 启动后台线程执行任务
+        def _execute_in_thread():
+            task.status = TaskStatus.RUNNING
+            try:
+                if task_name == "day_k":
+                    result = self._execute_funcs[task_name](action="replace")
+                else:
+                    result = self._execute_funcs[task_name]()
+                
+                task.last_run_time = datetime.now()
+                task.last_run_status = result
+                logger.info(f"任务 {task_name} 执行完成: {result}")
+            except Exception as e:
+                error_msg = f"failed: {str(e)}"
+                task.last_run_status = error_msg
+                logger.error(f"任务 {task_name} 执行失败: {error_msg}")
+            finally:
+                task.status = TaskStatus.IDLE
+        
+        thread = threading.Thread(target=_execute_in_thread, name=f"task_{task_name}")
+        thread.daemon = True
+        thread.start()
+        
+        logger.info(f"任务 {task_name} 已启动（后台执行）")
+        return "started"
     
     # ==================== 调度配置管理 ====================
     

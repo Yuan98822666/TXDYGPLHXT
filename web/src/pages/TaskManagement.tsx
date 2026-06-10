@@ -567,9 +567,29 @@ export default function TaskManagement() {
 
   async function handleRunTask(task: TaskInfo) {
     try {
-      await runTaskOnce(task.name)
-      showToast(`${task.display_name}执行中...`)
-      setTimeout(loadData, 2000)
+      const res = await runTaskOnce(task.name)
+      if (res.status === 'success') {
+        showToast(`${task.display_name}已启动，后台执行中...`)
+        // 每3秒刷新一次状态，持续检查任务是否完成
+        const checkInterval = setInterval(async () => {
+          const statusRes = await getTaskStatus()
+          if (statusRes.status === 'success') {
+            const taskList = Array.isArray(statusRes.data.tasks) 
+              ? statusRes.data.tasks 
+              : Object.values(statusRes.data.tasks)
+            const updatedTask = taskList.find((t: any) => t.name === task.name)
+            if (updatedTask && updatedTask.status === 'idle') {
+              clearInterval(checkInterval)
+              showToast(`${task.display_name}执行完成: ${updatedTask.last_run_status}`)
+              loadData()
+            }
+          }
+        }, 3000)
+        // 30秒后自动停止轮询
+        setTimeout(() => clearInterval(checkInterval), 30000)
+      } else {
+        showToast(`启动失败: ${res.message}`)
+      }
     } catch (err) {
       console.error('执行任务失败:', err)
       showToast('执行失败')

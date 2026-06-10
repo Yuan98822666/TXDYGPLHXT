@@ -295,13 +295,13 @@ async def run_task_once(task_name: str = Path(..., description="任务名称")):
         if result.startswith("failed"):
             return {
                 "status": "error",
-                "message": f"任务执行失败: {result}",
+                "message": f"任务启动失败: {result}",
                 "timestamp": datetime.now().isoformat(),
             }
         else:
             return {
                 "status": "success",
-                "message": f"任务 {task_name} 执行完成",
+                "message": f"任务 {task_name} 已启动（后台执行）",
                 "result": result,
                 "timestamp": datetime.now().isoformat(),
             }

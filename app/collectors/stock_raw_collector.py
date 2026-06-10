@@ -307,7 +307,7 @@ class StockRawCollector:
 
         # 多线程采集（并发数由运行时配置控制，每批间隔避免触发限流）
         results = []
-        failed_stocks = []  # 记录失败的股票，用于重试
+        failed_count = 0
         
         # 获取运行时配置
         config = get_collector_config()
@@ -325,32 +325,24 @@ class StockRawCollector:
                     executor.submit(cls._fetch_one_stock, stock, ztzt_map): stock
                     for stock in batch
                 }
+                batch_success = 0
+                batch_failed = 0
                 for future in as_completed(futures):
                     result = future.result()
                     if result:
                         results.append(result)
+                        batch_success += 1
                     else:
-                        failed_stocks.append(futures[future])
+                        batch_failed += 1
+                        failed_count += 1
                 
                 # 批次间隔（平衡速度与限流）
                 if i + batch_size < len(all_stocks):
                     time.sleep(batch_delay)
-                    fail_count = len([s for s in batch if s in failed_stocks])
-                    success_count = len(batch) - fail_count
-                    logger.info(f"已采集 {min(i + batch_size, len(all_stocks))}/{len(all_stocks)} 只 (成功 {success_count}, 失败 {fail_count})")
+                    logger.info(f"已采集 {min(i + batch_size, len(all_stocks))}/{len(all_stocks)} 只 (成功 {batch_success}, 失败 {batch_failed})")
 
-        # 重试失败的股票
-        if failed_stocks:
-            logger.warning(f"第一轮失败 {len(failed_stocks)} 只，开始重试...")
-            retry_results = []
-            for stock in failed_stocks:
-                result = cls._fetch_one_stock(stock, ztzt_map)
-                if result:
-                    retry_results.append(result)
-                time.sleep(0.3)  # 重试间隔
-            
-            results.extend(retry_results)
-            logger.info(f"重试完成：成功 {len(retry_results)}/{len(failed_stocks)} 只")
+        if failed_count > 0:
+            logger.warning(f"采集失败: {failed_count} 只（不重试）")
 
         # 批量入库
         with get_db_context() as db:

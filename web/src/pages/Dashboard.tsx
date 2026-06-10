@@ -1,33 +1,70 @@
 // src/pages/Dashboard.tsx - 数据看板主页
 import { useState, useEffect } from 'react'
-// TODO: 等后端 API 完成后取消注释
-// import { getStocks, getBlocks } from '../api'
-// import type { Stock, Block } from '../api'
+import { getMarketOverview } from '../api'
 
-// 临时类型定义
-interface Stock { stock_code: string; stock_name: string; stock_type: string; stock_imp: number }
-interface Block { block_code: string; block_name: string; leader_stock_name?: string; money_stock_name?: string }
+// 类型定义
+interface Stock { 
+  stock_code: string; 
+  stock_name: string; 
+  stock_type: string; 
+  stock_imp: number 
+}
+interface Block { 
+  block_code: string; 
+  block_name: string; 
+  leader_stock_name?: string; 
+  money_stock_name?: string 
+}
+interface FlowStats {
+  main_inflow: number
+  super_large_inflow: number
+  large_inflow: number
+  medium_small_inflow: number
+}
+
+// 格式化资金流向
+function formatFlow(value: number): string {
+  if (value >= 100000000) {
+    return `${(value / 100000000).toFixed(1)}亿`
+  } else if (value >= 10000) {
+    return `${(value / 10000).toFixed(1)}万`
+  }
+  return `${value}`
+}
 
 // 大盘资金概览卡片
-function MoneyOverview() {
+function MoneyOverview({ stats }: { stats: FlowStats }) {
+  const mainColor = stats.main_inflow >= 0 ? 'text-red-600' : 'text-green-600'
+  const superColor = stats.super_large_inflow >= 0 ? 'text-red-600' : 'text-green-600'
+  const largeColor = stats.large_inflow >= 0 ? 'text-red-600' : 'text-green-600'
+  const mediumColor = stats.medium_small_inflow >= 0 ? 'text-red-600' : 'text-green-600'
+  
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h2 className="text-lg font-semibold mb-4">大盘资金流向</h2>
       <div className="grid grid-cols-4 gap-4">
         <div className="text-center">
-          <div className="text-2xl font-bold text-green-600">+12.8亿</div>
+          <div className={`text-2xl font-bold ${mainColor}`}>
+            {stats.main_inflow >= 0 ? '+' : ''}{formatFlow(stats.main_inflow)}
+          </div>
           <div className="text-sm text-gray-500">主力净流入</div>
         </div>
         <div className="text-center">
-          <div className="text-2xl font-bold text-green-600">+5.2亿</div>
+          <div className={`text-2xl font-bold ${superColor}`}>
+            {stats.super_large_inflow >= 0 ? '+' : ''}{formatFlow(stats.super_large_inflow)}
+          </div>
           <div className="text-sm text-gray-500">超大单净流入</div>
         </div>
         <div className="text-center">
-          <div className="text-2xl font-bold text-red-500">-1.3亿</div>
+          <div className={`text-2xl font-bold ${largeColor}`}>
+            {stats.large_inflow >= 0 ? '+' : ''}{formatFlow(stats.large_inflow)}
+          </div>
           <div className="text-sm text-gray-500">大单净流入</div>
         </div>
         <div className="text-center">
-          <div className="text-2xl font-bold text-gray-700">+3.1亿</div>
+          <div className={`text-2xl font-bold ${mediumColor}`}>
+            {stats.medium_small_inflow >= 0 ? '+' : ''}{formatFlow(stats.medium_small_inflow)}
+          </div>
           <div className="text-sm text-gray-500">中小单净流入</div>
         </div>
       </div>
@@ -105,27 +142,28 @@ function BlockHot({ blocks }: { blocks: Block[] }) {
 export default function Dashboard() {
   const [stocks, setStocks] = useState<Stock[]>([])
   const [blocks, setBlocks] = useState<Block[]>([])
+  const [flowStats, setFlowStats] = useState<FlowStats>({
+    main_inflow: 0,
+    super_large_inflow: 0,
+    large_inflow: 0,
+    medium_small_inflow: 0
+  })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadData() {
       try {
-        // TODO: 等后端 API 完成后再连接真实数据
-        // const [stockData, blockData] = await Promise.all([getStocks(), getBlocks()])
-        // setStocks(stockData)
-        // setBlocks(blockData)
-        
-        // 暂时用 mock 数据展示
-        setStocks([
-          { stock_code: '600519', stock_name: '贵州茅台', stock_type: '上证所主板', stock_imp: 1 },
-          { stock_code: '000858', stock_name: '五粮液', stock_type: '深交所主板', stock_imp: 1 },
-          { stock_code: '300750', stock_name: '宁德时代', stock_type: '创业板', stock_imp: 1 },
-        ])
-        setBlocks([
-          { block_code: 'bk001', block_name: '白酒板块', leader_stock_name: '贵州茅台', money_stock_name: '五粮液' },
-          { block_code: 'bk002', block_name: '新能源车', leader_stock_name: '比亚迪', money_stock_name: '宁德时代' },
-        ])
+        const response = await getMarketOverview()
+        if (response.status === 'success') {
+          setStocks(response.data.watched_stocks || [])
+          setBlocks(response.data.hot_blocks || [])
+          if (response.data.flow_stats) {
+            setFlowStats(response.data.flow_stats)
+          }
+        } else {
+          setError(response.message || '加载失败')
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : '加载失败')
       } finally {
@@ -157,7 +195,10 @@ export default function Dashboard() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-800">📊 股票数据看板</h1>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
             刷新数据
           </button>
         </div>
@@ -168,7 +209,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* 左侧 - 大盘资金 + 板块热点 */}
           <div className="lg:col-span-2 space-y-6">
-            <MoneyOverview />
+            <MoneyOverview stats={flowStats} />
             <BlockHot blocks={blocks} />
           </div>
 
